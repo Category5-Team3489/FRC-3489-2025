@@ -125,6 +125,8 @@ public class TunerConstants {
             .withDriveFrictionVoltage(kDriveFrictionVoltage);
 
 
+    //TODO Find out why the rotation did not work until we flipped the front and back ids
+
     // Front Left
     private static final int kFrontLeftDriveMotorId = 3;
     private static final int kFrontLeftSteerMotorId = 4;
