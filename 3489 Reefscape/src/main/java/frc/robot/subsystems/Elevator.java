@@ -20,7 +20,8 @@ import frc.robot.enums.ElevatorState;
 
 public class Elevator extends SubsystemBase {
 
-    // TODO Add right motor as follower for left motor in Rev client
+    // TODO Add the right motor as a follower for left motor in Rev client
+    // TODO Add the pid values for the left motor in the rev client
     private final SparkMax rightMotor = new SparkMax(12, MotorType.kBrushless);
     private final SparkMax leftMotor = new SparkMax(13, MotorType.kBrushless);
 
@@ -43,10 +44,11 @@ public class Elevator extends SubsystemBase {
     private final SparkClosedLoopController pidControllerLeft = leftMotor.getClosedLoopController();
 
     private final RelativeEncoder encoder = leftMotor.getEncoder();
-    // TODO do the math correctly after getting the actualnumbers
+
+    // TODO do the math correctly after getting the actual numbers
     private double currentHeight = encoder.getPosition() * 10;
 
-    private double targetInches = 30;
+    private double targetInches = 0;
 
     @Override
     public void periodic() {
@@ -54,12 +56,15 @@ public class Elevator extends SubsystemBase {
         checkLimits(targetInches);
     }
 
+    // Move the elevator to the correct height
     private void setHeight(double positionHeight) {
         setTargetInches(positionHeight);
         double targetRotations = positionHeight * MotorRotationsPerInch;
         pidControllerLeft.setReference(targetRotations, ControlType.kPosition, ClosedLoopSlot.kSlot0);
     }
 
+    // If the limit switches are hit: dont continue moving in that direction; If
+    // switches not hit: run setHeight();
     private void checkLimits(double target) {
         // If the top limit switch is hit
         if (topSwitch.get()) {

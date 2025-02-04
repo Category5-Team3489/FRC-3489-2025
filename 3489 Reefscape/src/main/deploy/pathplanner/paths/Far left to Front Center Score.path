@@ -1,0 +1,59 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 8.014499999997433,
+        "y": 7.593500000002446
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.881749961617807,
+        "y": 7.680768127181086
+      },
+      "isLocked": false,
+      "linkedName": "Far Left Starting Position"
+    },
+    {
+      "anchor": {
+        "x": 3.2369999999940524,
+        "y": 4.025000000003569
+      },
+      "prevControl": {
+        "x": 1.6190682150188773,
+        "y": 6.48481722500161
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Front Center Score"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.11698113207548402,
+      "rotationDegrees": 180.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -0.2899096320159521
+  },
+  "reversed": false,
+  "folder": "Far Left to Score (Coral)",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": true
+}
