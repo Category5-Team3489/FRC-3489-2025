@@ -1,0 +1,19 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Far Left Start to Back Center Score"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "One Coral (L1)",
+  "choreoAuto": false
+}

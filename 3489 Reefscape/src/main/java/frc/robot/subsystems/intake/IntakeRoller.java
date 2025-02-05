@@ -10,6 +10,7 @@ import frc.robot.enums.IntakeRollerState;
 
 public class IntakeRoller extends SubsystemBase {
 
+    //TODO Is this the correct Motor?
     private final SparkMax motor = new SparkMax(10, MotorType.kBrushless);
 
     private double speed = 0;

@@ -6,11 +6,17 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.IntakeCommand;
+import frc.robot.enums.ElevatorState;
 import frc.robot.enums.OuttakeState;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Outtake;
+
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -28,13 +34,21 @@ public class RobotContainer {
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
 	 */
 	public RobotContainer() {
+
+		NamedCommands.registerCommand("Outtake", outtake.updateSpeed(OuttakeState.Outtake));
+		NamedCommands.registerCommand("Intake", new IntakeCommand(m_exampleSubsystem));
+		NamedCommands.registerCommand("L1", elevator.updateCommand(ElevatorState.L1));
+		NamedCommands.registerCommand("L2", elevator.updateCommand(ElevatorState.L2));
+		NamedCommands.registerCommand("L3", elevator.updateCommand(ElevatorState.L3));
+
 		// Configure the trigger bindings
 		configureBindings();
 	}
 
 	private void configureBindings() {
 
-		m_driverController.a().onTrue(elevator.updateCommand(() -> 10));
+		// Code Testing Buttons
+		m_driverController.a().onTrue(elevator.updateCommand(ElevatorState.L3));
 		m_driverController.b().onTrue(outtake.updateSpeed(OuttakeState.Intake));
 
 	}

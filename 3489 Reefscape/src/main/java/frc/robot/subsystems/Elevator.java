@@ -109,9 +109,9 @@ public class Elevator extends SubsystemBase {
         }, this);
     }
 
-    public Command updateCommand(DoubleSupplier heightInchesSupplier) {
+    public Command updateCommand(ElevatorState elevatorState) {
         return Commands.run(() -> {
-            setTargetInches(heightInchesSupplier.getAsDouble());
+            setTargetInches(elevatorState.getHeigtInches());
         }, this);
     }
 }
