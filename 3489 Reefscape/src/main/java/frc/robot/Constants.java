@@ -38,6 +38,11 @@ public final class Constants {
         public static final int MOTOR_ID = 10;
     }
 
+    public static class IntakeActuator  {
+        public static final int MOTOR_ID = 11;
+        public static final int SENSOR_ID = 40;
+    }
+
     public static class Index {
         public static final int RIGHT_MOTOR_ID = 22;
         public static final int LEFT_MOTOR_ID = 23;
