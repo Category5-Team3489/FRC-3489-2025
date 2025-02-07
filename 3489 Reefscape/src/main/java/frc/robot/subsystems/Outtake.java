@@ -6,11 +6,13 @@ import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.enums.OuttakeState;
 
 public class Outtake extends SubsystemBase {
 
-    private final SparkMax motor = new SparkMax(14, MotorType.kBrushless);
+    // Neo 550
+    private final SparkMax motor = new SparkMax(Constants.Outtake.MOTOR_ID, MotorType.kBrushless);
 
     private double speed = 0;
 

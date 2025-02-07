@@ -6,12 +6,13 @@ import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.enums.IntakeRollerState;
 
 public class IntakeRoller extends SubsystemBase {
 
-    //TODO Is this the correct Motor?
-    private final SparkMax motor = new SparkMax(10, MotorType.kBrushless);
+    // Neo 550
+    private final SparkMax motor = new SparkMax(Constants.IntakeRoller.MOTOR_ID, MotorType.kBrushless);
 
     private double speed = 0;
 

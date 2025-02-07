@@ -1,0 +1,46 @@
+package frc.robot.subsystems;
+
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.enums.IndexState;
+import frc.robot.enums.OuttakeState;
+
+public class Index extends SubsystemBase {
+
+    // Neo 550
+    private final SparkMax leftMotor = new SparkMax(Constants.Index.LEFT_MOTOR_ID, MotorType.kBrushless);
+    private final SparkMax rightMotor = new SparkMax(Constants.Index.RIGHT_MOTOR_ID, MotorType.kBrushless);
+
+    private double rightSpeed = 0;
+    private double leftSpeed = 0;
+
+    public Index() {
+
+    }
+
+    @Override
+    public void periodic() {
+        setIndex();
+    }
+
+    // Set the speed of the motor to the global speed variables
+    private void setIndex() {
+        leftMotor.set(leftSpeed);
+        rightMotor.set(rightSpeed);
+
+    }
+
+    // Update the global speed variables based on the input enums
+    public Command updateSpeed(IndexState state) {
+        return Commands.runOnce(() -> {
+            rightSpeed = state.getRightSpeedPercent();
+            leftSpeed = state.getLeftSpeedPercent();
+        });
+    }
+
+}
