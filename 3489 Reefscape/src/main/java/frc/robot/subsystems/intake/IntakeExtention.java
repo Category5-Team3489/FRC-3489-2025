@@ -1,6 +1,9 @@
 package frc.robot.subsystems.intake;
 
 import com.revrobotics.spark.SparkMax;
+
+import java.util.function.BooleanSupplier;
+
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -8,67 +11,78 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.enums.ElevatorState;
 import frc.robot.enums.IntakeExtentionState;
 
 public class IntakeExtention extends SubsystemBase {
 
+    private static final IntakeExtention instance = new IntakeExtention();
+
     private final SparkMax motor = new SparkMax(Constants.IntakeActuator.MOTOR_ID, MotorType.kBrushless);
+    private final SparkClosedLoopController pidController = motor.getClosedLoopController();
 
     // TODO update to correct sensor type
     private final DigitalInput sensor = new DigitalInput(Constants.IntakeActuator.SENSOR_ID);
+    private final Trigger sensorTrigger = new Trigger(sensor::get);
+    // the speed (10 degrees per second)
+    private static final double CorrectionDegreesPerSecond = 10; // 50
 
-    private static final double CorrectionInchesPerSecond = 5;
-    // TODO Update this when we have a gear ratio
-    // to make the motor rotate once (gear-ratio)
-    private static final double MotorRotationsPerRevolution = 10;
-    // the amount of times motor should spin to make it move one inch
-    private static final double MotorRotationsPerUnit = MotorRotationsPerRevolution / 360.0;
-    // the amount of inches it should move to make the motor rotate once
-    private static final double InchesPerMotorRotation = 1.0 / MotorRotationsPerUnit;
-    private static final double AllowedErrorInches = 2.0;
+    // Gear ratio (motor rotates 30 times for one revolution of the actuator)
+    private static final double MotorRotationsPerRevolution = 30;
 
-    private final SparkClosedLoopController pidController = motor.getClosedLoopController();
-    private final RelativeEncoder encoder = motor.getEncoder();
+    // Convert revolutions to degrees (Used in PID)(amount of rotations motor has to
+    // make for the actuator to move one degree)
+    private static final double MotorRotationsPerDegree = MotorRotationsPerRevolution / 360.0;
+    private static final double DegreesPerMotorRotation = 1.0 / MotorRotationsPerDegree;
 
-    // TODO do the math correctly after getting the actual numbers
-    private double currentHeight = encoder.getPosition() * 10;
+    // Intake is at its target angle if the error is within plus or minus this value
+    private static final double AllowedErrorDegrees = 2.0;
 
-    private double targetInches = 0;
+    private double targetDegrees = 0;
 
-    @Override
-    public void periodic() {
-        setPosition(targetInches);
+    public static IntakeExtention get() {
+        return instance;
     }
 
     // Move the intake to the correct position
     private void setPosition(double target) {
         setTarget(target);
-        double targetRotations = target * MotorRotationsPerUnit;
+        double targetRotations = target * MotorRotationsPerDegree;
         pidController.setReference(targetRotations, ControlType.kPosition, ClosedLoopSlot.kSlot0);
     }
 
     private void setTarget(double targetPosition) {
-        targetInches = MathUtil.clamp(targetPosition,
+        targetDegrees = MathUtil.clamp(targetPosition,
                 IntakeExtentionState.HomePosition.getValue(), IntakeExtentionState.IntakePosition.getValue());
     }
 
     public Command adjustManualHeight(double adjustPercent) {
         return Commands.run(() -> {
-            double deltaDegrees = adjustPercent * CorrectionInchesPerSecond * Robot.kDefaultPeriod;
-            setTarget(targetInches + deltaDegrees);
+            double deltaDegrees = adjustPercent * CorrectionDegreesPerSecond * Robot.kDefaultPeriod;
+            setTarget(targetDegrees + deltaDegrees);
         }, this);
     }
 
-    public Command updateCommand(IntakeExtentionState elevatorState) {
+    public Command updateCommand(IntakeExtentionState intakeExtentionState) {
         return Commands.run(() -> {
-            setTarget(elevatorState.getValue());
+            setTarget(intakeExtentionState.getValue());
+            System.out.println("Intake Update Command");
         }, this);
+    }
+
+    @Override
+    public void periodic() {
+        setPosition(targetDegrees);
+    }
+
+    public BooleanSupplier getSensor() {
+        return sensorTrigger;
     }
 }

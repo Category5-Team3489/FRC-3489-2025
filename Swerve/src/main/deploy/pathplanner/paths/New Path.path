@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.8330000000000002,
+        "y": 7.07675
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.0809999999951767,
+        "y": 6.988999999995173
+      },
+      "isLocked": false,
+      "linkedName": "Coral Station Pick Up"
+    },
+    {
+      "anchor": {
+        "x": 4.9871065089495525,
+        "y": 5.193031508949551
+      },
+      "prevControl": {
+        "x": 4.202249999995177,
+        "y": 5.809249999995172
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -118.179666975386
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -49.267893300290936
+  },
+  "useDefaultConstraints": true
+}

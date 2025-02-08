@@ -23,8 +23,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
 	// The robot's subsystems and commands are defined here...
 	private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-	private final Outtake outtake = new Outtake();
-	private final Elevator elevator = new Elevator();
+	private final Outtake outtake = Outtake.get();
+	private final Elevator elevator = Elevator.get();
+	private final IntakeCommand intakeCommand = new IntakeCommand();
 
 	// Replace with CommandPS4Controller or CommandJoystick if needed
 	private final CommandXboxController m_driverController = new CommandXboxController(
@@ -36,11 +37,10 @@ public class RobotContainer {
 	public RobotContainer() {
 
 		NamedCommands.registerCommand("Outtake", outtake.updateSpeed(OuttakeState.Outtake));
-		NamedCommands.registerCommand("Intake", new IntakeCommand(m_exampleSubsystem));
+		NamedCommands.registerCommand("Intake", intakeCommand);
 		NamedCommands.registerCommand("L1", elevator.updateCommand(ElevatorState.L1));
 		NamedCommands.registerCommand("L2", elevator.updateCommand(ElevatorState.L2));
 		NamedCommands.registerCommand("L3", elevator.updateCommand(ElevatorState.L3));
-
 		// Configure the trigger bindings
 		configureBindings();
 	}
@@ -50,6 +50,8 @@ public class RobotContainer {
 		// Code Testing Buttons
 		m_driverController.a().onTrue(elevator.updateCommand(ElevatorState.L3));
 		m_driverController.b().onTrue(outtake.updateSpeed(OuttakeState.Intake));
+
+		m_driverController.x().onTrue(intakeCommand);
 
 	}
 

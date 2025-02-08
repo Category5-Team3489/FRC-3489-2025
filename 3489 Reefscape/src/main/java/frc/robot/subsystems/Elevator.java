@@ -21,6 +21,8 @@ import frc.robot.enums.ElevatorState;
 
 public class Elevator extends SubsystemBase {
 
+    private static final Elevator instance = new Elevator();
+
     // TODO Add the right motor as a follower for left motor in Rev client
     // TODO Add the pid values for the left motor in the rev client
     private final SparkMax rightMotor = new SparkMax(Constants.Elevator.RIGHT_MOTOR_ID, MotorType.kBrushless);
@@ -28,13 +30,14 @@ public class Elevator extends SubsystemBase {
 
     private final DigitalInput topSwitch = new DigitalInput(Constants.Elevator.TOP_SENSOR_ID);
     private final DigitalInput bottomSwitch = new DigitalInput(Constants.Elevator.BOTTOM_SENSOR_ID);
-
+    // Speed
     private static final double CorrectionInchesPerSecond = 5;
     // TODO Update this when we have a gear ratio
     // to make the motor rotate once (gear-ratio)
-    private static final double MotorRotationsPerRevolution = 10;
+    private static final double MotorRotationsPerRevolution = 30;
     // the amount of times motor should spin to make it move one inch
-    private static final double MotorRotationsPerInch = MotorRotationsPerRevolution / 360.0;
+    // TODO test and measure how many rotations for the elevator to lift one inch
+    private static final double MotorRotationsPerInch = MotorRotationsPerRevolution * 5;
     // the amount of inches it should move to make the motor rotate once
     private static final double InchesPerMotorRotation = 1.0 / MotorRotationsPerInch;
     private static final double AllowedErrorInches = 2.0;
@@ -42,10 +45,13 @@ public class Elevator extends SubsystemBase {
     private final SparkClosedLoopController pidControllerLeft = leftMotor.getClosedLoopController();
     private final RelativeEncoder encoder = leftMotor.getEncoder();
 
-    // TODO do the math correctly after getting the actual numbers
-    private double currentHeight = encoder.getPosition() * 10;
+    private double currentHeight = encoder.getPosition() / MotorRotationsPerInch;
 
     private double targetInches = 0;
+
+    public static Elevator get() {
+        return instance;
+    }
 
     @Override
     public void periodic() {
@@ -92,7 +98,6 @@ public class Elevator extends SubsystemBase {
         }
 
         else {
-            setHeight(target);
             setHeight(target);
         }
     }

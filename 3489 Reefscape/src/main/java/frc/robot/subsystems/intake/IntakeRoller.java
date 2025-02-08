@@ -11,13 +11,15 @@ import frc.robot.enums.IntakeRollerState;
 
 public class IntakeRoller extends SubsystemBase {
 
+    private static final IntakeRoller instance = new IntakeRoller();
+
     // Neo 550
     private final SparkMax motor = new SparkMax(Constants.IntakeRoller.MOTOR_ID, MotorType.kBrushless);
 
     private double speed = 0;
 
-    public IntakeRoller() {
-
+    public static IntakeRoller get() {
+        return instance;
     }
 
     @Override

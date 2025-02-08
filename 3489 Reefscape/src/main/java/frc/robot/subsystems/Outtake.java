@@ -11,13 +11,15 @@ import frc.robot.enums.OuttakeState;
 
 public class Outtake extends SubsystemBase {
 
+    private static final Outtake instance = new Outtake();
+
     // Neo 550
     private final SparkMax motor = new SparkMax(Constants.Outtake.MOTOR_ID, MotorType.kBrushless);
 
     private double speed = 0;
 
-    public Outtake() {
-
+    public static Outtake get() {
+        return instance;
     }
 
     @Override

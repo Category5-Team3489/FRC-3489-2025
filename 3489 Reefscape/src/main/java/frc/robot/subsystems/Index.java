@@ -9,8 +9,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.enums.IndexState;
 import frc.robot.enums.OuttakeState;
+import frc.robot.subsystems.intake.IntakeExtention;
 
 public class Index extends SubsystemBase {
+
+    private static final Index instance = new Index();
 
     // Neo 550
     private final SparkMax leftMotor = new SparkMax(Constants.Index.LEFT_MOTOR_ID, MotorType.kBrushless);
@@ -19,8 +22,8 @@ public class Index extends SubsystemBase {
     private double rightSpeed = 0;
     private double leftSpeed = 0;
 
-    public Index() {
-
+    public static Index get() {
+        return instance;
     }
 
     @Override

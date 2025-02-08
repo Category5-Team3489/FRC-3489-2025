@@ -4,41 +4,62 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.enums.ElevatorState;
+import frc.robot.enums.IndexState;
+import frc.robot.enums.IntakeExtentionState;
+import frc.robot.enums.IntakeRollerState;
+import frc.robot.enums.OuttakeState;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Index;
+import frc.robot.subsystems.Outtake;
+import frc.robot.subsystems.intake.IntakeExtention;
+import frc.robot.subsystems.intake.IntakeRoller;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 /** An example command that uses an example subsystem. */
-public class IntakeCommand extends Command {
-    @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
+public class IntakeCommand extends SequentialCommandGroup {
 
-    /**
-     * Creates a new ExampleCommand.
-     *
-     * @param subsystem The subsystem used by this command.
-     */
-    public IntakeCommand(ExampleSubsystem subsystem) {
-        // Use addRequirements() here to declare subsystem dependencies.
-        addRequirements(subsystem);
+    private static IntakeRoller intakeRoller = IntakeRoller.get();
+    private static IntakeExtention intakeExtention = IntakeExtention.get();
+    private static Index index = Index.get();
+    private static Elevator elevator = Elevator.get();
+    private static Outtake outtake = Outtake.get();
+
+    public IntakeCommand() {
+
+        addRequirements(intakeRoller, intakeExtention, index, elevator);
+
+        addCommands(
+                Commands.run(() -> {
+                    outtake.updateSpeed(OuttakeState.Stop);
+                    intakeExtention.updateCommand(IntakeExtentionState.IntakePosition);
+                    intakeRoller.updateSpeed(IntakeRollerState.Intake);
+                    elevator.updateCommand(ElevatorState.Down);
+                }));
+        if (intakeExtention.getSensor().equals(true)) {
+            Commands.run(() -> {
+                intakeExtention.updateCommand(IntakeExtentionState.HomePosition);
+                index.updateSpeed(IndexState.Intake);
+                intakeRoller.updateSpeed(IntakeRollerState.Stop);
+                outtake.updateSpeed(OuttakeState.Intake);
+                // Find the right time
+                Commands.waitSeconds(2);
+                outtake.updateSpeed(OuttakeState.Stop);
+                elevator.updateCommand(ElevatorState.Up);
+                outtake.updateSpeed(OuttakeState.Outtake);
+            });
+        }
+        System.out.println("Intake update finished");
     }
 
-    // Called when the command is initially scheduled.
-    @Override
-    public void initialize() {
-    }
-
-    // Called every time the scheduler runs while the command is scheduled.
-    @Override
-    public void execute() {
-    }
-
-    // Called once the command ends or is interrupted.
-    @Override
-    public void end(boolean interrupted) {
-    }
-
-    // Returns true when the command should end.
-    @Override
-    public boolean isFinished() {
-        return false;
-    }
+    // addCommands(
+    // Commands.runEnd(() -> {
+    // intakeExtention.updateCommand(IntakeExtentionState.HomePosition);
+    // intakeRoller.updateSpeed(IntakeRollerState.Intake);
+    // elevator.updateCommand(ElevatorState.Down);
+    // }, intakeExtention.getSensor().equals(true), intakeExtention));
+    // System.out.println("Intake update finished");
+    // }
 }
