@@ -1,9 +1,13 @@
 {
-  "robotWidth": 0.762,
-  "robotLength": 0.762,
+  "robotWidth": 0.76835,
+  "robotLength": 0.76835,
   "holonomicMode": true,
-  "pathFolders": [],
-  "autoFolders": [],
+  "pathFolders": [
+    "New Folder"
+  ],
+  "autoFolders": [
+    "New Folder"
+  ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 540.0,
@@ -12,21 +16,24 @@
   "robotMass": 75.0,
   "robotMOI": 6.883,
   "robotTrackwidth": 0.5588,
-  "driveWheelRadius": 0.05504,
-  "driveGearing": 7.363636,
-  "maxDriveSpeed": 4.7,
-  "driveMotorType": "krakenX60FOC",
+  "driveWheelRadius": 0.0508,
+  "driveGearing": 5.357142857142857,
+  "maxDriveSpeed": 5.96,
+  "driveMotorType": "falcon500",
   "driveCurrentLimit": 120.0,
   "wheelCOF": 1.7,
-  "flModuleX": 0.267,
-  "flModuleY": 0.2667,
-  "frModuleX": 0.267,
-  "frModuleY": -0.267,
-  "blModuleX": -0.267,
-  "blModuleY": 0.267,
-  "brModuleX": -0.267,
-  "brModuleY": -0.267,
+  "flModuleX": 0.2873375,
+  "flModuleY": 0.2873375,
+  "frModuleX": 0.287,
+  "frModuleY": -0.2873375,
+  "blModuleX": -0.287,
+  "blModuleY": 0.287,
+  "brModuleX": -0.287,
+  "brModuleY": -0.287,
   "bumperOffsetX": 0.0,
   "bumperOffsetY": 0.0,
-  "robotFeatures": []
+  "robotFeatures": [
+    "{\"name\":\"Rectangle\",\"type\":\"rounded_rect\",\"data\":{\"center\":{\"x\":0.2,\"y\":0.0},\"size\":{\"width\":0.35,\"length\":0.2},\"borderRadius\":0.05,\"strokeWidth\":0.02,\"filled\":false}}",
+    "{\"name\":\"Rectangle\",\"type\":\"rounded_rect\",\"data\":{\"center\":{\"x\":-0.37,\"y\":0.0},\"size\":{\"width\":0.7,\"length\":0.2},\"borderRadius\":0.05,\"strokeWidth\":0.02,\"filled\":false}}"
+  ]
 }
