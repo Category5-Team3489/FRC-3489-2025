@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "(1) Start to 1B"
+            "pathName": "(2) Start to 5B"
           }
         },
         {
@@ -26,6 +26,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Testing",
+  "folder": "One Coral",
   "choreoAuto": false
 }
