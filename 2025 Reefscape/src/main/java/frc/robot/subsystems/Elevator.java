@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import java.util.function.DoubleSupplier;
-
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.ClosedLoopSlot;
@@ -18,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.enums.ElevatorState;
+import frc.robot.enums.OuttakeState;
 
 public class Elevator extends SubsystemBase {
 
@@ -28,26 +27,27 @@ public class Elevator extends SubsystemBase {
     private final SparkMax rightMotor = new SparkMax(Constants.Elevator.RIGHT_MOTOR_ID, MotorType.kBrushless);
     private final SparkMax leftMotor = new SparkMax(Constants.Elevator.LEFT_MOTOR_ID, MotorType.kBrushless);
 
-    private final DigitalInput topSwitch = new DigitalInput(Constants.Elevator.TOP_SENSOR_ID);
-    private final DigitalInput bottomSwitch = new DigitalInput(Constants.Elevator.BOTTOM_SENSOR_ID);
+    // private final DigitalInput topSwitch = new
+    // DigitalInput(Constants.Elevator.TOP_SENSOR_ID);
+    // private final DigitalInput bottomSwitch = new
+    // DigitalInput(Constants.Elevator.BOTTOM_SENSOR_ID);
     // Speed
-    private static final double CorrectionInchesPerSecond = 5;
+    private static final double CorrectionInchesPerSecond = 2;
     // TODO Update this when we have a gear ratio
     // to make the motor rotate once (gear-ratio)
-    private static final double MotorRotationsPerRevolution = 30;
+    private static final double MotorRotationsPerRevolution = 3; // 3
     // the amount of times motor should spin to make it move one inch
     // TODO test and measure how many rotations for the elevator to lift one inch
     private static final double MotorRotationsPerInch = MotorRotationsPerRevolution * 5;
-    // the amount of inches it should move to make the motor rotate once
-    private static final double InchesPerMotorRotation = 1.0 / MotorRotationsPerInch;
-    private static final double AllowedErrorInches = 2.0;
 
     private final SparkClosedLoopController pidControllerLeft = leftMotor.getClosedLoopController();
     private final RelativeEncoder encoder = leftMotor.getEncoder();
 
     private double currentHeight = encoder.getPosition() / MotorRotationsPerInch;
 
-    private double targetInches = 0;
+    private double targetInches = 0.05;
+
+    private double speed = 0;
 
     public static Elevator get() {
         return instance;
@@ -55,52 +55,70 @@ public class Elevator extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // setHeight(targetInches); //This method sets the elevator without checking
+        setElevator();
+        // setHeight(targetInches); // This method sets the elevator without checking
+        System.out.println("******************Current position: " + currentHeight);
+        System.out.println("*******************target position: " + targetInches);
+        System.out.println("*******************units of rotations?: " + rightMotor.getAbsoluteEncoder().getPosition());
+
         // sensors
-        checkLimits(targetInches); // This method sets the elevator after checking sensors
+        // checkLimits(targetInches); // This method sets the elevator after checking
+        // sensors
+
     }
+
+    // public double getEncoder() {
+    // return encoder.getPosition();
+    // }
+
+    // public boolean getBottomSensor() {
+    // return bottomSwitch.get();
+    // }
 
     // Move the elevator to the correct height
     private void setHeight(double positionHeight) {
         setTargetInches(positionHeight);
         double targetRotations = positionHeight * MotorRotationsPerInch;
-        pidControllerLeft.setReference(targetRotations, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+        pidControllerLeft.setReference(targetRotations, ControlType.kPosition,
+                ClosedLoopSlot.kSlot0);
+        System.out.println("**************************************Target Height: " +
+                targetInches);
     }
 
     // If the limit switches are hit: dont continue moving in that direction; If
     // switches not hit: run setHeight();
-    private void checkLimits(double target) {
-        // If the top limit switch is hit
-        if (topSwitch.get()) {
-            // If you are trying to go down: drive normally
-            if (targetInches < currentHeight) {
-                setHeight(target);
-                System.out.println("Elevator -> Down from Sensor");
-            }
-            // If you are trying to go up more: Stop Motor
-            else if (targetInches > currentHeight) {
-                leftMotor.stopMotor();
-                System.out.println("THE ELEVATOR IS ON THE TOP SWITCH");
-            }
-        }
-        // if the bottom switch is on
-        else if (bottomSwitch.get()) {
-            // if you want to go up: move normally
-            if (targetInches >= currentHeight) {
-                setHeight(target);
-                System.out.println("Elevator -> Up from Sensor");
-            }
-            // if you want to go more down: stop motor
-            else {
-                rightMotor.stopMotor();
-                System.out.println("THE ELEVATOR IS ON THE BOTTOM SWITCH");
-            }
-        }
+    // private void checkLimits(double target) {
+    // // If the top limit switch is hit
+    // if (topSwitch.get()) {
+    // // If you are trying to go down: drive normally
+    // if (targetInches < currentHeight) {
+    // setHeight(target);
+    // System.out.println("Elevator -> Down from Sensor");
+    // }
+    // // If you are trying to go up more: Stop Motor
+    // else if (targetInches > currentHeight) {
+    // leftMotor.stopMotor();
+    // System.out.println("THE ELEVATOR IS ON THE TOP SWITCH");
+    // }
+    // }
+    // // if the bottom switch is on
+    // else if (bottomSwitch.get()) {
+    // // if you want to go up: move normally
+    // if (targetInches >= currentHeight) {
+    // setHeight(target);
+    // System.out.println("Elevator -> Up from Sensor");
+    // }
+    // // if you want to go more down: stop motor
+    // else {
+    // rightMotor.stopMotor();
+    // System.out.println("THE ELEVATOR IS ON THE BOTTOM SWITCH");
+    // }
+    // }
 
-        else {
-            setHeight(target);
-        }
-    }
+    // else {
+    // setHeight(target);
+    // }
+    // }
 
     private void setTargetInches(double positionHeight) {
         targetInches = MathUtil.clamp(positionHeight,
@@ -109,7 +127,8 @@ public class Elevator extends SubsystemBase {
 
     public Command adjustManualHeight(double adjustPercent) {
         return Commands.run(() -> {
-            double deltaDegrees = adjustPercent * CorrectionInchesPerSecond * Robot.kDefaultPeriod;
+            double deltaDegrees = adjustPercent * CorrectionInchesPerSecond *
+                    Robot.kDefaultPeriod;
             setTargetInches(targetInches + deltaDegrees);
         }, this);
     }
@@ -118,5 +137,17 @@ public class Elevator extends SubsystemBase {
         return Commands.run(() -> {
             setTargetInches(elevatorState.getHeigtInches());
         }, this);
+    }
+
+    // Set the speed of the motor to the global outtake variable
+    private void setElevator() {
+        leftMotor.set(-speed);
+        System.out.println("++++++++++++++++++++++=Speed: " + speed);
+
+    }
+
+    // Update the global outtake speed variable based on the input enum
+    public Command updateSpeed() {
+        return Commands.runOnce(() -> speed = -0.1);
     }
 }

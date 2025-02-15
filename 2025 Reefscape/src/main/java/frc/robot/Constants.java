@@ -22,8 +22,8 @@ public final class Constants {
     }
 
     public static class Elevator {
-        public static final int RIGHT_MOTOR_ID = 12;
-        public static final int LEFT_MOTOR_ID = 13;
+        public static final int RIGHT_MOTOR_ID = 13;
+        public static final int LEFT_MOTOR_ID = 14;
 
         public static final int TOP_SENSOR_ID = 4;
         public static final int BOTTOM_SENSOR_ID = 0;
@@ -31,7 +31,7 @@ public final class Constants {
     }
 
     public static class Outtake {
-        public static final int MOTOR_ID = 14;
+        public static final int MOTOR_ID = 15;
     }
 
     public static class IntakeRoller {
@@ -39,12 +39,12 @@ public final class Constants {
     }
 
     public static class IntakeActuator {
-        public static final int MOTOR_ID = 11;
+        public static final int MOTOR_ID = 9;
         public static final int SENSOR_ID = 10;
     }
 
     public static class Index {
-        public static final int RIGHT_MOTOR_ID = 22;
-        public static final int LEFT_MOTOR_ID = 23;
+        public static final int RIGHT_MOTOR_ID = 11;
+        public static final int LEFT_MOTOR_ID = 12;
     }
 }

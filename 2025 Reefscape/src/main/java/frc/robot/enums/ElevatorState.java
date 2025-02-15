@@ -1,9 +1,11 @@
 package frc.robot.enums;
 
 public enum ElevatorState {
+    // Test the numbers
+
     Down(0),
     L1(18),
-    L2(31.875),
+    L2(.03),
     L3(48),
     Up(55);
 

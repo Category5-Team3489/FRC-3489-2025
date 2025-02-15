@@ -63,10 +63,14 @@ public class RobotContainer {
 
         NamedCommands.registerCommand("Outtake", outtake.updateSpeed(OuttakeState.Outtake));
         NamedCommands.registerCommand("Intake", intakeCommand);
-        NamedCommands.registerCommand("L1", elevator.updateCommand(ElevatorState.L1));
-        NamedCommands.registerCommand("L2", elevator.updateCommand(ElevatorState.L2));
-        NamedCommands.registerCommand("L3", elevator.updateCommand(ElevatorState.L3));
-        NamedCommands.registerCommand("Home", elevator.updateCommand(ElevatorState.Down));
+        NamedCommands.registerCommand("L1",
+                elevator.updateCommand(ElevatorState.L1));
+        NamedCommands.registerCommand("L2",
+                elevator.updateCommand(ElevatorState.L2));
+        NamedCommands.registerCommand("L3",
+                elevator.updateCommand(ElevatorState.L3));
+        NamedCommands.registerCommand("Home",
+                elevator.updateCommand(ElevatorState.Down));
 
         NamedCommands.registerCommand("TEST", Commands.run(() -> {
             System.out.println("TESTING------------------");
@@ -116,6 +120,21 @@ public class RobotContainer {
         driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         drivetrain.registerTelemetry(logger::telemeterize);
+        getElevatorBindings();
+
+    }
+
+    private void getElevatorBindings() {
+        manipulatorController.a().onTrue(elevator.updateSpeed());
+        // manipulatorController.b().onTrue(outtake.updateSpeed(OuttakeState.Intake));
+        // manipulatorController.y().onTrue(outtake.updateSpeed(OuttakeState.Stop));
+        // manipulatorController.axisLessThan(5, -0.1).whileTrue(
+        // elevator.adjustManualHeight(1));
+        // manipulatorController.y().onTrue(elevator.updateCommand(ElevatorState.Up));
+        // manipulatorController.x().onTrue(elevator.updateCommand(ElevatorState.L1));
+        // manipulatorController.b().onTrue(elevator.updateCommand(ElevatorState.L2));
+        // manipulatorController.start().onTrue(elevator.updateCommand(ElevatorState.L3));
+
     }
 
     public Command getAutonomousCommand() {

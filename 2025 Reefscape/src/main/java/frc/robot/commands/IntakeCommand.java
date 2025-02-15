@@ -38,7 +38,7 @@ public class IntakeCommand extends SequentialCommandGroup {
                     intakeRoller.updateSpeed(IntakeRollerState.Intake);
                     elevator.updateCommand(ElevatorState.Down);
                 }));
-        if (intakeExtention.getSensor().equals(true)) {
+        if (intakeExtention.getSensor().equals(true)) { // && elevator.getBottomSensor()) {
             Commands.run(() -> {
                 intakeExtention.updateCommand(IntakeExtentionState.HomePosition);
                 index.updateSpeed(IndexState.Intake);
