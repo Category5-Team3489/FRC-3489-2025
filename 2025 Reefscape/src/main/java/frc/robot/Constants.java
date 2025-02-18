@@ -21,6 +21,11 @@ public final class Constants {
         public static final int kDriverControllerPort = 0;
     }
 
+    public static class Drivetrain {
+        // TODO Calculate this
+        public static final int MaxRadiansPerSecond = 1;
+    }
+
     public static class Elevator {
         public static final int RIGHT_MOTOR_ID = 13;
         public static final int LEFT_MOTOR_ID = 14;

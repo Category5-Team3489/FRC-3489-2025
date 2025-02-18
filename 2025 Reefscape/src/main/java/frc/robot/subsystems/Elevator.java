@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.ClosedLoopSlot;
@@ -10,6 +11,7 @@ import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -22,30 +24,29 @@ public class Elevator extends SubsystemBase {
 
     private static final Elevator instance = new Elevator();
 
-    // TODO Add the right motor as a follower for left motor in Rev client
-    // TODO Add the pid values for the left motor in the rev client
+    // TODO Add the left motor as a follower for right motor in Rev client
+    // TODO Add the pid values for the right motor in the rev client
     private final SparkMax rightMotor = new SparkMax(Constants.Elevator.RIGHT_MOTOR_ID, MotorType.kBrushless);
     private final SparkMax leftMotor = new SparkMax(Constants.Elevator.LEFT_MOTOR_ID, MotorType.kBrushless);
 
-    // private final DigitalInput topSwitch = new
-    // DigitalInput(Constants.Elevator.TOP_SENSOR_ID);
-    // private final DigitalInput bottomSwitch = new
-    // DigitalInput(Constants.Elevator.BOTTOM_SENSOR_ID);
-    // Speed
-    private static final double CorrectionInchesPerSecond = 2;
-    // TODO Update this when we have a gear ratio
+    private final SparkClosedLoopController pidControllerRight = rightMotor.getClosedLoopController();
+
+    // TODO Make sure we dont actually need to use the encoder in the code
+    private final AbsoluteEncoder encoder = rightMotor.getAbsoluteEncoder();
+
+    private static final double CorrectionTicsPerSecond = 4096;
+
     // to make the motor rotate once (gear-ratio)
-    private static final double MotorRotationsPerRevolution = 3; // 3
-    // the amount of times motor should spin to make it move one inch
-    // TODO test and measure how many rotations for the elevator to lift one inch
-    private static final double MotorRotationsPerInch = MotorRotationsPerRevolution * 5;
+    private static final double gearRatio = 3;
 
-    private final SparkClosedLoopController pidControllerLeft = leftMotor.getClosedLoopController();
-    private final RelativeEncoder encoder = leftMotor.getEncoder();
+    private final int sparkTicsPerRotation = 4096;
 
-    private double currentHeight = encoder.getPosition() / MotorRotationsPerInch;
+    // TODO Measure (HeightChange from 1 rotation of final)
+    // Height (in Tics) = Tics * Gear ratio * HeightChange from 1 rotation of final
+    // gear
 
-    private double targetInches = 0.05;
+    // Encoder Ticks
+    private double targetTics = 0;
 
     private double speed = 0;
 
@@ -53,95 +54,59 @@ public class Elevator extends SubsystemBase {
         return instance;
     }
 
+    private Elevator() {
+        Shuffleboard.getTab("Main")
+                .addDouble("Right Encoder", () -> encoder.getPosition())
+                .withSize(1, 1)
+                .withPosition(7, 3);
+
+        Shuffleboard.getTab("Main")
+                .addDouble("Target Tics", () -> targetTics)
+                .withSize(1, 1)
+                .withPosition(6, 3);
+    }
+
     @Override
     public void periodic() {
-        setElevator();
-        // setHeight(targetInches); // This method sets the elevator without checking
-        System.out.println("******************Current position: " + currentHeight);
-        System.out.println("*******************target position: " + targetInches);
+        // setElevator();
+        setHeight(); // This method sets the elevator without checking
+        System.out.println("*******************target position: " + targetTics);
         System.out.println("*******************units of rotations?: " + rightMotor.getAbsoluteEncoder().getPosition());
-
-        // sensors
-        // checkLimits(targetInches); // This method sets the elevator after checking
-        // sensors
-
     }
-
-    // public double getEncoder() {
-    // return encoder.getPosition();
-    // }
-
-    // public boolean getBottomSensor() {
-    // return bottomSwitch.get();
-    // }
 
     // Move the elevator to the correct height
-    private void setHeight(double positionHeight) {
-        setTargetInches(positionHeight);
-        double targetRotations = positionHeight * MotorRotationsPerInch;
-        pidControllerLeft.setReference(targetRotations, ControlType.kPosition,
+    private void setHeight() {
+        setTargetTics(targetTics);
+        double targetRotations = (targetTics * gearRatio) / sparkTicsPerRotation;
+        pidControllerRight.setReference(targetRotations, ControlType.kPosition,
                 ClosedLoopSlot.kSlot0);
-        System.out.println("**************************************Target Height: " +
-                targetInches);
+        System.out.println("**************************************Target Height: " + targetTics);
     }
 
-    // If the limit switches are hit: dont continue moving in that direction; If
-    // switches not hit: run setHeight();
-    // private void checkLimits(double target) {
-    // // If the top limit switch is hit
-    // if (topSwitch.get()) {
-    // // If you are trying to go down: drive normally
-    // if (targetInches < currentHeight) {
-    // setHeight(target);
-    // System.out.println("Elevator -> Down from Sensor");
-    // }
-    // // If you are trying to go up more: Stop Motor
-    // else if (targetInches > currentHeight) {
-    // leftMotor.stopMotor();
-    // System.out.println("THE ELEVATOR IS ON THE TOP SWITCH");
-    // }
-    // }
-    // // if the bottom switch is on
-    // else if (bottomSwitch.get()) {
-    // // if you want to go up: move normally
-    // if (targetInches >= currentHeight) {
-    // setHeight(target);
-    // System.out.println("Elevator -> Up from Sensor");
-    // }
-    // // if you want to go more down: stop motor
-    // else {
-    // rightMotor.stopMotor();
-    // System.out.println("THE ELEVATOR IS ON THE BOTTOM SWITCH");
-    // }
-    // }
-
-    // else {
-    // setHeight(target);
-    // }
-    // }
-
-    private void setTargetInches(double positionHeight) {
-        targetInches = MathUtil.clamp(positionHeight,
+    private void setTargetTics(double positionHeight) {
+        targetTics = MathUtil.clamp(positionHeight,
                 ElevatorState.Down.getHeigtInches(), ElevatorState.Up.getHeigtInches());
     }
 
     public Command adjustManualHeight(double adjustPercent) {
         return Commands.run(() -> {
-            double deltaDegrees = adjustPercent * CorrectionInchesPerSecond *
+            double deltaDegrees = adjustPercent * CorrectionTicsPerSecond *
                     Robot.kDefaultPeriod;
-            setTargetInches(targetInches + deltaDegrees);
+            setTargetTics(targetTics + deltaDegrees);
         }, this);
     }
 
     public Command updateCommand(ElevatorState elevatorState) {
         return Commands.run(() -> {
-            setTargetInches(elevatorState.getHeigtInches());
+            setTargetTics(elevatorState.getHeigtInches());
         }, this);
     }
 
+    // Manual Testing --------------------------------------------
+
     // Set the speed of the motor to the global outtake variable
     private void setElevator() {
-        leftMotor.set(-speed);
+        rightMotor.set(-speed);
         System.out.println("++++++++++++++++++++++=Speed: " + speed);
 
     }
@@ -150,4 +115,6 @@ public class Elevator extends SubsystemBase {
     public Command updateSpeed() {
         return Commands.runOnce(() -> speed = -0.1);
     }
+    // -------------------------------------------------------------------
+
 }
