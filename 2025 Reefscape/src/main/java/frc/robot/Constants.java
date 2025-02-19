@@ -37,6 +37,8 @@ public final class Constants {
 
     public static class Outtake {
         public static final int MOTOR_ID = 15;
+
+        public static final int SENSOR_ID = 1;
     }
 
     public static class IntakeRoller {

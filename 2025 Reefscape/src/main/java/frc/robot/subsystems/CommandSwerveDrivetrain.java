@@ -37,8 +37,9 @@ import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
  * Subsystem so it can easily be used in command-based projects.
  */
 public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem {
-    // private static final CommandSwerveDrivetrain instance =
-    // TunerConstants.DriveTrain;
+    // private static final TunerConstants tunerConstants = new TunerConstants();
+    // private static final CommandSwerveDrivetrain instance = new
+    // CommandSwerveDrivetrain();
     // TODO fix lines 43-48 to get rid of the error in AutoPlace (get() issue)
     // private static final CommandSwerveDrivetrain instance = new
     // CommandSwerveDrivetrain(

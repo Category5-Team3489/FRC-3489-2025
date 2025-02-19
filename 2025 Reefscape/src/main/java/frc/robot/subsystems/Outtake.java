@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -15,6 +16,7 @@ public class Outtake extends SubsystemBase {
 
     // Neo 550
     private final SparkMax motor = new SparkMax(Constants.Outtake.MOTOR_ID, MotorType.kBrushless);
+    private final DigitalInput sesor = new DigitalInput(Constants.Outtake.SENSOR_ID);
 
     private double speed = 0;
 

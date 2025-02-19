@@ -19,8 +19,8 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    driverController.a().onTrue(vortexTesting.runMotor(0.15));
-    driverController.b().onTrue(vortexTesting.runMotor(1));
+    driverController.a().onTrue(vortexTesting.runMotor(0.25));
+    driverController.b().onTrue(vortexTesting.runMotor(0.50));
     driverController.x().onTrue(vortexTesting.runMotor(0));
 
   }
