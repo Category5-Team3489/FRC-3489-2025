@@ -1,7 +1,7 @@
 package frc.robot.subsystems.intake;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkFlex;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -14,7 +14,7 @@ public class IntakeRoller extends SubsystemBase {
     private static final IntakeRoller instance = new IntakeRoller();
 
     // Neo 550
-    private final SparkMax motor = new SparkMax(Constants.IntakeRoller.MOTOR_ID, MotorType.kBrushless);
+    private final SparkFlex motor = new SparkFlex(Constants.IntakeRoller.MOTOR_ID, MotorType.kBrushless);
 
     private double speed = 0;
 

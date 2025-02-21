@@ -39,7 +39,7 @@ public class Elevator extends SubsystemBase {
     // to make the motor rotate once (gear-ratio)
     private static final double gearRatio = 3;
 
-    private final int sparkTicsPerRotation = 4096;
+    private final int sparkTicsPerRotation = 4096; // 2048 Cycles per Revolution (8192 Counts per Revolution)
 
     // TODO Measure (HeightChange from 1 rotation of final)
     // Height (in Tics) = Tics * Gear ratio * HeightChange from 1 rotation of final
@@ -69,7 +69,7 @@ public class Elevator extends SubsystemBase {
     @Override
     public void periodic() {
         // setElevator();
-        setHeight(); // This method sets the elevator without checking
+        // setHeight(); // This method sets the elevator without checking
         System.out.println("*******************target position: " + targetTics);
         System.out.println("*******************units of rotations?: " + rightMotor.getAbsoluteEncoder().getPosition());
     }
@@ -115,6 +115,13 @@ public class Elevator extends SubsystemBase {
     public Command updateSpeed() {
         return Commands.runOnce(() -> speed = -0.1);
     }
+
     // -------------------------------------------------------------------
+    // Other Manual-------------------------------------------------------
+    public Command manualJoystick(double joystick) {
+        return Commands.run(() -> {
+            rightMotor.set(joystick * 0.3);
+        });
+    }
 
 }
