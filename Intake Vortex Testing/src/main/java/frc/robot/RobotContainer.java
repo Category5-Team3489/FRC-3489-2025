@@ -10,7 +10,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
 
-  private final VortexTesting vortexTesting = VortexTesting.get();
+  // private final VortexTesting vortexTesting = VortexTesting.get();
+  private final CANrangeTesting canRangeTesting = CANrangeTesting.get();
 
   private final CommandXboxController driverController = new CommandXboxController(0);
 
@@ -19,9 +20,18 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    driverController.a().onTrue(vortexTesting.runMotor(-0.15));
-    driverController.b().onTrue(vortexTesting.runMotor(-0.70));
-    driverController.x().onTrue(vortexTesting.runMotor(0));
+    // driverController.a().onTrue(vortexTesting.runMotor(-0.15));
+    // driverController.b().onTrue(vortexTesting.runMotor(-0.70));
+    // driverController.x().onTrue(vortexTesting.runMotor(0));
+
+    // canRangeTesting.setDefaultCommand(Commands.run(() ->
+    // canRangeTesting.setIntake()));
+
+    driverController.y().onTrue(canRangeTesting.updateSpeed(-0.15, false));
+
+    driverController.b().onTrue(canRangeTesting.updateSpeed(-0.15, true));
+
+    driverController.a().onTrue(canRangeTesting.updateSpeed(-0.15, true));
 
   }
 

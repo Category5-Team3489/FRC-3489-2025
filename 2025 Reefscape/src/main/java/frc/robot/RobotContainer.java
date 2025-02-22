@@ -98,28 +98,30 @@ public class RobotContainer {
         }
 
         private void configureBindings() {
-                // Testing Buttons--------------------------------------------------------------
-                manipulatorController.x().onTrue(index.updateSpeed(IndexState.Intake));
-                manipulatorController.b().onTrue(index.updateSpeed(IndexState.Outtake));
-                manipulatorController.a().onTrue(index.updateSpeed(IndexState.Stop));
+                // manipulatorController.a().onTrue(intakeRoller.updateSpeed(IntakeRollerState.IntakeCollect,
+                // true));
 
-                // manipulatorController.y().onTrue(elevator.manualJoystick(0));
+                // // *************** INTAKE RIB ROLLER ***********************
+                // manipulatorController.y().onTrue(intakeRoller.updateSpeed(-0.15, false));
 
-                // manipulatorController.axisLessThan(5, -0.1).whileTrue(
-                // elevator.manualJoystick(1));
-                // manipulatorController.axisGreaterThan(5, 0.1).whileTrue(
-                // elevator.manualJoystick(-1));
+                // manipulatorController.b().onTrue(canRangeTesting.updateSpeed(-0.15, true));
 
-                manipulatorController.rightBumper().onTrue(outtake.updateSpeed(OuttakeState.Intake));
-                manipulatorController.leftBumper().onTrue(outtake.updateSpeed(OuttakeState.Stop));
+                // manipulatorController.a().onTrue(canRangeTesting.updateSpeed(-0.15, true));
+                // // ***************************************************************
 
-                // -------------------------------------------------------------------------------
+                // //!!!!!!!!!!!!!!!!!!!!!!!!!!!! ELEVATOR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                manipulatorController.y().onTrue(elevator.manualJoystick(0));
 
+                manipulatorController.axisLessThan(5, -0.1).whileTrue(elevator.manualJoystick(1));
+                manipulatorController.axisGreaterThan(5, 0.1).whileTrue(elevator.manualJoystick(-1));
+                // //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+                // -----------------BINDING METHODS-----------------------------------------
                 // getDrivetrainBindings();
-                // TODO Uncomment after testing
                 // getElevatorBindings();
-                // getOuttakeBindings();
+                getOuttakeBindings(); // RUN = LB; STOP = RB
                 // getIntakeBindings();
+                getIndexBindings(); // RUN = START; STOP = BACK
 
         }
 
@@ -187,13 +189,18 @@ public class RobotContainer {
 
         private void getOuttakeBindings() {
                 manipulatorController.leftBumper().onTrue(outtake.updateSpeed(OuttakeState.Intake));
-                manipulatorController.start().onTrue(outtake.updateSpeed(OuttakeState.Stop));
+                manipulatorController.rightBumper().onTrue(outtake.updateSpeed(OuttakeState.Stop));
         }
 
         private void getIntakeBindings() {
                 manipulatorController.rightBumper()
                                 .onTrue(intakeRoller.updateSpeed(IntakeRollerState.IntakeCollect, false));
                 manipulatorController.back().onTrue(intakeRoller.updateSpeed(IntakeRollerState.Stop, false));
+        }
+
+        private void getIndexBindings() {
+                manipulatorController.start().onTrue(index.updateSpeed(IndexState.Intake));
+                manipulatorController.back().onTrue(index.updateSpeed(IndexState.Stop));
         }
 
         public Command getAutonomousCommand() {

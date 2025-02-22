@@ -70,7 +70,7 @@ public class Elevator extends SubsystemBase {
     public void periodic() {
         // setElevator();
         // setHeight(); // This method sets the elevator without checking
-        System.out.println("*******************target position: " + targetTics);
+        // System.out.println("*******************target position: " + targetTics);
         System.out.println("*******************units of rotations?: " + rightMotor.getAbsoluteEncoder().getPosition());
     }
 
@@ -120,7 +120,7 @@ public class Elevator extends SubsystemBase {
     // Other Manual-------------------------------------------------------
     public Command manualJoystick(double joystick) {
         return Commands.run(() -> {
-            rightMotor.set(joystick * 0.3);
+            rightMotor.set(joystick * 0.5);
         });
     }
 
