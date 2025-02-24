@@ -1,8 +1,7 @@
 package frc.robot.enums;
 
 public enum ElevatorState {
-    // Test the numbers
-
+    // TODO update these numbers 
     Down(0),
     L1(18),
     L2(.03),

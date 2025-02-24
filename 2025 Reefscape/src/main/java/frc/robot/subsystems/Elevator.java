@@ -1,24 +1,22 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.enums.ElevatorState;
-import frc.robot.enums.OuttakeState;
 
 public class Elevator extends SubsystemBase {
 
@@ -31,15 +29,17 @@ public class Elevator extends SubsystemBase {
 
     private final SparkClosedLoopController pidControllerRight = rightMotor.getClosedLoopController();
 
-    // TODO Make sure we dont actually need to use the encoder in the code
-    private final AbsoluteEncoder encoder = rightMotor.getAbsoluteEncoder();
 
-    private static final double CorrectionTicsPerSecond = 4096;
+    // TODO Make sure we dont actually need to use the encoder in the code
+    // private final AbsoluteEncoder encoder = rightMotor.getAbsoluteEncoder();
+    private final SparkAbsoluteEncoder encoder = rightMotor.getAbsoluteEncoder();
+
+    private static final double CorrectionTicsPerSecond = 8192; //4096
 
     // to make the motor rotate once (gear-ratio)
     private static final double gearRatio = 3;
 
-    private final int sparkTicsPerRotation = 4096; // 2048 Cycles per Revolution (8192 Counts per Revolution)
+    private final int sparkTicsPerRotation = 8192; // 2048 Cycles per Revolution (8192 Counts per Revolution)
 
     // TODO Measure (HeightChange from 1 rotation of final)
     // Height (in Tics) = Tics * Gear ratio * HeightChange from 1 rotation of final
@@ -54,24 +54,18 @@ public class Elevator extends SubsystemBase {
         return instance;
     }
 
-    private Elevator() {
-        Shuffleboard.getTab("Main")
-                .addDouble("Right Encoder", () -> encoder.getPosition())
-                .withSize(1, 1)
-                .withPosition(7, 3);
-
-        Shuffleboard.getTab("Main")
-                .addDouble("Target Tics", () -> targetTics)
-                .withSize(1, 1)
-                .withPosition(6, 3);
-    }
 
     @Override
     public void periodic() {
         // setElevator();
         // setHeight(); // This method sets the elevator without checking
         // System.out.println("*******************target position: " + targetTics);
+        SmartDashboard.putNumber("Elevator Encoder", getEncoder());
         System.out.println("*******************units of rotations?: " + rightMotor.getAbsoluteEncoder().getPosition());
+    }
+
+    private double getEncoder() {
+        return encoder.getPosition();
     }
 
     // Move the elevator to the correct height
@@ -116,12 +110,13 @@ public class Elevator extends SubsystemBase {
         return Commands.runOnce(() -> speed = -0.1);
     }
 
-    // -------------------------------------------------------------------
     // Other Manual-------------------------------------------------------
     public Command manualJoystick(double joystick) {
         return Commands.run(() -> {
             rightMotor.set(joystick * 0.5);
+            System.out.println("RIGHT MOTOR SPEED: " + joystick*0.5);
         });
     }
+        // -------------------------------------------------------------------
 
 }
