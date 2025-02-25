@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -24,17 +25,18 @@ public class Elevator extends SubsystemBase {
 
     // TODO Add the left motor as a follower for right motor in Rev client
     // TODO Add the pid values for the right motor in the rev client
-    private final SparkMax rightMotor = new SparkMax(Constants.Elevator.RIGHT_MOTOR_ID, MotorType.kBrushless);
-    private final SparkMax leftMotor = new SparkMax(Constants.Elevator.LEFT_MOTOR_ID, MotorType.kBrushless);
+    private final SparkMax rightMotor;
+    private final SparkMax leftMotor;
 
-    private final SparkClosedLoopController pidControllerRight = rightMotor.getClosedLoopController();
+    private final RelativeEncoder encoder;
 
+    private final SparkClosedLoopController pidControllerRight;
 
     // TODO Make sure we dont actually need to use the encoder in the code
     // private final AbsoluteEncoder encoder = rightMotor.getAbsoluteEncoder();
-    private final SparkAbsoluteEncoder encoder = rightMotor.getAbsoluteEncoder();
+    // private final SparkAbsoluteEncoder encoder = rightMotor.getAbsoluteEncoder();
 
-    private static final double CorrectionTicsPerSecond = 8192; //4096
+    private static final double CorrectionTicsPerSecond = 8192; // 4096
 
     // to make the motor rotate once (gear-ratio)
     private static final double gearRatio = 3;
@@ -54,6 +56,19 @@ public class Elevator extends SubsystemBase {
         return instance;
     }
 
+    public Elevator() {
+        rightMotor = new SparkMax(Constants.Elevator.RIGHT_MOTOR_ID, MotorType.kBrushless);
+        leftMotor = new SparkMax(Constants.Elevator.LEFT_MOTOR_ID, MotorType.kBrushless);
+
+        pidControllerRight = rightMotor.getClosedLoopController();
+
+        encoder = rightMotor.getEncoder();
+
+        Shuffleboard.getTab("Main")
+                .addDouble("Right Encoder", () -> encoder.getPosition())
+                .withSize(1, 1)
+                .withPosition(7, 3);
+    }
 
     @Override
     public void periodic() {
@@ -61,11 +76,21 @@ public class Elevator extends SubsystemBase {
         // setHeight(); // This method sets the elevator without checking
         // System.out.println("*******************target position: " + targetTics);
         SmartDashboard.putNumber("Elevator Encoder", getEncoder());
-        System.out.println("*******************units of rotations?: " + rightMotor.getAbsoluteEncoder().getPosition());
+        System.out.println("Endoder: " + encoder.getPosition());
+        setHeight();
+        // System.out.println("Endoder: " +
+        // leftMotor.getAbsoluteEncoder().getPosition());
+
+        // System.out.println("*******************units of rotations?: " +
+        // rightMotor.getAbsoluteEncoder().getPosition());
     }
 
     private double getEncoder() {
         return encoder.getPosition();
+    }
+
+    public void printEncoder() {
+        System.out.println("Endoder: " + encoder.getPosition());
     }
 
     // Move the elevator to the correct height
@@ -74,12 +99,13 @@ public class Elevator extends SubsystemBase {
         double targetRotations = (targetTics * gearRatio) / sparkTicsPerRotation;
         pidControllerRight.setReference(targetRotations, ControlType.kPosition,
                 ClosedLoopSlot.kSlot0);
-        System.out.println("**************************************Target Height: " + targetTics);
+        System.out.println("**************************************target rotation: " + targetRotations);
     }
 
     private void setTargetTics(double positionHeight) {
         targetTics = MathUtil.clamp(positionHeight,
                 ElevatorState.Down.getHeigtInches(), ElevatorState.Up.getHeigtInches());
+        // System.out.println("pos: " + positionHeight);
     }
 
     public Command adjustManualHeight(double adjustPercent) {
@@ -112,11 +138,11 @@ public class Elevator extends SubsystemBase {
 
     // Other Manual-------------------------------------------------------
     public Command manualJoystick(double joystick) {
-        return Commands.run(() -> {
+        return Commands.runOnce(() -> {
             rightMotor.set(joystick * 0.5);
-            System.out.println("RIGHT MOTOR SPEED: " + joystick*0.5);
+            // System.out.println("RIGHT MOTOR SPEED: " + joystick * 0.5);
         });
     }
-        // -------------------------------------------------------------------
+    // -------------------------------------------------------------------
 
 }

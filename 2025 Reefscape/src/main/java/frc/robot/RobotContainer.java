@@ -110,14 +110,21 @@ public class RobotContainer {
                 // // ***************************************************************
 
                 // //!!!!!!!!!!!!!!!!!!!!!!!!!!!! ELEVATOR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                manipulatorController.y().onTrue(elevator.manualJoystick(0));
+                // manipulatorController.y().onTrue(elevator.manualJoystick(0));
 
-                manipulatorController.axisLessThan(5, -0.1).whileTrue(elevator.manualJoystick(1));
-                manipulatorController.axisGreaterThan(5, 0.1).whileTrue(elevator.manualJoystick(-1));
+                // manipulatorController.axisLessThan(5,
+                // -0.1).whileTrue(elevator.manualJoystick(1));
+                // manipulatorController.axisGreaterThan(5,
+                // 0.1).whileTrue(elevator.manualJoystick(-1));
+
+                manipulatorController.y().onTrue(elevator.updateCommand(ElevatorState.L1));
+
+                // manipulatorController.a().onTrue(elevator.updateCommand(ElevatorState.L2));
+
                 // //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
                 // -----------------BINDING METHODS-----------------------------------------
-                // getDrivetrainBindings();
+                getDrivetrainBindings();
                 // getElevatorBindings();
                 getOuttakeBindings(); // RUN = LB; STOP = RB
                 // getIntakeBindings();

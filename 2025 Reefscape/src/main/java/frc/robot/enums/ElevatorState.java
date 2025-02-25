@@ -1,10 +1,10 @@
 package frc.robot.enums;
 
 public enum ElevatorState {
-    // TODO update these numbers 
+    // TODO update these numbers
     Down(0),
-    L1(18),
-    L2(.03),
+    L1(2),
+    L2(27),
     L3(48),
     Up(55);
 
