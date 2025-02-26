@@ -41,7 +41,7 @@ public class Elevator extends SubsystemBase {
     // to make the motor rotate once (gear-ratio)
     private static final double gearRatio = 3;
 
-    private final int sparkTicsPerRotation = 8192; // 2048 Cycles per Revolution (8192 Counts per Revolution)
+    private final int sparkTicsPerRotation = 4096; // 2048 Cycles per Revolution (8192 Counts per Revolution)
 
     // TODO Measure (HeightChange from 1 rotation of final)
     // Height (in Tics) = Tics * Gear ratio * HeightChange from 1 rotation of final
@@ -77,7 +77,7 @@ public class Elevator extends SubsystemBase {
         // System.out.println("*******************target position: " + targetTics);
         SmartDashboard.putNumber("Elevator Encoder", getEncoder());
         System.out.println("Endoder: " + encoder.getPosition());
-        setHeight();
+        // setHeight();
         // System.out.println("Endoder: " +
         // leftMotor.getAbsoluteEncoder().getPosition());
 
@@ -96,7 +96,12 @@ public class Elevator extends SubsystemBase {
     // Move the elevator to the correct height
     private void setHeight() {
         setTargetTics(targetTics);
-        double targetRotations = (targetTics * gearRatio) / sparkTicsPerRotation;
+        // double targetRotations = (targetTics * gearRatio) / sparkTicsPerRotation;
+        // //Through Bore Math
+        // double targetRotations = (targetTics / sparkTicsPerRotation); // Built in
+        // encoder
+        double targetRotations = 0; // 8.8
+
         pidControllerRight.setReference(targetRotations, ControlType.kPosition,
                 ClosedLoopSlot.kSlot0);
         System.out.println("**************************************target rotation: " + targetRotations);
