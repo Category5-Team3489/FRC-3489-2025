@@ -51,6 +51,8 @@ public class IntakeRoller extends SubsystemBase {
     public void periodic() {
         setIntake();
         checkSensor();
+        System.out.println("________________________________" + returnRange());
+
     }
 
     // Set the speed of the motor to the global intake variable
@@ -63,6 +65,7 @@ public class IntakeRoller extends SubsystemBase {
     private void checkSensor() {
         if (checkSensor) {
             double sensorValue = returnRange();
+            System.out.println("________________________________" + CANrange.getDistance());
             if (sensorValue <= Constants.IntakeRoller.SENSOR_RANGE) { // TODO Test/Update distance constant
                 speed = IntakeRollerState.Stop.getSpeedPercent();
             }
