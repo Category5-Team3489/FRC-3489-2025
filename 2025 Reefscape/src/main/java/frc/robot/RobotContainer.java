@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 // import frc.robot.commands.IntakeCommand;
 import frc.robot.enums.ElevatorState;
 import frc.robot.enums.IndexState;
+import frc.robot.enums.IntakeExtentionState;
 import frc.robot.enums.IntakeRollerState;
 import frc.robot.enums.OuttakeState;
 import frc.robot.generated.TunerConstants;
@@ -102,11 +103,30 @@ public class RobotContainer {
                 // true));
 
                 // // *************** INTAKE RIB ROLLER ***********************
-                // manipulatorController.y().onTrue(intakeRoller.updateSpeed(-0.15, false));
+                // manipulatorController.a().onTrue(intakeRoller.updateSpeed(IntakeRollerState.IntakeCollect,
+                // false));
+
+                // manipulatorController.y().onTrue(intakeRoller.updateSpeed(IntakeRollerState.IntakeCollect,
+                // true));
+
+                manipulatorController.a().onTrue(intakeRoller.updateSpeed(IntakeRollerState.Stop, true));
+
+                manipulatorController.b().onTrue(Commands.runOnce(() -> intakeRoller.testing()));
 
                 // manipulatorController.b().onTrue(canRangeTesting.updateSpeed(-0.15, true));
 
                 // manipulatorController.a().onTrue(canRangeTesting.updateSpeed(-0.15, true));
+                // // ***************************************************************
+                // manipulatorController.a().onTrue(intakeExtention.manualJoystick(1));
+
+                // manipulatorController.b().onTrue(intakeExtention.manualJoystick(-1));
+
+                manipulatorController.x().onTrue(
+                                intakeExtention.updateCommand(() -> IntakeExtentionState.HomePosition.getValue()));
+
+                manipulatorController.y().onTrue(
+                                intakeExtention.updateCommand(() -> IntakeExtentionState.IntakePosition.getValue()));
+
                 // // ***************************************************************
 
                 // //!!!!!!!!!!!!!!!!!!!!!!!!!!!! ELEVATOR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -127,7 +147,7 @@ public class RobotContainer {
                 // getDrivetrainBindings();
                 // getElevatorBindings();
                 // getOuttakeBindings(); // RUN = LB; STOP = RB
-                getIntakeBindings();
+                // getIntakeBindings();
                 // getIndexBindings(); // RUN = START; STOP = BACK
 
         }

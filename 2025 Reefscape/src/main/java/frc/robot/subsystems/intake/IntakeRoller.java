@@ -32,6 +32,10 @@ public class IntakeRoller extends SubsystemBase {
         CANrange.getConfigurator().apply(configs); // Write these configs to the CANrange
     }
 
+    public void testing() {
+        motor.set(IntakeRollerState.IntakeTransfer.getSpeedPercent());
+    }
+
     public double returnRange() {
         // Get Distance
         var distance = CANrange.getDistance();
@@ -41,8 +45,8 @@ public class IntakeRoller extends SubsystemBase {
         double distanceDouble = currentDistance.getValueAsDouble();
 
         // Refresh and print these values
-        System.out.println("Distance is " + distance.refresh().toString());
-        System.out.println("+++++++Double Distance is " + currentDistance.toString());
+        // System.out.println("+++++++Double Distance is " +
+        // currentDistance.toString());
 
         return distanceDouble; // TODO test that this returns the correct value with robot!
     }
@@ -65,9 +69,13 @@ public class IntakeRoller extends SubsystemBase {
     private void checkSensor() {
         if (checkSensor) {
             double sensorValue = returnRange();
-            System.out.println("________________________________" + CANrange.getDistance());
+            // System.out.println("________________________________" +
+            // CANrange.getDistance());
             if (sensorValue <= Constants.IntakeRoller.SENSOR_RANGE) { // TODO Test/Update distance constant
                 speed = IntakeRollerState.Stop.getSpeedPercent();
+                // System.out.println("STOP____________________________________________");
+                checkSensor = false;
+
             }
         }
     }
@@ -75,6 +83,8 @@ public class IntakeRoller extends SubsystemBase {
     // Update the global intake speed variable based on the input enum
     public Command updateSpeed(IntakeRollerState state, boolean checkSensor) {
         this.checkSensor = checkSensor;
+        // System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!checkSensor:
+        // " + checkSensor);
         return Commands.runOnce(() -> speed = state.getSpeedPercent());
     }
 

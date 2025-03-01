@@ -76,8 +76,8 @@ public class Elevator extends SubsystemBase {
         // setHeight(); // This method sets the elevator without checking
         // System.out.println("*******************target position: " + targetTics);
         SmartDashboard.putNumber("Elevator Encoder", getEncoder());
-        System.out.println("Endoder: " + encoder.getPosition());
-        // setHeight();
+        // TODO TESTING: System.out.println("Endoder: " + encoder.getPosition());
+        setHeight();
         // System.out.println("Endoder: " +
         // leftMotor.getAbsoluteEncoder().getPosition());
 
@@ -100,11 +100,13 @@ public class Elevator extends SubsystemBase {
         // //Through Bore Math
         // double targetRotations = (targetTics / sparkTicsPerRotation); // Built in
         // encoder
-        double targetRotations = 0; // 8.8
+        double targetRotations = ElevatorState.Down.getHeigtInches(); // 8.8
 
         pidControllerRight.setReference(targetRotations, ControlType.kPosition,
                 ClosedLoopSlot.kSlot0);
-        System.out.println("**************************************target rotation: " + targetRotations);
+        // TODO TESTING:
+        // System.out.println("**************************************target rotation: "
+        // + targetRotations);
     }
 
     private void setTargetTics(double positionHeight) {

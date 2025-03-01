@@ -2,8 +2,8 @@ package frc.robot.enums;
 
 public enum IntakeExtentionState {
     // TODO Update these values
-    HomePosition(0),
-    IntakePosition(50);
+    HomePosition(0.28),
+    IntakePosition(-9);
 
     // TODO Update this name
     private final double value;

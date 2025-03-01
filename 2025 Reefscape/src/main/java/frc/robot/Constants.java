@@ -44,10 +44,10 @@ public final class Constants {
     public static class IntakeRoller {
         public static final int MOTOR_ID = 10;
 
-        public static final int SENSOR_ID = 20;
+        public static final int SENSOR_ID = 0;
 
         // TODO: Check - Not sure if this is correct
-        public static final String CAN_RANGE_CAN_BUS = "canivore";
+        public static final String CAN_RANGE_CAN_BUS = "rio";
 
         public static final double SENSOR_RANGE = 0.5;
     }

@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.7541773093575745,
-        "y": 7.2643037059650535
+        "x": 7.792702642610593,
+        "y": 7.475801537183554
       },
       "isLocked": false,
       "linkedName": "Far Left Start"
     },
     {
       "anchor": {
-        "x": 5.26550019210811,
-        "y": 5.061131722395004
+        "x": 5.111481735997246,
+        "y": 7.489220667797889
       },
       "prevControl": {
-        "x": 5.651813723889127,
-        "y": 5.4947161609707065
+        "x": 5.391365735363289,
+        "y": 7.487464417521278
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Score 1B"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -42,10 +42,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -119.82284040604654
+    "rotation": 180.0
   },
   "reversed": false,
-  "folder": "(1) Far Left to 1B",
+  "folder": "New Folder",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0
