@@ -22,7 +22,7 @@ public class IntakeRoller extends SubsystemBase {
     CANrangeConfiguration configs = new CANrangeConfiguration(); // Configure the CANrange for basic use
 
     private double speed = 0; // Target Speed of Intake
-    private boolean checkSensor = false; // Should the motor stop if the Sensor is triggered?
+    public boolean checkSensor = true; // Should the motor stop if the Sensor is triggered?
 
     public static IntakeRoller get() {
         return instance;
@@ -55,6 +55,11 @@ public class IntakeRoller extends SubsystemBase {
     public void periodic() {
         setIntake();
         checkSensor();
+
+        // TODO TEST THIS
+        // System.out.println("----------------------------------------------------SENSOR:"
+        // + CANrange.getIsDetected());
+
         System.out.println("________________________________" + returnRange());
 
     }
@@ -69,12 +74,12 @@ public class IntakeRoller extends SubsystemBase {
     private void checkSensor() {
         if (checkSensor) {
             double sensorValue = returnRange();
-            // System.out.println("________________________________" +
-            // CANrange.getDistance());
+            System.out.println("________________________________" + CANrange.getDistance());
             if (sensorValue <= Constants.IntakeRoller.SENSOR_RANGE) { // TODO Test/Update distance constant
                 speed = IntakeRollerState.Stop.getSpeedPercent();
-                // System.out.println("STOP____________________________________________");
-                checkSensor = false;
+                System.out.println("STOP____________________________________________");
+                // TODO DELETE!!
+                // checkSensor = false;
 
             }
         }
@@ -82,10 +87,14 @@ public class IntakeRoller extends SubsystemBase {
 
     // Update the global intake speed variable based on the input enum
     public Command updateSpeed(IntakeRollerState state, boolean checkSensor) {
-        this.checkSensor = checkSensor;
+        // this.checkSensor = checkSensor;
         // System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!checkSensor:
         // " + checkSensor);
         return Commands.runOnce(() -> speed = state.getSpeedPercent());
+    }
+
+    public Command setSpeedCommand() {
+        return Commands.runOnce(() -> motor.set(IntakeRollerState.IntakeTransfer.getSpeedPercent()), this);
     }
 
 }

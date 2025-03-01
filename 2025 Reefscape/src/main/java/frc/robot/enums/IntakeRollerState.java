@@ -1,7 +1,7 @@
 package frc.robot.enums;
 
 public enum IntakeRollerState {
-    IntakeCollect(-0.25),
+    IntakeCollect(-0.25), // -0.25
     IntakeTransfer(0.9),
     Outtake(-0.5),
     Stop(0);

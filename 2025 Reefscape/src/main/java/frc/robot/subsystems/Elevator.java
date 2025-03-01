@@ -74,9 +74,13 @@ public class Elevator extends SubsystemBase {
     public void periodic() {
         // setElevator();
         // setHeight(); // This method sets the elevator without checking
-        // System.out.println("*******************target position: " + targetTics);
+        System.out.println(
+                "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*******************target position: "
+                        + targetTics);
         SmartDashboard.putNumber("Elevator Encoder", getEncoder());
-        // TODO TESTING: System.out.println("Endoder: " + encoder.getPosition());
+        // // TODO TESTING:
+        System.out.println(
+                "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++Endoder: " + encoder.getPosition());
         setHeight();
         // System.out.println("Endoder: " +
         // leftMotor.getAbsoluteEncoder().getPosition());
@@ -90,7 +94,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public void printEncoder() {
-        System.out.println("Endoder: " + encoder.getPosition());
+        // System.out.println("Encoder: " + encoder.getPosition());
     }
 
     // Move the elevator to the correct height
@@ -100,13 +104,13 @@ public class Elevator extends SubsystemBase {
         // //Through Bore Math
         // double targetRotations = (targetTics / sparkTicsPerRotation); // Built in
         // encoder
-        double targetRotations = ElevatorState.Down.getHeigtInches(); // 8.8
-
-        pidControllerRight.setReference(targetRotations, ControlType.kPosition,
+        // double targetRotations = ElevatorState.Down.getHeigtInches(); // 8.8
+        // System.out.println("---------------------Target" + targetTics);
+        pidControllerRight.setReference(targetTics, ControlType.kPosition,
                 ClosedLoopSlot.kSlot0);
-        // TODO TESTING:
+        // // TODO TESTING:
         // System.out.println("**************************************target rotation: "
-        // + targetRotations);
+        // + targetTics);
     }
 
     private void setTargetTics(double positionHeight) {
@@ -131,25 +135,25 @@ public class Elevator extends SubsystemBase {
 
     // Manual Testing --------------------------------------------
 
-    // Set the speed of the motor to the global outtake variable
-    private void setElevator() {
-        rightMotor.set(-speed);
-        System.out.println("++++++++++++++++++++++=Speed: " + speed);
+    // // Set the speed of the motor to the global outtake variable
+    // private void setElevator() {
+    // rightMotor.set(-speed);
+    // System.out.println("++++++++++++++++++++++=Speed: " + speed);
 
-    }
+    // }
 
-    // Update the global outtake speed variable based on the input enum
-    public Command updateSpeed() {
-        return Commands.runOnce(() -> speed = -0.1);
-    }
+    // // Update the global outtake speed variable based on the input enum
+    // public Command updateSpeed() {
+    // return Commands.runOnce(() -> speed = -0.1);
+    // }
 
-    // Other Manual-------------------------------------------------------
-    public Command manualJoystick(double joystick) {
-        return Commands.runOnce(() -> {
-            rightMotor.set(joystick * 0.5);
-            // System.out.println("RIGHT MOTOR SPEED: " + joystick * 0.5);
-        });
-    }
-    // -------------------------------------------------------------------
+    // // Other Manual-------------------------------------------------------
+    // public Command manualJoystick(double joystick) {
+    // return Commands.runOnce(() -> {
+    // rightMotor.set(joystick * 0.5);
+    // // System.out.println("RIGHT MOTOR SPEED: " + joystick * 0.5);
+    // });
+    // }
+    // // -------------------------------------------------------------------
 
 }

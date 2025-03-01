@@ -24,8 +24,9 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 // import frc.robot.commands.IntakeCommand;
 import frc.robot.enums.ElevatorState;
 import frc.robot.enums.IndexState;
-import frc.robot.enums.IntakeExtentionState;
 import frc.robot.enums.IntakeRollerState;
+// import frc.robot.enums.IntakeExtentionState;
+// import frc.robot.enums.IntakeRollerState;
 import frc.robot.enums.OuttakeState;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -103,31 +104,43 @@ public class RobotContainer {
                 // true));
 
                 // // *************** INTAKE RIB ROLLER ***********************
-                // manipulatorController.a().onTrue(intakeRoller.updateSpeed(IntakeRollerState.IntakeCollect,
-                // false));
+                // manipulatorController.start().onTrue(intakeRoller.updateSpeed(IntakeRollerState.IntakeCollect,
+                // true));
 
                 // manipulatorController.y().onTrue(intakeRoller.updateSpeed(IntakeRollerState.IntakeCollect,
                 // true));
 
-                manipulatorController.a().onTrue(intakeRoller.updateSpeed(IntakeRollerState.Stop, true));
+                // manipulatorController.a().onTrue(intakeRoller.updateSpeed(IntakeRollerState.Stop,
+                // true));
 
-                manipulatorController.b().onTrue(Commands.runOnce(() -> intakeRoller.testing()));
+                // manipulatorController.b().onTrue(Commands.runOnce(() ->
+                // intakeRoller.testing()));
 
                 // manipulatorController.b().onTrue(canRangeTesting.updateSpeed(-0.15, true));
 
-                // manipulatorController.a().onTrue(canRangeTesting.updateSpeed(-0.15, true));
+                // manipulatorController.a().onTrue(canRangeTesting.updateSpeed(-0.15, false));
                 // // ***************************************************************
                 // manipulatorController.a().onTrue(intakeExtention.manualJoystick(1));
 
                 // manipulatorController.b().onTrue(intakeExtention.manualJoystick(-1));
 
-                manipulatorController.x().onTrue(
-                                intakeExtention.updateCommand(() -> IntakeExtentionState.HomePosition.getValue()));
+                // manipulatorController.rightBumper().onTrue(
+                // intakeExtention.updateCommand(IntakeExtentionState.HomePosition));
 
-                manipulatorController.y().onTrue(
-                                intakeExtention.updateCommand(() -> IntakeExtentionState.IntakePosition.getValue()));
+                // manipulatorController.leftBumper().onTrue(
+                // intakeExtention.updateCommand(IntakeExtentionState.IntakePosition));
 
                 // // ***************************************************************
+
+                manipulatorController.rightBumper().onTrue(outtake.updateSpeed(OuttakeState.Outtake));
+
+                manipulatorController.back().onTrue(intakeRoller.updateSpeed(IntakeRollerState.IntakeCollect, true));
+
+                // manipulatorController.rightBumper().onTrue(outtake.updateSpeed(OuttakeState.Stop));
+
+                manipulatorController.leftBumper().onTrue(index.updateSpeed(IndexState.Stop));
+
+                manipulatorController.start().onTrue(index.updateSpeed(IndexState.Intake));
 
                 // //!!!!!!!!!!!!!!!!!!!!!!!!!!!! ELEVATOR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 // manipulatorController.y().onTrue(elevator.manualJoystick(0));
@@ -137,14 +150,19 @@ public class RobotContainer {
                 // manipulatorController.axisGreaterThan(5,
                 // 0.1).whileTrue(elevator.manualJoystick(-1));
 
-                // manipulatorController.y().onTrue(elevator.updateCommand(ElevatorState.L1));
+                // TODO Uncomment
+                manipulatorController.a().onTrue(elevator.updateCommand(ElevatorState.Down));
 
-                // manipulatorController.a().onTrue(elevator.updateCommand(ElevatorState.L2));
+                manipulatorController.x().onTrue(elevator.updateCommand(ElevatorState.L1));
+
+                manipulatorController.b().onTrue(elevator.updateCommand(ElevatorState.L2));
+
+                manipulatorController.y().onTrue(elevator.updateCommand(ElevatorState.L3));
 
                 // //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
                 // -----------------BINDING METHODS-----------------------------------------
-                // getDrivetrainBindings();
+                getDrivetrainBindings();
                 // getElevatorBindings();
                 // getOuttakeBindings(); // RUN = LB; STOP = RB
                 // getIntakeBindings();
@@ -172,29 +190,29 @@ public class RobotContainer {
                                 // negative X (left)
                                 ));
 
-                driverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
-                driverController.b().whileTrue(drivetrain.applyRequest(
-                                () -> point.withModuleDirection(
-                                                new Rotation2d(-driverController.getLeftY(),
-                                                                -driverController.getLeftX()))));
+                // driverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
+                // driverController.b().whileTrue(drivetrain.applyRequest(
+                // () -> point.withModuleDirection(
+                // new Rotation2d(-driverController.getLeftY(),
+                // -driverController.getLeftX()))));
 
-                driverController.pov(0)
-                                .whileTrue(drivetrain.applyRequest(
-                                                () -> forwardStraight.withVelocityX(0.5).withVelocityY(0)));
-                driverController.pov(180)
-                                .whileTrue(drivetrain.applyRequest(
-                                                () -> forwardStraight.withVelocityX(-0.5).withVelocityY(0)));
+                // driverController.pov(0)
+                // .whileTrue(drivetrain.applyRequest(
+                // () -> forwardStraight.withVelocityX(0.5).withVelocityY(0)));
+                // driverController.pov(180)
+                // .whileTrue(drivetrain.applyRequest(
+                // () -> forwardStraight.withVelocityX(-0.5).withVelocityY(0)));
 
                 // Run SysId routines when holding back/start and X/Y.
                 // Note that each routine should be run exactly once in a single log.
-                driverController.back().and(driverController.y())
-                                .whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-                driverController.back().and(driverController.x())
-                                .whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-                driverController.start().and(driverController.y())
-                                .whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-                driverController.start().and(driverController.x())
-                                .whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+                // driverController.back().and(driverController.y())
+                // .whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+                // driverController.back().and(driverController.x())
+                // .whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+                // driverController.start().and(driverController.y())
+                // .whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+                // driverController.start().and(driverController.x())
+                // .whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
                 // reset the field-centric heading on left bumper press
                 driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
@@ -220,9 +238,10 @@ public class RobotContainer {
         }
 
         private void getIntakeBindings() {
-                manipulatorController.start()
-                                .onTrue(intakeRoller.updateSpeed(IntakeRollerState.IntakeCollect, true));
-                manipulatorController.back().onTrue(intakeRoller.updateSpeed(IntakeRollerState.Stop, false));
+                // manipulatorController.start()
+                // .onTrue(intakeRoller.updateSpeed(IntakeRollerState.IntakeCollect, true));
+                // manipulatorController.back().onTrue(intakeRoller.updateSpeed(IntakeRollerState.Stop,
+                // false));
         }
 
         private void getIndexBindings() {

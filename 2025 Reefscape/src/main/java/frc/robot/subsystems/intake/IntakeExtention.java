@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.enums.ElevatorState;
 import frc.robot.enums.IntakeExtentionState;
 
 public class IntakeExtention extends SubsystemBase {
@@ -43,6 +44,8 @@ public class IntakeExtention extends SubsystemBase {
 
     private double targetTics = IntakeExtentionState.HomePosition.getValue();
 
+    private final IntakeRoller intakeRoller = IntakeRoller.get();
+
     public static IntakeExtention get() {
         return instance;
     }
@@ -55,7 +58,7 @@ public class IntakeExtention extends SubsystemBase {
     private void setPosition() {
         // double pos = -9;
         pidController.setReference(targetTics, ControlType.kPosition, ClosedLoopSlot.kSlot0);
-        System.out.println("INTAKE: Target Tics = " + targetTics);
+        System.out.println("Target Tics = " + targetTics);
         // System.out.println("**************************************target rotation: "
         // + pos);
 
@@ -63,7 +66,7 @@ public class IntakeExtention extends SubsystemBase {
 
     private void setTarget(double targetPosition) {
         targetTics = MathUtil.clamp(targetPosition,
-                IntakeExtentionState.HomePosition.getValue(), IntakeExtentionState.IntakePosition.getValue());
+                IntakeExtentionState.IntakePosition.getValue(), IntakeExtentionState.HomePosition.getValue());
     }
 
     public Command adjustManualHeight(double adjustPercent) {
@@ -73,17 +76,18 @@ public class IntakeExtention extends SubsystemBase {
         }, this);
     }
 
-    public Command updateCommand(DoubleSupplier angleDegreesSupplier) {
+    public Command updateCommand(IntakeExtentionState intakeExtentionState) {
         return Commands.run(() -> {
-            setTarget(angleDegreesSupplier.getAsDouble());
+            setTarget(intakeExtentionState.getValue());
             System.out.println("Intake Update Command");
         }, this);
     }
 
     @Override
     public void periodic() {
-        setPosition();
-        System.out.println("Endoder: " + encoder.getPosition());
+        // setPosition();
+        checksensor();
+        System.out.println("Encoder: " + encoder.getPosition());
 
     }
 
@@ -92,6 +96,14 @@ public class IntakeExtention extends SubsystemBase {
         return Commands.runOnce(() -> {
             motor.set(joystick * 0.3);
         });
+    }
+
+    private void checksensor() {
+        if (encoder.getPosition() >= 0.3) {
+            intakeRoller.checkSensor = false;
+        } else if (targetTics <= -9) {
+            intakeRoller.checkSensor = true;
+        }
     }
 
 }
