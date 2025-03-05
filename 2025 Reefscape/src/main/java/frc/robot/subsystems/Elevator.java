@@ -7,6 +7,7 @@ import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkMaxAlternateEncoder;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -28,7 +29,7 @@ public class Elevator extends SubsystemBase {
     private final SparkMax rightMotor;
     private final SparkMax leftMotor;
 
-    private final RelativeEncoder encoder;
+    // private final SparkMaxAlternateEncoder encoder;
 
     private final SparkClosedLoopController pidControllerRight;
 
@@ -62,36 +63,26 @@ public class Elevator extends SubsystemBase {
 
         pidControllerRight = rightMotor.getClosedLoopController();
 
-        encoder = rightMotor.getEncoder();
+        // encoder = rightMotor.();
 
-        Shuffleboard.getTab("Main")
-                .addDouble("Right Encoder", () -> encoder.getPosition())
-                .withSize(1, 1)
-                .withPosition(7, 3);
+        // Shuffleboard.getTab("Main")
+        // .addDouble("Right Encoder", () -> encoder.getPosition())
+        // .withSize(1, 1)
+        // .withPosition(7, 3);
     }
 
     @Override
     public void periodic() {
-        // setElevator();
-        // setHeight(); // This method sets the elevator without checking
-        System.out.println(
-                "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*******************target position: "
-                        + targetTics);
-        SmartDashboard.putNumber("Elevator Encoder", getEncoder());
-        // // TODO TESTING:
-        System.out.println(
-                "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++Endoder: " + encoder.getPosition());
+        // System.out.println("*******************target position: " + targetTics);
+        // System.out.println(
+        // "++++++++++++++++++++++++++++++++++Endoder: " +
+        // rightMotor.getAlternateEncoder().getPosition());
         setHeight();
-        // System.out.println("Endoder: " +
-        // leftMotor.getAbsoluteEncoder().getPosition());
-
-        // System.out.println("*******************units of rotations?: " +
-        // rightMotor.getAbsoluteEncoder().getPosition());
     }
 
-    private double getEncoder() {
-        return encoder.getPosition();
-    }
+    // private double getEncoder() {
+    // return encoder.getPosition();
+    // }
 
     public void printEncoder() {
         // System.out.println("Encoder: " + encoder.getPosition());
