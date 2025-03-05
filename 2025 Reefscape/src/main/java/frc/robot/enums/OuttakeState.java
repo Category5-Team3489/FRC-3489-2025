@@ -1,8 +1,8 @@
 package frc.robot.enums;
 
 public enum OuttakeState {
-    Outtake(0.25),
-    Intake(-0.25),
+    Outtake(-0.25),
+    Intake(0.25),
     Stop(0);
 
     private final double speedPercent;

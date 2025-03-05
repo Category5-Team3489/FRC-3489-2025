@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -10,9 +9,6 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkMaxAlternateEncoder;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -29,7 +25,7 @@ public class Elevator extends SubsystemBase {
     private final SparkMax rightMotor;
     private final SparkMax leftMotor;
 
-    // private final SparkMaxAlternateEncoder encoder;
+    // private final SparkAbsoluteEncoder throughBoreEncoder;
 
     private final SparkClosedLoopController pidControllerRight;
 
@@ -63,6 +59,8 @@ public class Elevator extends SubsystemBase {
 
         pidControllerRight = rightMotor.getClosedLoopController();
 
+        // throughBoreEncoder = rightMotor.getAbsoluteEncoder();
+
         // encoder = rightMotor.();
 
         // Shuffleboard.getTab("Main")
@@ -74,9 +72,8 @@ public class Elevator extends SubsystemBase {
     @Override
     public void periodic() {
         // System.out.println("*******************target position: " + targetTics);
-        // System.out.println(
-        // "++++++++++++++++++++++++++++++++++Endoder: " +
-        // rightMotor.getAlternateEncoder().getPosition());
+        // System.out.println("++++++++++++++++++++++++++++++++++Alternate Endoder: "
+        // + rightMotor.getAlternateEncoder().getPosition());
         setHeight();
     }
 

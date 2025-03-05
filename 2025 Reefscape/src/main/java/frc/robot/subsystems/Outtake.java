@@ -16,7 +16,7 @@ public class Outtake extends SubsystemBase {
 
     // Neo 550
     private final SparkMax motor = new SparkMax(Constants.Outtake.MOTOR_ID, MotorType.kBrushless);
-    private final DigitalInput sesor = new DigitalInput(Constants.Outtake.SENSOR_ID);
+    private final DigitalInput sensor = new DigitalInput(Constants.Outtake.SENSOR_ID);
 
     private double speed = 0;
 
@@ -26,7 +26,7 @@ public class Outtake extends SubsystemBase {
 
     @Override
     public void periodic() {
-        setOuttake();
+        // setOuttake();
     }
 
     // Set the speed of the motor to the global outtake variable
@@ -36,7 +36,12 @@ public class Outtake extends SubsystemBase {
 
     // Update the global outtake speed variable based on the input enum
     public Command updateSpeed(OuttakeState state) {
-        return Commands.runOnce(() -> speed = state.getSpeedPercent());
+        // return Commands.runOnce(() -> speed = state.getSpeedPercent());
+        return Commands.runOnce(() -> {
+            motor.set(state.getSpeedPercent());
+            speed = state.getSpeedPercent();
+        });
+
     }
 
 }

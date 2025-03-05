@@ -85,9 +85,9 @@ public class IntakeExtention extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // setPosition();
-        checksensor();
-        // System.out.println("Encoder: " + encoder.getPosition());
+        setPosition();
+        // checksensor();
+        System.out.println("Encoder: " + encoder.getPosition());
 
     }
 

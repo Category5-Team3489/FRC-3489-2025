@@ -74,11 +74,10 @@ public class IntakeRoller extends SubsystemBase {
     private void checkSensor() {
         if (checkSensor) {
             double sensorValue = returnRange();
-            // System.out.println("________________________________" +
-            // CANrange.getDistance());
+            System.out.println("________________________________" + CANrange.getDistance());
             if (sensorValue <= Constants.IntakeRoller.SENSOR_RANGE) { // TODO Test/Update distance constant
                 speed = IntakeRollerState.Stop.getSpeedPercent();
-                // System.out.println("STOP____________________________________________");
+                System.out.println("STOP____________________________________________");
                 // TODO DELETE!!
                 // checkSensor = false;
 
