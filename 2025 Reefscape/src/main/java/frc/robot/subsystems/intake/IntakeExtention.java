@@ -42,7 +42,7 @@ public class IntakeExtention extends SubsystemBase {
     // Intake is at its target angle if the error is within plus or minus this value
     private static final double AllowedErrorTics = 2.0;
 
-    private double targetTics = IntakeExtentionState.HomePosition.getValue();
+    private double targetTics = IntakeExtentionState.MatchHome.getValue();
 
     private final IntakeRoller intakeRoller = IntakeRoller.get();
 
@@ -66,7 +66,7 @@ public class IntakeExtention extends SubsystemBase {
 
     private void setTarget(double targetPosition) {
         targetTics = MathUtil.clamp(targetPosition,
-                IntakeExtentionState.IntakePosition.getValue(), IntakeExtentionState.HomePosition.getValue());
+                IntakeExtentionState.HomePosition.getValue(), IntakeExtentionState.IntakePosition.getValue());
     }
 
     public Command adjustManualHeight(double adjustPercent) {
@@ -79,7 +79,7 @@ public class IntakeExtention extends SubsystemBase {
     public Command updateCommand(IntakeExtentionState intakeExtentionState) {
         return Commands.run(() -> {
             setTarget(intakeExtentionState.getValue());
-            System.out.println("Intake Update Command");
+            // System.out.println("Intake Update Command");
         }, this);
     }
 
@@ -87,7 +87,7 @@ public class IntakeExtention extends SubsystemBase {
     public void periodic() {
         setPosition();
         // checksensor();
-        System.out.println("Encoder: " + encoder.getPosition());
+        // System.out.println("Encoder: " + encoder.getPosition());
 
     }
 

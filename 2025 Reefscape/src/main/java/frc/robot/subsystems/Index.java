@@ -17,9 +17,10 @@ public class Index extends SubsystemBase {
 
     // Neo 550
     private final SparkMax leftMotor = new SparkMax(Constants.Index.LEFT_MOTOR_ID, MotorType.kBrushless);
-    private final SparkMax rightMotor = new SparkMax(Constants.Index.RIGHT_MOTOR_ID, MotorType.kBrushless);
+    // private final SparkMax rightMotor = new
+    // SparkMax(Constants.Index.RIGHT_MOTOR_ID, MotorType.kBrushless);
 
-    private double rightSpeed = 0;
+    // private double rightSpeed = 0;
     private double leftSpeed = 0;
 
     public static Index get() {
@@ -28,21 +29,24 @@ public class Index extends SubsystemBase {
 
     @Override
     public void periodic() {
-        setIndex();
+        // setIndex();
     }
 
     // Set the speed of the motor to the global speed variables
     private void setIndex() {
         leftMotor.set(leftSpeed);
-        rightMotor.set(rightSpeed);
+        // rightMotor.set(rightSpeed);
 
     }
 
     // Update the global speed variables based on the input enums
     public Command updateSpeed(IndexState state) {
         return Commands.runOnce(() -> {
-            rightSpeed = state.getRightSpeedPercent();
+            // rightSpeed = state.getRightSpeedPercent();
             leftSpeed = state.getLeftSpeedPercent();
+
+            leftMotor.set(leftSpeed);
+            // rightMotor.set(rightSpeed);
         });
     }
 

@@ -44,7 +44,7 @@ public class RobotContainer {
     private final Elevator elevator = Elevator.get();
     // private final IntakeCommand intakeCommand = new IntakeCommand();
     private final Index index = Index.get();
-    // private final IntakeExtention intakeExtention = IntakeExtention.get();
+    private final IntakeExtention intakeExtention = IntakeExtention.get();
     private final IntakeRoller intakeRoller = IntakeRoller.get();
 
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top
@@ -102,64 +102,32 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-        manipulatorController.leftBumper().onTrue(intakeRoller.updateSpeed(IntakeRollerState.IntakeCollect, true));
+        // // ================= INTAKE ROLLER ===================================
+        manipulatorController.a().onTrue(intakeRoller.updateSpeed(IntakeRollerState.IntakeCollect, false));
+        // ======================================================================
 
-        // // *************** INTAKE RIB ROLLER ***********************
-        // manipulatorController.start().onTrue(intakeRoller.updateSpeed(IntakeRollerState.IntakeCollect,
-        // true));
+        // // ****************INTAKE EXTENTION****************************
+        manipulatorController.rightBumper().onTrue(intakeExtention.updateCommand(IntakeExtentionState.MatchHome));
 
-        // manipulatorController.y().onTrue(intakeRoller.updateSpeed(IntakeRollerState.IntakeCollect,
-        // true));
-
-        // manipulatorController.a().onTrue(intakeRoller.updateSpeed(IntakeRollerState.Stop,
-        // true));
-
-        // manipulatorController.b().onTrue(Commands.runOnce(() ->
-        // intakeRoller.testing()));
-
-        // manipulatorController.b().onTrue(canRangeTesting.updateSpeed(-0.15, true));
-
-        // manipulatorController.a().onTrue(canRangeTesting.updateSpeed(-0.15, false));
-        // // ***************************************************************
-        // manipulatorController.a().onTrue(intakeExtention.manualJoystick(1));
-
-        // manipulatorController.b().onTrue(intakeExtention.manualJoystick(-1));
-
-        // manipulatorController.rightBumper().onTrue(intakeExtention.updateCommand(IntakeExtentionState.HomePosition));
-
-        // manipulatorController.leftBumper().onTrue(intakeExtention.updateCommand(IntakeExtentionState.IntakePosition));
-
+        manipulatorController.leftBumper().onTrue(intakeExtention.updateCommand(IntakeExtentionState.IntakePosition));
         // // ***************************************************************
 
-        manipulatorController.rightBumper().onTrue(outtake.updateSpeed(OuttakeState.Outtake));
+        manipulatorController.x().onTrue(outtake.updateSpeed(OuttakeState.Outtake));
 
-        // manipulatorController.back().onTrue(intakeRoller.updateSpeed(IntakeRollerState.IntakeCollect,
-        // true));
-
-        // //
         // manipulatorController.rightBumper().onTrue(outtake.updateSpeed(OuttakeState.Stop));
 
         manipulatorController.back().onTrue(index.updateSpeed(IndexState.Stop));
 
-        manipulatorController.start().onTrue(index.updateSpeed(IndexState.Outtake));
+        manipulatorController.b().onTrue(index.updateSpeed(IndexState.Outtake));
 
-        // //!!!!!!!!!!!!!!!!!!!!!!!!!!!! ELEVATOR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // manipulatorController.y().onTrue(elevator.manualJoystick(0));
+        // //!!!!!!!!!!!!!!!!!!!!!!!!!!!! ELEVATOR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        // manipulatorController.a().onTrue(elevator.updateCommand(ElevatorState.Down));
 
-        // manipulatorController.axisLessThan(5,
-        // -0.1).whileTrue(elevator.manualJoystick(1));
-        // manipulatorController.axisGreaterThan(5,
-        // 0.1).whileTrue(elevator.manualJoystick(-1));
-
-        // TODO Uncomment
-        manipulatorController.a().onTrue(elevator.updateCommand(ElevatorState.Down));
-
-        manipulatorController.x().onTrue(elevator.updateCommand(ElevatorState.L1));
-
-        manipulatorController.b().onTrue(elevator.updateCommand(ElevatorState.L2));
+        // manipulatorController.x().onTrue(elevator.updateCommand(ElevatorState.L1));
 
         manipulatorController.y().onTrue(elevator.updateCommand(ElevatorState.L3));
 
+        // manipulatorController.y().onTrue(elevator.updateCommand(ElevatorState.L3));
         // //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         // -----------------BINDING METHODS-----------------------------------------
