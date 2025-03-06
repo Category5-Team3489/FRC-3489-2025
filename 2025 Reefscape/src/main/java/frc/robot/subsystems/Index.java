@@ -21,7 +21,7 @@ public class Index extends SubsystemBase {
     // SparkMax(Constants.Index.RIGHT_MOTOR_ID, MotorType.kBrushless);
 
     // private double rightSpeed = 0;
-    private double leftSpeed = 0;
+    public double speed = 0;
 
     public static Index get() {
         return instance;
@@ -34,7 +34,7 @@ public class Index extends SubsystemBase {
 
     // Set the speed of the motor to the global speed variables
     private void setIndex() {
-        leftMotor.set(leftSpeed);
+        leftMotor.set(speed);
         // rightMotor.set(rightSpeed);
 
     }
@@ -42,11 +42,9 @@ public class Index extends SubsystemBase {
     // Update the global speed variables based on the input enums
     public Command updateSpeed(IndexState state) {
         return Commands.runOnce(() -> {
-            // rightSpeed = state.getRightSpeedPercent();
-            leftSpeed = state.getLeftSpeedPercent();
+            speed = state.getSpeedPercent();
 
-            leftMotor.set(leftSpeed);
-            // rightMotor.set(rightSpeed);
+            leftMotor.set(speed);
         });
     }
 

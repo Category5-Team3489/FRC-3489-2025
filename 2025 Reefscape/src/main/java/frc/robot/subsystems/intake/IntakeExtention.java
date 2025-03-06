@@ -42,7 +42,7 @@ public class IntakeExtention extends SubsystemBase {
     // Intake is at its target angle if the error is within plus or minus this value
     private static final double AllowedErrorTics = 2.0;
 
-    private double targetTics = IntakeExtentionState.MatchHome.getValue();
+    public double targetTics = IntakeExtentionState.MatchHome.getValue();
 
     private final IntakeRoller intakeRoller = IntakeRoller.get();
 
@@ -58,7 +58,7 @@ public class IntakeExtention extends SubsystemBase {
     private void setPosition() {
         // double pos = -9;
         pidController.setReference(targetTics, ControlType.kPosition, ClosedLoopSlot.kSlot0);
-        System.out.println("Target Tics = " + targetTics);
+        // System.out.println("Target Tics = " + targetTics);
         // System.out.println("**************************************target rotation: "
         // + pos);
 
@@ -86,7 +86,7 @@ public class IntakeExtention extends SubsystemBase {
     @Override
     public void periodic() {
         setPosition();
-        // checksensor();
+        checksensor();
         // System.out.println("Encoder: " + encoder.getPosition());
 
     }
@@ -99,9 +99,9 @@ public class IntakeExtention extends SubsystemBase {
     }
 
     private void checksensor() {
-        if (encoder.getPosition() >= 0.3) {
+        if (targetTics == IntakeExtentionState.MatchHome.getValue()) {
             intakeRoller.checkSensor = false;
-        } else if (targetTics <= -9) {
+        } else if (targetTics == IntakeExtentionState.IntakePosition.getValue()) {
             intakeRoller.checkSensor = true;
         }
     }

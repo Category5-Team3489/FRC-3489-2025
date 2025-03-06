@@ -53,7 +53,7 @@ public class IntakeRoller extends SubsystemBase {
 
     @Override
     public void periodic() {
-        setIntake();
+        // setIntake();
         checkSensor();
 
         // TODO TEST THIS
@@ -74,14 +74,10 @@ public class IntakeRoller extends SubsystemBase {
     private void checkSensor() {
         if (checkSensor) {
             double sensorValue = returnRange();
-            // System.out.println("________________________________" +
-            // CANrange.getDistance());
-            if (sensorValue <= Constants.IntakeRoller.SENSOR_RANGE) { // TODO Test/Update distance constant
+            // System.out.println("___________________" + CANrange.getDistance());
+            if (sensorValue <= Constants.IntakeRoller.SENSOR_RANGE) {
                 speed = IntakeRollerState.Stop.getSpeedPercent();
                 // System.out.println("STOP____________________________________________");
-                // TODO DELETE!!
-                // checkSensor = false;
-
             }
         }
     }
@@ -89,8 +85,6 @@ public class IntakeRoller extends SubsystemBase {
     // Update the global intake speed variable based on the input enum
     public Command updateSpeed(IntakeRollerState state, boolean checkSensor) {
         // this.checkSensor = checkSensor;
-        // System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!checkSensor:
-        // " + checkSensor);
         return Commands.runOnce(() -> speed = state.getSpeedPercent());
     }
 

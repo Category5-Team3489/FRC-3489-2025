@@ -78,17 +78,13 @@ public class RobotContainer {
 
         SmartDashboard.putData("Auto Mode", autoChooser);
 
-        // NamedCommands.registerCommand("Outtake",
-        // outtake.updateSpeed(OuttakeState.Outtake));
-        // // NamedCommands.registerCommand("Intake", intakeCommand);
-        // NamedCommands.registerCommand("L1",
-        // elevator.updateCommand(ElevatorState.L1));
-        // NamedCommands.registerCommand("L2",
-        // elevator.updateCommand(ElevatorState.L2));
-        // NamedCommands.registerCommand("L3",
-        // elevator.updateCommand(ElevatorState.L3));
-        // NamedCommands.registerCommand("Home",
-        // elevator.updateCommand(ElevatorState.Down));
+        NamedCommands.registerCommand("Outtake", outtake.updateSpeed(OuttakeState.Outtake));
+        NamedCommands.registerCommand("Index", index.updateSpeed(IndexState.Outtake));
+        // NamedCommands.registerCommand("Intake", intakeCommand);
+        NamedCommands.registerCommand("L1", elevator.updateCommand(ElevatorState.L1));
+        NamedCommands.registerCommand("L2", elevator.updateCommand(ElevatorState.L2));
+        NamedCommands.registerCommand("L3", elevator.updateCommand(ElevatorState.L3));
+        NamedCommands.registerCommand("Home Elevator", elevator.updateCommand(ElevatorState.Down));
 
         NamedCommands.registerCommand("TEST", Commands.run(() -> {
             System.out.println("TESTING------------------");
@@ -103,39 +99,14 @@ public class RobotContainer {
 
     private void configureBindings() {
         // // ================= INTAKE ROLLER ===================================
-        manipulatorController.a().onTrue(intakeRoller.updateSpeed(IntakeRollerState.IntakeCollect, false));
+        manipulatorController.a().onTrue(intakeRoller.updateSpeed(IntakeRollerState.IntakeCollect, true));
         // ======================================================================
-
-        // // ****************INTAKE EXTENTION****************************
-        manipulatorController.rightBumper().onTrue(intakeExtention.updateCommand(IntakeExtentionState.MatchHome));
-
-        manipulatorController.leftBumper().onTrue(intakeExtention.updateCommand(IntakeExtentionState.IntakePosition));
-        // // ***************************************************************
-
-        manipulatorController.x().onTrue(outtake.updateSpeed(OuttakeState.Outtake));
-
-        // manipulatorController.rightBumper().onTrue(outtake.updateSpeed(OuttakeState.Stop));
-
-        manipulatorController.back().onTrue(index.updateSpeed(IndexState.Stop));
-
-        manipulatorController.b().onTrue(index.updateSpeed(IndexState.Outtake));
-
-        // //!!!!!!!!!!!!!!!!!!!!!!!!!!!! ELEVATOR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // manipulatorController.a().onTrue(elevator.updateCommand(ElevatorState.Down));
-
-        // manipulatorController.x().onTrue(elevator.updateCommand(ElevatorState.L1));
-
-        manipulatorController.y().onTrue(elevator.updateCommand(ElevatorState.L3));
-
-        // manipulatorController.y().onTrue(elevator.updateCommand(ElevatorState.L3));
-        // //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
         // -----------------BINDING METHODS-----------------------------------------
         // getDrivetrainBindings();
-        // getElevatorBindings();
-        // getOuttakeBindings(); // RUN = LB; STOP = RB
-        // getIntakeBindings();
-        // getIndexBindings(); // RUN = START; STOP = BACK
+        getElevatorBindings();
+        getOuttakeBindings(); // RUN = LB; STOP = RB
+        getIntakeExtendBindings();
+        getIndexBindings(); // RUN = START; STOP = BACK
 
     }
 
@@ -191,31 +162,43 @@ public class RobotContainer {
     }
 
     private void getElevatorBindings() {
-        // manipulatorController.a().onTrue(elevator.updateSpeed()); for manual use
-        // manipulatorController.axisLessThan(5,
-        // -0.1).whileTrue(elevator.adjustManualHeight(1)); for manual use
 
-        // manipulatorController.y().onTrue(elevator.updateCommand(ElevatorState.L1));
-        // manipulatorController.b().onTrue(elevator.updateCommand(ElevatorState.L2));
-        // manipulatorController.a().onTrue(elevator.updateCommand(ElevatorState.L3));
+        manipulatorController.y().onTrue(elevator.updateCommand(ElevatorState.L3));
+        manipulatorController.b().onTrue(elevator.updateCommand(ElevatorState.L2));
+        manipulatorController.x().onTrue(elevator.updateCommand(ElevatorState.L1));
+        manipulatorController.a().onTrue(elevator.updateCommand(ElevatorState.Down));
 
     }
 
     private void getOuttakeBindings() {
-        // manipulatorController.leftBumper().onTrue(outtake.updateSpeed(OuttakeState.Intake));
-        // manipulatorController.rightBumper().onTrue(outtake.updateSpeed(OuttakeState.Stop));
+        manipulatorController.back().onTrue(Commands.runOnce(() -> {
+            if (outtake.speed == OuttakeState.Stop.getSpeedPercent()) {
+                outtake.updateSpeed(OuttakeState.Outtake).schedule();
+            } else {
+                outtake.updateSpeed(OuttakeState.Stop).schedule();
+            }
+        }));
+
     }
 
-    private void getIntakeBindings() {
-        // manipulatorController.start()
-        // .onTrue(intakeRoller.updateSpeed(IntakeRollerState.IntakeCollect, true));
-        // manipulatorController.back().onTrue(intakeRoller.updateSpeed(IntakeRollerState.Stop,
-        // false));
+    private void getIntakeExtendBindings() {
+        manipulatorController.leftBumper().onTrue(Commands.runOnce(() -> {
+            if (intakeExtention.targetTics == IntakeExtentionState.IntakePosition.getValue()) {
+                intakeExtention.updateCommand(IntakeExtentionState.MatchHome).schedule();
+            } else {
+                intakeExtention.updateCommand(IntakeExtentionState.IntakePosition).schedule();
+            }
+        }));
     }
 
     private void getIndexBindings() {
-        // manipulatorController.start().onTrue(index.updateSpeed(IndexState.Intake));
-        // manipulatorController.back().onTrue(index.updateSpeed(IndexState.Stop));
+        manipulatorController.start().onTrue(Commands.runOnce(() -> {
+            if (index.speed == IndexState.Stop.getSpeedPercent()) {
+                index.updateSpeed(IndexState.Outtake).schedule();
+            } else {
+                index.updateSpeed(IndexState.Stop).schedule();
+            }
+        }));
     }
 
     public Command getAutonomousCommand() {

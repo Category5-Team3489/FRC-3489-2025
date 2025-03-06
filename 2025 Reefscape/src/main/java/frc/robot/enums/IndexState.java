@@ -1,24 +1,18 @@
 package frc.robot.enums;
 
 public enum IndexState {
-    Outtake(0.25, -0.25),
-    Intake(-0.25, 0.25),
-    Stop(0, 0);
+    Outtake(-0.25),
+    Intake(0.25),
+    Stop(0);
 
-    private final double rightSpeedPercent;
-    private final double leftSpeedPercent;
+    private final double speedPercent;
 
-    private IndexState(double rightSpeedPercent, double leftSpeedPercent) {
-        this.rightSpeedPercent = rightSpeedPercent;
-        this.leftSpeedPercent = leftSpeedPercent;
+    private IndexState(double speedPercent) {
+        this.speedPercent = speedPercent;
     }
 
-    public double getLeftSpeedPercent() {
-        return leftSpeedPercent;
-    }
-
-    public double getRightSpeedPercent() {
-        return rightSpeedPercent;
+    public double getSpeedPercent() {
+        return speedPercent;
     }
 
 }

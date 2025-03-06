@@ -30,8 +30,7 @@ public final class Constants {
         public static final int RIGHT_MOTOR_ID = 13;
         public static final int LEFT_MOTOR_ID = 14;
 
-        public static final int TOP_SENSOR_ID = 4;
-        public static final int BOTTOM_SENSOR_ID = 0;
+        public static final int BOTTOM_SENSOR_ID = 1;
 
     }
 
