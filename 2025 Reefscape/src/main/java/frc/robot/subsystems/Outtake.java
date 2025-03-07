@@ -18,7 +18,7 @@ public class Outtake extends SubsystemBase {
     private final SparkMax motor = new SparkMax(Constants.Outtake.MOTOR_ID, MotorType.kBrushless);
     private final DigitalInput sensor = new DigitalInput(Constants.Outtake.SENSOR_ID);
 
-    private double speed = 0;
+    public double speed = 0;
 
     public static Outtake get() {
         return instance;
@@ -38,6 +38,7 @@ public class Outtake extends SubsystemBase {
     public Command updateSpeed(OuttakeState state) {
         // return Commands.runOnce(() -> speed = state.getSpeedPercent());
         return Commands.runOnce(() -> {
+            System.out.println("UPDATE SPEED");
             motor.set(state.getSpeedPercent());
             speed = state.getSpeedPercent();
         });

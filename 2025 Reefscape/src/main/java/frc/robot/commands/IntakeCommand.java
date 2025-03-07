@@ -39,8 +39,7 @@
 // elevator.updateCommand(ElevatorState.Down);
 // }));
 // if (intakeExtention.getSensor().equals(true)) { // &&
-// elevator.getBottomSensor()) {
-// Commands.run(() -> {
+// elevator.getBottomSensor()) {Commands.run(() -> {
 // intakeExtention.updateCommand(IntakeExtentionState.HomePosition);
 // index.updateSpeed(IndexState.Intake);
 // intakeRoller.updateSpeed(IntakeRollerState.Stop, false);

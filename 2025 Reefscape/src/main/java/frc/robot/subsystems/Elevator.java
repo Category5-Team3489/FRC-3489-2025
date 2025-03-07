@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.enums.ElevatorState;
+import frc.robot.enums.IntakeExtentionState;
 
 public class Elevator extends SubsystemBase {
 
@@ -37,6 +38,8 @@ public class Elevator extends SubsystemBase {
 
     // to make the motor rotate once (gear-ratio)
     private static final double gearRatio = 3;
+
+    private static final double CorrectionDegreesPerSecond = 2;
 
     private final int sparkTicsPerRotation = 4096; // 2048 Cycles per Revolution (8192 Counts per Revolution)
 
@@ -99,12 +102,28 @@ public class Elevator extends SubsystemBase {
         // // TODO TESTING:
         // System.out.println("**************************************target rotation: "
         // + targetTics);
+
+        if (targetTics != ElevatorState.Down.getHeigtInches()) {
+            pidControllerRight.setReference(targetTics, ControlType.kPosition,
+                    ClosedLoopSlot.kSlot0);
+        } else {
+            pidControllerRight.setReference(targetTics, ControlType.kPosition,
+                    ClosedLoopSlot.kSlot1);
+        }
     }
 
     private void setTargetTics(double positionHeight) {
         targetTics = MathUtil.clamp(positionHeight,
                 ElevatorState.Down.getHeigtInches(), ElevatorState.Up.getHeigtInches());
         // System.out.println("pos: " + positionHeight);
+    }
+
+    public Command adjustManualAngle(double adjustPercent) {
+        return Commands.run(() -> {
+            double deltaDegrees = adjustPercent * CorrectionDegreesPerSecond *
+                    Robot.kDefaultPeriod;
+            setTargetTics(targetTics + deltaDegrees);
+        }, this);
     }
 
     public Command adjustManualHeight(double adjustPercent) {
