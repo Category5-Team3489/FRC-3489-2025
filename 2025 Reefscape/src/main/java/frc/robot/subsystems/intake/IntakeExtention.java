@@ -33,7 +33,7 @@ public class IntakeExtention extends SubsystemBase {
     // TODO update to correct sensor type
     private final DigitalInput sensor = new DigitalInput(Constants.IntakeActuator.SENSOR_ID);
 
-    private static final double CorrectionDegreesPerSecond = 10; // the speed
+    private static final double CorrectionDegreesPerSecond = 5; // the speed
 
     // Gear ratio (motor rotates 30 times for one revolution of the actuator)
     private static final double gearRatio = 25;
@@ -57,7 +57,11 @@ public class IntakeExtention extends SubsystemBase {
     // Move the intake to the correct position
     private void setPosition() {
         // double pos = -9;
-        pidController.setReference(targetTics, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+        if (targetTics == IntakeExtentionState.IntakePosition.getValue()) {
+            pidController.setReference(targetTics, ControlType.kPosition, ClosedLoopSlot.kSlot1);
+        } else {
+            pidController.setReference(targetTics, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+        }
         // System.out.println("Target Tics = " + targetTics);
         // System.out.println("**************************************target rotation: "
         // + pos);
@@ -98,11 +102,20 @@ public class IntakeExtention extends SubsystemBase {
         });
     }
 
+    public Command adjustManualAngle(double adjustPercent) {
+        return Commands.run(() -> {
+            double deltaDegrees = adjustPercent * CorrectionDegreesPerSecond * Robot.kDefaultPeriod;
+            setTarget(targetTics + deltaDegrees);
+        }, this);
+    }
+
     private void checksensor() {
         if (targetTics == IntakeExtentionState.MatchHome.getValue()) {
             intakeRoller.checkSensor = false;
+            // System.out.println("FALSE");
         } else if (targetTics == IntakeExtentionState.IntakePosition.getValue()) {
             intakeRoller.checkSensor = true;
+            // System.out.println("TRUE");
         }
     }
 

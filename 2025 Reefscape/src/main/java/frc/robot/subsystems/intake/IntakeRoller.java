@@ -21,7 +21,7 @@ public class IntakeRoller extends SubsystemBase {
 
     CANrangeConfiguration configs = new CANrangeConfiguration(); // Configure the CANrange for basic use
 
-    private double speed = 0; // Target Speed of Intake
+    public double speed = 0; // Target Speed of Intake
     public boolean checkSensor = true; // Should the motor stop if the Sensor is triggered?
 
     public static IntakeRoller get() {
@@ -54,6 +54,7 @@ public class IntakeRoller extends SubsystemBase {
     @Override
     public void periodic() {
         // setIntake();
+        // System.out.println("---------------------------" + checkSensor);
         checkSensor();
 
         // TODO TEST THIS
@@ -76,20 +77,25 @@ public class IntakeRoller extends SubsystemBase {
             double sensorValue = returnRange();
             // System.out.println("___________________" + CANrange.getDistance());
             if (sensorValue <= Constants.IntakeRoller.SENSOR_RANGE) {
-                speed = IntakeRollerState.Stop.getSpeedPercent();
+                motor.set(IntakeRollerState.Stop.getSpeedPercent());
                 // System.out.println("STOP____________________________________________");
             }
+        } else {
+            return;
         }
     }
 
-    // Update the global intake speed variable based on the input enum
-    public Command updateSpeed(IntakeRollerState state, boolean checkSensor) {
-        // this.checkSensor = checkSensor;
-        return Commands.runOnce(() -> speed = state.getSpeedPercent());
-    }
+    // // Update the global intake speed variable based on the input enum
+    // public Command updateSpeed(IntakeRollerState state, boolean checkSensor) {
+    // // this.checkSensor = checkSensor;
+    // return Commands.runOnce(() -> speed = state.getSpeedPercent());
+    // }
 
-    public Command setSpeedCommand() {
-        return Commands.runOnce(() -> motor.set(IntakeRollerState.IntakeTransfer.getSpeedPercent()), this);
+    public Command setSpeedCommand(IntakeRollerState intakeRollerState) {
+        return Commands.runOnce(() -> {
+            motor.set(intakeRollerState.getSpeedPercent());
+            speed = intakeRollerState.getSpeedPercent();
+        }, this);
     }
 
 }

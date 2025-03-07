@@ -98,14 +98,30 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
+
+        manipulatorController.axisLessThan(5, -0.1).whileTrue(
+                intakeExtention.adjustManualAngle(-1));
+
+        manipulatorController.axisGreaterThan(5, 0.1).whileTrue(
+                intakeExtention.adjustManualAngle(1));
+
+        manipulatorController.axisLessThan(2, -0.1).whileTrue(
+                elevator.adjustManualAngle(1));
+
+        manipulatorController.axisGreaterThan(2, 0.1).whileTrue(
+                elevator.adjustManualAngle(-1));
+
         // // ================= INTAKE ROLLER ===================================
-        manipulatorController.a().onTrue(intakeRoller.updateSpeed(IntakeRollerState.IntakeCollect, true));
+
+        // manipulatorController.povUp().onTrue(intakeRoller.setSpeedCommand(IntakeRollerState.IntakeCollect));
+
         // ======================================================================
         // -----------------BINDING METHODS-----------------------------------------
-        // getDrivetrainBindings();
+        getDrivetrainBindings();
         getElevatorBindings();
         getOuttakeBindings(); // RUN = LB; STOP = RB
         getIntakeExtendBindings();
+        getIntakeRollerBindings();
         getIndexBindings(); // RUN = START; STOP = BACK
 
     }
@@ -191,6 +207,24 @@ public class RobotContainer {
         }));
     }
 
+    private void getIntakeRollerBindings() {
+        manipulatorController.povUp().onTrue(Commands.runOnce(() -> {
+            if (intakeRoller.speed == IntakeRollerState.Stop.getSpeedPercent()) {
+                intakeRoller.setSpeedCommand(IntakeRollerState.IntakeCollect).schedule();
+            } else {
+                intakeRoller.setSpeedCommand(IntakeRollerState.Stop).schedule();
+            }
+        }));
+
+        manipulatorController.povDown().onTrue(Commands.runOnce(() -> {
+            if (intakeRoller.speed == IntakeRollerState.Stop.getSpeedPercent()) {
+                intakeRoller.setSpeedCommand(IntakeRollerState.IntakeTransfer).schedule();
+            } else {
+                intakeRoller.setSpeedCommand(IntakeRollerState.Stop).schedule();
+            }
+        }));
+    }
+
     private void getIndexBindings() {
         manipulatorController.start().onTrue(Commands.runOnce(() -> {
             if (index.speed == IndexState.Stop.getSpeedPercent()) {
@@ -203,6 +237,6 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         /* Run the path selected from the auto chooser */
-        return new PathPlannerAuto("(3) Far Left to 3B");
+        return new PathPlannerAuto("Leave");
     }
 }
