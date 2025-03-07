@@ -103,7 +103,7 @@ public class Elevator extends SubsystemBase {
         // System.out.println("**************************************target rotation: "
         // + targetTics);
 
-        if (targetTics != ElevatorState.Down.getHeigtInches()) {
+        if (targetTics != ElevatorState.Down.getHeigt()) {
             pidControllerRight.setReference(targetTics, ControlType.kPosition,
                     ClosedLoopSlot.kSlot0);
         } else {
@@ -114,7 +114,7 @@ public class Elevator extends SubsystemBase {
 
     private void setTargetTics(double positionHeight) {
         targetTics = MathUtil.clamp(positionHeight,
-                ElevatorState.Down.getHeigtInches(), ElevatorState.Up.getHeigtInches());
+                ElevatorState.Down.getHeigt(), ElevatorState.Up.getHeigt());
         // System.out.println("pos: " + positionHeight);
     }
 
@@ -136,7 +136,7 @@ public class Elevator extends SubsystemBase {
 
     public Command updateCommand(ElevatorState elevatorState) {
         return Commands.run(() -> {
-            setTargetTics(elevatorState.getHeigtInches());
+            setTargetTics(elevatorState.getHeigt());
         }, this);
     }
 

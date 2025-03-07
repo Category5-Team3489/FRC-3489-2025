@@ -56,16 +56,11 @@ public class IntakeExtention extends SubsystemBase {
 
     // Move the intake to the correct position
     private void setPosition() {
-        // double pos = -9;
         if (targetTics == IntakeExtentionState.IntakePosition.getValue()) {
             pidController.setReference(targetTics, ControlType.kPosition, ClosedLoopSlot.kSlot1);
         } else {
             pidController.setReference(targetTics, ControlType.kPosition, ClosedLoopSlot.kSlot0);
         }
-        // System.out.println("Target Tics = " + targetTics);
-        // System.out.println("**************************************target rotation: "
-        // + pos);
-
     }
 
     private void setTarget(double targetPosition) {
@@ -110,12 +105,12 @@ public class IntakeExtention extends SubsystemBase {
     }
 
     private void checksensor() {
-        if (targetTics == IntakeExtentionState.MatchHome.getValue()) {
+        //If the intake is extended: Check for sensor value
+        if (targetTics == IntakeExtentionState.MatchHome.getValue()) { 
             intakeRoller.checkSensor = false;
-            // System.out.println("FALSE");
+        //Else: Don't check sensor
         } else if (targetTics == IntakeExtentionState.IntakePosition.getValue()) {
             intakeRoller.checkSensor = true;
-            // System.out.println("TRUE");
         }
     }
 

@@ -37,18 +37,12 @@ public class IntakeRoller extends SubsystemBase {
     }
 
     public double returnRange() {
-        // Get Distance
-        var distance = CANrange.getDistance();
-        // refresh the value
-        var currentDistance = distance.refresh();
-        // converts the current distance to a double so that it can be returned
+        var distance = CANrange.getDistance();      //Get Distance
+        var currentDistance = distance.refresh();   //Refresh the value
+
+        // converts the current distance to a double
         double distanceDouble = currentDistance.getValueAsDouble();
-
-        // Refresh and print these values
-        // System.out.println("+++++++Double Distance is " +
-        // currentDistance.toString());
-
-        return distanceDouble; // TODO test that this returns the correct value with robot!
+        return distanceDouble;
     }
 
     @Override
