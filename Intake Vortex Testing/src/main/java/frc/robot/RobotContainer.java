@@ -27,9 +27,9 @@ public class RobotContainer {
     // canRangeTesting.setDefaultCommand(Commands.run(() ->
     // canRangeTesting.setIntake()));
 
-    // driverController.y().onTrue(canRangeTesting.updateSpeed(-0.15, false));
+    driverController.y().onTrue(canRangeTesting.updateSpeed(-0.15, false));
 
-    // driverController.b().onTrue(canRangeTesting.updateSpeed(-0.15, true));
+    driverController.b().onTrue(canRangeTesting.updateSpeed(-0.15, true));
 
     driverController.a().onTrue(canRangeTesting.updateSpeed(-0.15, true));
 

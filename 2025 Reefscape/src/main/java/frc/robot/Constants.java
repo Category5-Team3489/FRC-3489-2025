@@ -49,7 +49,7 @@ public final class Constants {
         // TODO: Check - Not sure if this is correct
         public static final String CAN_RANGE_CAN_BUS = "rio";
 
-        public static final double SENSOR_RANGE = 0.37;
+        public static final double SENSOR_RANGE = 0.5;
     }
 
     public static class IntakeActuator {

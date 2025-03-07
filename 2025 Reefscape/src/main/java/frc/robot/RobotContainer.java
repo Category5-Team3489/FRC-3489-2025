@@ -121,6 +121,9 @@ public class RobotContainer {
 
         // manipulatorController.a().onTrue(canRangeTesting.updateSpeed(-0.15, false));
         // // ***************************************************************
+        // manipulatorController.a().onTrue(intakeExtention.manualJoystick(1));
+
+        // manipulatorController.b().onTrue(intakeExtention.manualJoystick(-1));
 
         // manipulatorController.rightBumper().onTrue(intakeExtention.updateCommand(IntakeExtentionState.HomePosition));
 
@@ -128,26 +131,34 @@ public class RobotContainer {
 
         // // ***************************************************************
 
-        // manipulatorController.rightBumper().onTrue(outtake.updateSpeed(OuttakeState.Outtake));
+        manipulatorController.rightBumper().onTrue(outtake.updateSpeed(OuttakeState.Outtake));
 
         // manipulatorController.back().onTrue(intakeRoller.updateSpeed(IntakeRollerState.IntakeCollect,
         // true));
 
         // //
-        // manipulatorController.back().onTrue(outtake.updateSpeed(OuttakeState.Stop));
+        // manipulatorController.rightBumper().onTrue(outtake.updateSpeed(OuttakeState.Stop));
 
         manipulatorController.back().onTrue(index.updateSpeed(IndexState.Stop));
 
         manipulatorController.start().onTrue(index.updateSpeed(IndexState.Outtake));
 
         // //!!!!!!!!!!!!!!!!!!!!!!!!!!!! ELEVATOR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // manipulatorController.a().onTrue(elevator.updateCommand(ElevatorState.Down));
+        // manipulatorController.y().onTrue(elevator.manualJoystick(0));
 
-        // manipulatorController.x().onTrue(elevator.updateCommand(ElevatorState.L1));
+        // manipulatorController.axisLessThan(5,
+        // -0.1).whileTrue(elevator.manualJoystick(1));
+        // manipulatorController.axisGreaterThan(5,
+        // 0.1).whileTrue(elevator.manualJoystick(-1));
 
-        // manipulatorController.b().onTrue(elevator.updateCommand(ElevatorState.L2));
+        // TODO Uncomment
+        manipulatorController.a().onTrue(elevator.updateCommand(ElevatorState.Down));
 
-        // manipulatorController.y().onTrue(elevator.updateCommand(ElevatorState.L3));
+        manipulatorController.x().onTrue(elevator.updateCommand(ElevatorState.L1));
+
+        manipulatorController.b().onTrue(elevator.updateCommand(ElevatorState.L2));
+
+        manipulatorController.y().onTrue(elevator.updateCommand(ElevatorState.L3));
 
         // //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

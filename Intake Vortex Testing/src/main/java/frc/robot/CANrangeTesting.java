@@ -16,7 +16,7 @@ public class CANrangeTesting extends SubsystemBase {
     private static final CANrangeTesting instance = new CANrangeTesting();
 
     private final CANrange CANrange = new CANrange(0, "rio");
-    private final SparkFlex motor = new SparkFlex(10, MotorType.kBrushless);
+    private final SparkFlex motor = new SparkFlex(1, MotorType.kBrushless);
 
     // CANrangeConfiguration configs = new CANrangeConfiguration(); // Configure the
     // CANrange for basic use
@@ -64,7 +64,7 @@ public class CANrangeTesting extends SubsystemBase {
     private void checkSensor() {
         if (checkSensor) {
             double sensorValue = returnRange();
-            if (sensorValue <= 0.35) { // TODO Test/Update distance constant
+            if (sensorValue <= 0.5) { // TODO Test/Update distance constant
                 System.out.println("STOP____________________________________________");
                 speed = 0;
             }
