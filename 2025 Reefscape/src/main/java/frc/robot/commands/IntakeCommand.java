@@ -21,45 +21,51 @@
 // /** An example command that uses an example subsystem. */
 // public class IntakeCommand extends SequentialCommandGroup {
 
-// private static IntakeRoller intakeRoller = IntakeRoller.get();
-// private static IntakeExtention intakeExtention = IntakeExtention.get();
-// private static Index index = Index.get();
-// private static Elevator elevator = Elevator.get();
-// private static Outtake outtake = Outtake.get();
+//     private static IntakeRoller intakeRoller = IntakeRoller.get();
+//     private static IntakeExtention intakeExtention = IntakeExtention.get();
+//     private static Index index = Index.get();
+//     private static Elevator elevator = Elevator.get();
+//     private static Outtake outtake = Outtake.get();
 
-// public IntakeCommand() {
+//     public IntakeCommand() {
 
-// addRequirements(intakeRoller, intakeExtention, index, elevator);
+//         addRequirements(intakeRoller, intakeExtention, index, elevator);
+
+//         addCommands(
+//             Commands.runOnce(() -> {
+//                 outtake.updateSpeed(OuttakeState.Stop);
+//                 intakeExtention.updateCommand(IntakeExtentionState.IntakePosition);
+//                 intakeRoller.setSpeedCommand(IntakeRollerState.IntakeCollect);
+//                 elevator.updateCommand(ElevatorState.Down);
+//         }));
+                
+//         if (intakeExtention.getSensor().equals(true)) { // &&
+//             elevator.getBottomSensor() {
+//                 Commands.run(() -> {
+//                     intakeExtention.updateCommand(IntakeExtentionState.HomePosition);
+//                     index.updateSpeed(IndexState.Intake);
+//                     intakeRoller.updateSpeed(IntakeRollerState.Stop, false);
+//                     outtake.updateSpeed(OuttakeState.Intake);
+//                     // Find the right time
+//                     Commands.waitSeconds(2);
+//                     outtake.updateSpeed(OuttakeState.Stop);
+//                     elevator.updateCommand(ElevatorState.Up);
+//                     outtake.updateSpeed(OuttakeState.Outtake);
+//             });
+//         }
+//         System.out.println("Intake update finished");
+//         }
+//     }
+// }
 
 // addCommands(
-// Commands.run(() -> {
-// outtake.updateSpeed(OuttakeState.Stop);
-// intakeExtention.updateCommand(IntakeExtentionState.IntakePosition);
-// intakeRoller.updateSpeed(IntakeRollerState.IntakeCollect, true);
-// elevator.updateCommand(ElevatorState.Down);
-// }));
-// if (intakeExtention.getSensor().equals(true)) { // &&
-// elevator.getBottomSensor()) {Commands.run(() -> {
+// Commands.runEnd(() -> {
 // intakeExtention.updateCommand(IntakeExtentionState.HomePosition);
-// index.updateSpeed(IndexState.Intake);
-// intakeRoller.updateSpeed(IntakeRollerState.Stop, false);
-// outtake.updateSpeed(OuttakeState.Intake);
-// // Find the right time
-// Commands.waitSeconds(2);
-// outtake.updateSpeed(OuttakeState.Stop);
-// elevator.updateCommand(ElevatorState.Up);
-// outtake.updateSpeed(OuttakeState.Outtake);
-// });
-// }
+// intakeRoller.updateSpeed(IntakeRollerState.Intake);
+// elevator.updateCommand(ElevatorState.Down);
+// }, intakeExtention.getSensor().equals(true), intakeExtention));
 // System.out.println("Intake update finished");
 // }
 
-// // addCommands(
-// // Commands.runEnd(() -> {
-// // intakeExtention.updateCommand(IntakeExtentionState.HomePosition);
-// // intakeRoller.updateSpeed(IntakeRollerState.Intake);
-// // elevator.updateCommand(ElevatorState.Down);
-// // }, intakeExtention.getSensor().equals(true), intakeExtention));
-// // System.out.println("Intake update finished");
-// // }
-// }
+// set everthing to position/state
+// when canRange hit: stop roller, intake up, start roller, start index

@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
+import frc.robot.Constants.Drivetrain;
 import frc.robot.generated.TunerConstants;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
@@ -43,12 +44,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     // CommandSwerveDrivetrain();
     // TODO fix lines 43-48 to get rid of the error in AutoPlace (get() issue)
     // private static final CommandSwerveDrivetrain instance = new
-    // CommandSwerveDrivetrain(
-    // Constants.DriveTrain.);
+    // CommandSwerveDrivetrain();
 
-    // public static CommandSwerveDrivetrain get() {
-    // return instance;
-    // }
+    private static final CommandSwerveDrivetrain instance = TunerConstants.DriveTrain;
+
+    public static CommandSwerveDrivetrain get() {
+        return instance;
+    }
 
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
@@ -151,6 +153,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             startSimThread();
         }
         configureAutoBuilder();
+    }
+
+    public static CommandSwerveDrivetrain construct(SwerveDrivetrainConstants driveTrainConstants,
+            SwerveModuleConstants... modules) {
+        return new CommandSwerveDrivetrain(driveTrainConstants, modules);
     }
 
     /**
