@@ -1,10 +1,11 @@
 package frc.robot.subsystems.intake;
 
-import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.ctre.phoenix6.configs.CANrangeConfiguration;
 import com.ctre.phoenix6.hardware.CANrange;
 import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -56,6 +57,7 @@ public class IntakeRoller extends SubsystemBase {
         // setIntake();
         // System.out.println("---------------------------" + checkSensor);
         checkSensor();
+        // hasTimeElapsed();
 
         // TODO TEST THIS
         // System.out.println("----------------------------------------------------SENSOR:"
@@ -84,6 +86,22 @@ public class IntakeRoller extends SubsystemBase {
             return;
         }
     }
+
+    // public void stopMotor() {
+    // if (hasTime) {
+    // motor.set(IntakeRollerState.Stop.getSpeedPercent());
+    // }
+    // }
+
+    // public boolean hasTimeElapsed() {
+    // if (timer.hasElapsed(0.01)) {
+    // hasTime = true;
+    // } else {
+    // hasTime = false;
+    // }
+    // stopMotor();
+    // return hasTime;
+    // }
 
     // // Update the global intake speed variable based on the input enum
     // public Command updateSpeed(IntakeRollerState state, boolean checkSensor) {

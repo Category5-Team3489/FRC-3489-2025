@@ -74,7 +74,8 @@ public class Elevator extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // System.out.println("*******************target position: " + targetTics);
+        // System.out.println("******************* position: " +
+        // rightMotor.getEncoder().getPosition());
         // System.out.println("++++++++++++++++++++++++++++++++++Alternate Endoder: "
         // + rightMotor.getAlternateEncoder().getPosition());
         setHeight();

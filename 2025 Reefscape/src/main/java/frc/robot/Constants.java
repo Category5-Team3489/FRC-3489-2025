@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import frc.robot.generated.TunerConstants;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -23,7 +25,14 @@ public final class Constants {
 
     public static class Drivetrain {
         // TODO Calculate this
-        public static final int MaxRadiansPerSecond = 1;
+        // public static final int MaxRadiansPerSecond = 1;
+
+        public static double MaxMetersPerSecond = 16.5 / 3.281;
+
+        public static double DrivetrainHypotenuseMeters = Math.hypot(11.5 / 39.37,
+                -11.5 / 39.37);
+
+        public static double MaxRadiansPerSecond = MaxMetersPerSecond / -DrivetrainHypotenuseMeters;
     }
 
     public static class Elevator {
@@ -48,7 +57,7 @@ public final class Constants {
         // TODO: Check - Not sure if this is correct
         public static final String CAN_RANGE_CAN_BUS = "rio";
 
-        public static final double SENSOR_RANGE = 0.4;
+        public static final double SENSOR_RANGE = 0.3;
     }
 
     public static class IntakeActuator {
@@ -60,4 +69,5 @@ public final class Constants {
         public static final int RIGHT_MOTOR_ID = 11;
         public static final int LEFT_MOTOR_ID = 12;
     }
+
 }

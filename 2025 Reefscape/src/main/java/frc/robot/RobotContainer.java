@@ -34,6 +34,7 @@ import frc.robot.enums.OuttakeState;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.ElevatorLimelight;
 import frc.robot.subsystems.Index;
 import frc.robot.subsystems.Outtake;
 import frc.robot.subsystems.intake.IntakeExtention;
@@ -46,6 +47,7 @@ public class RobotContainer {
     private final Index index = Index.get();
     private final IntakeExtention intakeExtention = IntakeExtention.get();
     private final IntakeRoller intakeRoller = IntakeRoller.get();
+    // private final ElevatorLimelight limelight = ElevatorLimelight.get();
 
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top
                                                                                   // speed
@@ -146,6 +148,49 @@ public class RobotContainer {
                 // negative X (left)
                 ));
 
+        // final SwerveRequest.FieldCentricFacingAngle driveFacingAngle = new
+        // SwerveRequest.FieldCentricFacingAngle()
+        // .withDeadband(Constants.Drivetrain.MaxMetersPerSecond * 0.1)
+        // .withRotationalDeadband(Constants.Drivetrain.MaxRadiansPerSecond * 0.1) //
+        // Add a
+        // // 10%
+        // // deadband
+        // .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want
+        // field-centric
+        // driving in open loop
+
+        // driverController.y().whileTrue(
+        // drivetrain.applyRequest(() -> driveFacingAngle
+        // .withVelocityX(-driverController.getLeftY() *
+        // Constants.Drivetrain.MaxMetersPerSecond)
+        // .withVelocityY(-driverController.getLeftX() *
+        // Constants.Drivetrain.MaxMetersPerSecond)
+        // .withTargetDirection(Rotation2d.fromDegrees(0))));
+        // driverController.b().whileTrue(
+        // drivetrain.applyRequest(() -> driveFacingAngle
+        // .withVelocityX(-driverController.getLeftY() *
+        // Constants.Drivetrain.MaxMetersPerSecond)
+
+        // .withVelocityY(-driverController.getLeftX() *
+        // Constants.Drivetrain.MaxMetersPerSecond)
+        // .withTargetDirection(Rotation2d.fromDegrees(270))));
+        // driverController.a().whileTrue(
+        // drivetrain.applyRequest(() -> driveFacingAngle
+        // .withVelocityX(-driverController.getLeftY() *
+        // Constants.Drivetrain.MaxMetersPerSecond)
+
+        // .withVelocityY(-driverController.getLeftX() *
+        // Constants.Drivetrain.MaxMetersPerSecond)
+        // .withTargetDirection(Rotation2d.fromDegrees(180))));
+        // driverController.x().whileTrue(
+        // drivetrain.applyRequest(() -> driveFacingAngle
+        // .withVelocityX(-driverController.getLeftY() *
+        // Constants.Drivetrain.MaxMetersPerSecond)
+
+        // .withVelocityY(-driverController.getLeftX() *
+        // Constants.Drivetrain.MaxMetersPerSecond)
+        // .withTargetDirection(Rotation2d.fromDegrees(90))));
+
         // driverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
         // driverController.b().whileTrue(drivetrain.applyRequest(
         // () -> point.withModuleDirection(
@@ -183,6 +228,7 @@ public class RobotContainer {
         manipulatorController.b().onTrue(elevator.updateCommand(ElevatorState.L2));
         manipulatorController.x().onTrue(elevator.updateCommand(ElevatorState.L1));
         manipulatorController.a().onTrue(elevator.updateCommand(ElevatorState.Down));
+        manipulatorController.rightBumper().onTrue(elevator.updateCommand(ElevatorState.HP));
 
     }
 
@@ -219,6 +265,14 @@ public class RobotContainer {
         manipulatorController.povDown().onTrue(Commands.runOnce(() -> {
             if (intakeRoller.speed == IntakeRollerState.Stop.getSpeedPercent()) {
                 intakeRoller.setSpeedCommand(IntakeRollerState.IntakeTransfer).schedule();
+            } else {
+                intakeRoller.setSpeedCommand(IntakeRollerState.Stop).schedule();
+            }
+        }));
+
+        manipulatorController.povRight().onTrue(Commands.runOnce(() -> {
+            if (intakeRoller.speed == IntakeRollerState.Stop.getSpeedPercent()) {
+                intakeRoller.setSpeedCommand(IntakeRollerState.Outtake).schedule();
             } else {
                 intakeRoller.setSpeedCommand(IntakeRollerState.Stop).schedule();
             }
