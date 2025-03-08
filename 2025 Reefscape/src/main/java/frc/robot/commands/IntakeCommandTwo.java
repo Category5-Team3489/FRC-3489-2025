@@ -24,13 +24,14 @@ public class IntakeCommandTwo extends SequentialCommandGroup {
         addCommands(
                 Commands.runOnce(() -> { // runs when the button is clicked, the button is clicked after the starting
                                          // positions are set
-                    intakeRoller.setSpeedCommand(IntakeRollerState.IntakeCollect); // these should all run after the
-                                                                                   // previous command finishes
-                    intakeExtention.updateCommand(IntakeExtentionState.HomePosition);
-                    intakeRoller.setSpeedCommand(IntakeRollerState.IntakeTransfer);
-                    index.updateSpeed(IndexState.Intake);
+                    // intakeRoller.setSpeedCommand(IntakeRollerState.IntakeCollect); // these
+                    // should all run after the
+                    // previous command finishes
+                    // intakeExtention.updateCommand(IntakeExtentionState.HomePosition);
+                    intakeRoller.setSpeedCommand(IntakeRollerState.IntakeTransfer).schedule();
+                    index.updateSpeed(IndexState.Outtake).schedule();
                 }));
-    };
+    }
 }
 // start rollers (it should automactically stop when piece is inside), intake
 // completely up, start rollers (again to push into the index), start index (it

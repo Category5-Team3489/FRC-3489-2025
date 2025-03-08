@@ -22,14 +22,17 @@ public class IntakeCommandOne extends SequentialCommandGroup {
 
     public IntakeCommandOne() {
         addRequirements(intakeRoller, intakeExtention, index, elevator, outtake);
+        System.out.println("INIT One");
 
         addCommands(
                 Commands.runOnce(() -> {
-                    outtake.updateSpeed(OuttakeState.Stop);
-                    index.updateSpeed(IndexState.Stop);
-                    intakeExtention.updateCommand(IntakeExtentionState.IntakePosition);
-                    intakeRoller.setSpeedCommand(IntakeRollerState.IntakeCollect);
-                    elevator.updateCommand(ElevatorState.Down);
+                    System.out.println("START ONE");
+                    outtake.updateSpeed(OuttakeState.Stop).schedule();
+                    index.updateSpeed(IndexState.Stop).schedule();
+                    intakeExtention.updateCommand(IntakeExtentionState.IntakePosition).schedule();
+                    intakeRoller.setSpeedCommand(IntakeRollerState.IntakeTransfer).schedule();
+                    elevator.updateCommand(ElevatorState.Down).schedule();
+                    // System.out.println("END ONE");
                 }));
     }
 

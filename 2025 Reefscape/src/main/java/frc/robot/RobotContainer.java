@@ -22,7 +22,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-
+import frc.robot.commands.IntakeCommandOne;
+import frc.robot.commands.IntakeCommandThree;
+import frc.robot.commands.IntakeCommandTwo;
 // import frc.robot.commands.IntakeCommand;
 import frc.robot.enums.ElevatorState;
 import frc.robot.enums.IndexState;
@@ -244,19 +246,29 @@ public class RobotContainer {
     }
 
     private void getIntakeExtendBindings() {
+        final IntakeCommandOne intakeCommandOne = new IntakeCommandOne();
+        // final IntakeCommandTwo intakeCommandThree = new IntakeCommandTwo();
+        // final IntakeCommandThree intakeCommandTwo = new IntakeCommandThree();
+
         manipulatorController.leftBumper().onTrue(Commands.runOnce(() -> {
             if (intakeExtention.targetTics == IntakeExtentionState.IntakePosition.getValue()) {
                 intakeExtention.updateCommand(IntakeExtentionState.MatchHome).schedule();
             } else {
-                intakeExtention.updateCommand(IntakeExtentionState.IntakePosition).schedule();
+                intakeCommandOne.schedule();
             }
         }));
+
+        // manipulatorController.rightBumper().onTrue(Commands.runOnce(() ->
+        // intakeCommandTwo.schedule()));
+        // manipulatorController.leftTrigger().onTrue(Commands.runOnce(() ->
+        // intakeCommandThree.schedule()));
+
     }
 
     private void getIntakeRollerBindings() {
         manipulatorController.povUp().onTrue(Commands.runOnce(() -> {
             if (intakeRoller.speed == IntakeRollerState.Stop.getSpeedPercent()) {
-                intakeRoller.setSpeedCommand(IntakeRollerState.IntakeCollect).schedule();
+                intakeRoller.setSpeedCommand(IntakeRollerState.Test).schedule();
             } else {
                 intakeRoller.setSpeedCommand(IntakeRollerState.Stop).schedule();
             }
@@ -277,6 +289,10 @@ public class RobotContainer {
                 intakeRoller.setSpeedCommand(IntakeRollerState.Stop).schedule();
             }
         }));
+
+        final IntakeCommandTwo intakeCommandTwo = new IntakeCommandTwo();
+
+        manipulatorController.povLeft().onTrue(Commands.runOnce(() -> intakeCommandTwo.schedule()));
     }
 
     private void getIndexBindings() {

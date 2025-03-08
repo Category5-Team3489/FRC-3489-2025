@@ -2,7 +2,7 @@ package frc.robot.enums;
 
 public enum ElevatorState {
     // TODO update these numbers
-    Down(0.3), // 0.001
+    Down(0), // 0.001
     L1(3), // 0.8
     HP(4.49),
     L2(5.2), // 1.15
