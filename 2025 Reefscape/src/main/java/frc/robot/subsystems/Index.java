@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.enums.IndexState;
 import frc.robot.enums.OuttakeState;
-import frc.robot.subsystems.intake.IntakeExtention;
+// import frc.robot.subsystems.intake.IntakeExtention;
 
 public class Index extends SubsystemBase {
 

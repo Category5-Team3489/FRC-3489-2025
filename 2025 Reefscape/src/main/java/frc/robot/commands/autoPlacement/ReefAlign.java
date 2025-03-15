@@ -1,105 +1,154 @@
-// package frc.robot.commands.autoPlacement;
+package frc.robot.commands.autoPlacement;
 
-// import edu.wpi.first.math.MathUtil;
-// import edu.wpi.first.math.controller.PIDController;
-// import edu.wpi.first.math.geometry.Rotation2d;
-// import edu.wpi.first.wpilibj2.command.Command;
-// import frc.robot.subsystems.CommandSwerveDrivetrain;
-// import frc.robot.subsystems.ElevatorLimelight;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 
-// public class ReefAlign extends Command {
-// // TODO fix the constants
-// private static double MaxStrafeMetersPerSecond = 0.5;
-// private static double MaxDistanceMetersPerSecond = 1;
-// private static double StrafeToleranceDegrees = 0.6;
-// private static double DistanceToleranceDegrees = 0.25;
-// private static Rotation2d TargetAngle = Rotation2d.fromDegrees(180);
-// private static double SpeedLimiter = 0.5;
-// private static double MaxOmegaDegreesPerSecond = 45;
-// private static double TargetXSetpointDegrees = -5.72;
-// private static double TargetYSetpointDegrees = -5.48;
-// public static double FeedforwardMetersPerSecond = 0.02;
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 
-// private ElevatorLimelight limelight = ElevatorLimelight.get();
-// private CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.get();
-// private PIDController strafeController = new PIDController(0.15, 0, 0);
-// private PIDController distanceController = new PIDController(0.25, 0, 0);
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.enums.AlignState;
+import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.ElevatorLimelight;
 
-// private double xMetersPerSecond = 0;
-// private double yMetersPerSecond = 0;
+public class ReefAlign extends Command {
+    // TODO fix the constants
+    private static double MaxStrafeMetersPerSecond = 0.5;
+    private static double MaxDistanceMetersPerSecond = 1;
+    private static double StrafeToleranceDegrees = 0.6;
+    private static double DistanceToleranceDegrees = 0.25;
+    private static Rotation2d TargetAngle = Rotation2d.fromDegrees(180);
+    private static double SpeedLimiter = 0.5;
+    private static double MaxOmegaDegreesPerSecond = 45;
+    private static double TargetXSetpointDegrees = -5.72;
+    private static double TargetYSetpointDegrees = -5.48;
+    public static double FeedforwardMetersPerSecond = 0.02;
 
-// public ReefAlign(ElevatorLimelight limelight, CommandSwerveDrivetrain
-// drivetrain) {
-// this.limelight = limelight;
-// this.drivetrain = drivetrain;
+    private boolean hasHitStrafeSetpoint = false;
 
-// addRequirements(limelight, drivetrain);
-// }
+    private ElevatorLimelight limelight;
+    private CommandSwerveDrivetrain drivetrain;
+    // private ElevatorLimelight limelight;
+    // private CommandSwerveDrivetrain drivetrain;
+    private PIDController strafeController = new PIDController(0.15, 0, 0);
+    private PIDController distanceController = new PIDController(0.25, 0, 0);
 
-// @Override
-// public void initialize() {
-// limelight.setDesiredPipeline(LimelightPipeline.MidRetroreflective);
+    private double xMetersPerSecond = 0;
+    private double yMetersPerSecond = 0;
 
-// strafeController.setTolerance(StrafeToleranceDegrees);
-// distanceController.setTolerance(DistanceToleranceDegrees);
-// }
+    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond);
+    // test robotrentric
+    private final SwerveRequest.RobotCentric drive = new SwerveRequest.RobotCentric()
+            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-// @Override
-// public void execute() {
-// if (!limelight.isActivePipeline(LimelightPipeline.MidRetroreflective) ||
-// !drivetrain.isAroundTargetHeading()) {
-// drivetrain.driveFieldRelative(0.0, 0.0, SpeedLimiter, TargetAngle,
-// MaxOmegaDegreesPerSecond);
-// return;
-// }
+    private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
 
-// double targetX = limelight.getTargetX();
-// if (!Double.isNaN(targetX)) {
-// yMetersPerSecond = -strafeController.calculate(targetX,
-// TargetXSetpointDegrees);
-// yMetersPerSecond += Cat5.getSign(yMetersPerSecond) *
-// FeedforwardMetersPerSecond;
-// yMetersPerSecond = MathUtil.clamp(yMetersPerSecond,
-// -MaxStrafeMetersPerSecond, MaxStrafeMetersPerSecond);
-// // if (strafeController.atSetpoint()) {
-// // yMetersPerSecond *= 0.3;
-// // }
-// } else {
-// yMetersPerSecond = 0;
-// }
+    Command CommandSwerveDrive;
 
-// double targetY = limelight.getTargetY();
-// if (!Double.isNaN(targetY)) {
-// xMetersPerSecond = distanceController.calculate(targetY,
-// TargetYSetpointDegrees);
-// xMetersPerSecond += Cat5.getSign(xMetersPerSecond) *
-// FeedforwardMetersPerSecond;
-// xMetersPerSecond = MathUtil.clamp(xMetersPerSecond,
-// -MaxDistanceMetersPerSecond,
-// MaxDistanceMetersPerSecond);
-// // if (distanceController.atSetpoint()) {
-// // xMetersPerSecond *= 0.3;
-// // }
-// } else {
-// xMetersPerSecond = 0;
-// }
+    private double drivetrainAngleRate = 0;
+    private double drivetrainVelocityX = 0;
+    private double drivetrainVelocityY = 0;
 
-// drivetrain.driveFieldRelative(xMetersPerSecond, yMetersPerSecond,
-// SpeedLimiter, TargetAngle,
-// MaxOmegaDegreesPerSecond);
-// }
+    public ReefAlign(CommandSwerveDrivetrain drivetrain, ElevatorLimelight limelight) {
+        this.drivetrain = drivetrain;
+        this.limelight = limelight;
+        CommandSwerveDrive = drivetrain.applyRequest(() -> drive
+                .withVelocityX(0)// this is avtually Y drives forward and back
+                .withVelocityY(getDrivetrainVelocityY()) // this is actually X drives in
+                .withRotationalRate(0));
 
-// @Override
-// public boolean isFinished() {
-// return strafeController.atSetpoint() && distanceController.atSetpoint();
-// }
+        addRequirements(drivetrain, limelight);
+    }
 
-// @Override
-// public void end(boolean interrupted) {
-// drivetrain.brakeTranslation();
+    @Override
+    public void initialize() {
+        // limelight.setDesiredPipeline(LimelightPipeline.MidRetroreflectiv
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TEST REEF ALIGN INITIALIZE");
 
-// Cat5.print(getName() + " end");
+        strafeController.setTolerance(StrafeToleranceDegrees);
+        distanceController.setTolerance(DistanceToleranceDegrees);
+    }
 
-// limelight.printTargetData();
-// }
-// }
+    private void printthings() {
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TEST REEF ALIGN INITIALIZE");
+
+    }
+
+    @Override
+    public void execute() {
+
+        // System.out.println("---------------------------------------------- TEST REEF
+        // ALIGN");
+        double targetX = limelight.getTargetX();
+        double targetY = limelight.getTargetY();
+
+        if (!Double.isNaN(targetX)) {
+            yMetersPerSecond = -strafeController.calculate(targetX, TargetXSetpointDegrees);
+            yMetersPerSecond = MathUtil.clamp(yMetersPerSecond, -MaxStrafeMetersPerSecond, MaxStrafeMetersPerSecond);
+        } else {
+            yMetersPerSecond = 0;
+        }
+
+        if (strafeController.atSetpoint() && !hasHitStrafeSetpoint) {
+            hasHitStrafeSetpoint = true;
+        }
+
+        // if (hasHitStrafeSetpoint) {
+        // xMetersPerSecond = distanceRateLimiter.calculate(WallSpeedMetersPerSecond);
+        // }
+
+        // drivetrain.driveFieldRelative(xMetersPerSecond, yMetersPerSecond,
+        // SpeedLimiter, TargetAngle,
+        // MaxOmegaDegreesPerSecond);
+        if (targetX == AlignState.LeftCenter.getX() && targetY == AlignState.LeftCenter.getY()) {
+            drivetrainVelocityX = 0;
+            drivetrainVelocityY = 0;
+            System.out.println("------don't move" + targetX);
+
+        } else if (targetX > AlignState.Left.getX()) {
+            drivetrainVelocityX = 0.2 * MaxSpeed;
+            System.out.println("--------to the right---------" + targetX);
+
+        } else {
+            drivetrainVelocityX = 0.2 * MaxSpeed;
+            System.out.println("--------to the left------" + targetX);
+
+        }
+        // todo fix the distance
+        if (targetY > AlignState.Left.getY()) {
+            drivetrainVelocityY = 0.2 * MaxSpeed;
+            System.out.println("--------------------------------------------" + targetX);
+
+        } else {
+            drivetrainVelocityY = 0.2 * MaxSpeed;
+            System.out.println("--------------------------------------------" + targetX);
+        }
+        CommandSwerveDrive.schedule();
+    }
+
+    private double getDrivetrainAngleRate() {
+        return drivetrainAngleRate;
+    }
+
+    private double getDrivetrainVelocityX() {
+        return drivetrainVelocityX;
+    }
+
+    private double getDrivetrainVelocityY() {
+        return drivetrainVelocityY;
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        System.out.println("---------------------------------------------- TEST REEF ALIGN END");
+
+        drivetrain.applyRequest(() -> brake);
+    }
+}

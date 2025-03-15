@@ -17,24 +17,33 @@ public class ElevatorLimelight extends SubsystemBase {
     // Devices
     // private final NetworkTable limelight =
     // NetworkTableInstance.getDefault().getTable("limelight-shooter");
-    private final NetworkTable limelight = NetworkTableInstance.getDefault().getTable("limelight-elevator");
+    private final NetworkTable limelight;
 
     // Used to determine how long
     private Timer timer = new Timer();
 
     // Variables
-    private final NetworkTableEntry tagIdEntry = limelight.getEntry("tid");
-    private final NetworkTableEntry targetXEntry = limelight.getEntry("tx");
-    private final NetworkTableEntry targetYEntry = limelight.getEntry("ty");
-    private final NetworkTableEntry targetAreaEntry = limelight.getEntry("ta");
-    private final NetworkTableEntry targetVisibleEntry = limelight.getEntry("tv");
-    private final NetworkTableEntry targetAngleEntry = limelight.getEntry("ts");
+    private final NetworkTableEntry tagIdEntry;
+    private final NetworkTableEntry targetXEntry;
+    private final NetworkTableEntry targetYEntry;
+    private final NetworkTableEntry targetAreaEntry;
+    private final NetworkTableEntry targetVisibleEntry;
+    private final NetworkTableEntry targetAngleEntry;
 
     private double lastTargetX;
     private double lastTargetY;
     private double lastTargetS;
 
     private ElevatorLimelight() {
+
+        limelight = NetworkTableInstance.getDefault().getTable("limelight-one");
+
+        tagIdEntry = limelight.getEntry("tid");
+        targetXEntry = limelight.getEntry("tx");
+        targetYEntry = limelight.getEntry("ty");
+        targetAreaEntry = limelight.getEntry("ta");
+        targetVisibleEntry = limelight.getEntry("tv");
+        targetAngleEntry = limelight.getEntry("ts");
 
         Shuffleboard.getTab("Main")
                 .addDouble("Tag", () -> getTagId())

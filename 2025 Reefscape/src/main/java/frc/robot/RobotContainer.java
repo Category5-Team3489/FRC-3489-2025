@@ -10,26 +10,23 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.commands.IntakeCommandOne;
-import frc.robot.commands.IntakeCommandThree;
-import frc.robot.commands.IntakeCommandTwo;
+import frc.robot.commands.autoPlacement.ReefAlign;
+// import frc.robot.commands.IntakeCommandOne;
+// import frc.robot.commands.IntakeCommandThree;
+// import frc.robot.commands.IntakeCommandTwo;
 // import frc.robot.commands.IntakeCommand;
 import frc.robot.enums.ElevatorState;
 import frc.robot.enums.IndexState;
-import frc.robot.enums.IntakeExtentionState;
-import frc.robot.enums.IntakeRollerState;
 // import frc.robot.enums.IntakeExtentionState;
 // import frc.robot.enums.IntakeRollerState;
 import frc.robot.enums.OuttakeState;
@@ -39,16 +36,17 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ElevatorLimelight;
 import frc.robot.subsystems.Index;
 import frc.robot.subsystems.Outtake;
-import frc.robot.subsystems.intake.IntakeExtention;
-import frc.robot.subsystems.intake.IntakeRoller;
+// import frc.robot.subsystems.intake.IntakeExtention;
+// import frc.robot.subsystems.intake.IntakeRoller;
 
 public class RobotContainer {
     private final Outtake outtake = Outtake.get();
     private final Elevator elevator = Elevator.get();
     // private final IntakeCommand intakeCommand = new IntakeCommand();
     private final Index index = Index.get();
-    private final IntakeExtention intakeExtention = IntakeExtention.get();
-    private final IntakeRoller intakeRoller = IntakeRoller.get();
+    private final ElevatorLimelight limelight = ElevatorLimelight.get();
+    // private final IntakeExtention intakeExtention = IntakeExtention.get();
+    // private final IntakeRoller intakeRoller = IntakeRoller.get();
     // private final ElevatorLimelight limelight = ElevatorLimelight.get();
 
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top
@@ -74,8 +72,12 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
+    // public final ElevatorLimelight limelight = ElevatorLimelight.get();
+
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
+
+    public final ReefAlign autoAlign = new ReefAlign(drivetrain, limelight);
 
     public RobotContainer() {
         autoChooser = AutoBuilder.buildAutoChooser("New Auto");
@@ -103,11 +105,11 @@ public class RobotContainer {
 
     private void configureBindings() {
 
-        manipulatorController.axisLessThan(5, -0.1).whileTrue(
-                intakeExtention.adjustManualAngle(-1));
+        // manipulatorController.axisLessThan(5, -0.1).whileTrue(
+        // intakeExtention.adjustManualAngle(-1));
 
-        manipulatorController.axisGreaterThan(5, 0.1).whileTrue(
-                intakeExtention.adjustManualAngle(1));
+        // manipulatorController.axisGreaterThan(5, 0.1).whileTrue(
+        // intakeExtention.adjustManualAngle(1));
 
         manipulatorController.axisLessThan(2, -0.1).whileTrue(
                 elevator.adjustManualAngle(1));
@@ -122,11 +124,11 @@ public class RobotContainer {
         // ======================================================================
         // -----------------BINDING METHODS-----------------------------------------
         getDrivetrainBindings();
-        getElevatorBindings();
-        getOuttakeBindings(); // RUN = LB; STOP = RB
-        getIntakeExtendBindings();
-        getIntakeRollerBindings();
-        getIndexBindings(); // RUN = START; STOP = BACK
+        // getElevatorBindings();
+        // getOuttakeBindings(); // RUN = LB; STOP = RB
+        // // getIntakeExtendBindings();
+        // // getIntakeRollerBindings();
+        // getIndexBindings(); // RUN = START; STOP = BACK
 
     }
 
@@ -220,8 +222,14 @@ public class RobotContainer {
         // reset the field-centric heading on left bumper press
         driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-        drivetrain.registerTelemetry(logger::telemeterize);
+        // TODO !!!Uncomment this for Limelight Testing!!!
+        // driverController.rightBumper().onTrue(Commands.runOnce(() -> {
+        // System.out.println("-----------==");
+        // autoAlign.schedule();
+        // }));
 
+        drivetrain.registerTelemetry(logger::telemeterize);
+        // DriverStation.silenceJoystickConnectionWarning(true);
     }
 
     private void getElevatorBindings() {
@@ -246,17 +254,18 @@ public class RobotContainer {
     }
 
     private void getIntakeExtendBindings() {
-        final IntakeCommandOne intakeCommandOne = new IntakeCommandOne();
+        // final IntakeCommandOne intakeCommandOne = new IntakeCommandOne();
         // final IntakeCommandTwo intakeCommandThree = new IntakeCommandTwo();
         // final IntakeCommandThree intakeCommandTwo = new IntakeCommandThree();
 
-        manipulatorController.leftBumper().onTrue(Commands.runOnce(() -> {
-            if (intakeExtention.targetTics == IntakeExtentionState.IntakePosition.getValue()) {
-                intakeExtention.updateCommand(IntakeExtentionState.MatchHome).schedule();
-            } else {
-                intakeCommandOne.schedule();
-            }
-        }));
+        // manipulatorController.leftBumper().onTrue(Commands.runOnce(() -> {
+        // if (intakeExtention.targetTics ==
+        // IntakeExtentionState.IntakePosition.getValue()) {
+        // intakeExtention.updateCommand(IntakeExtentionState.MatchHome).schedule();
+        // } else {
+        // intakeCommandOne.schedule();
+        // }
+        // }));
 
         // manipulatorController.rightBumper().onTrue(Commands.runOnce(() ->
         // intakeCommandTwo.schedule()));
@@ -265,35 +274,36 @@ public class RobotContainer {
 
     }
 
-    private void getIntakeRollerBindings() {
-        manipulatorController.povUp().onTrue(Commands.runOnce(() -> {
-            if (intakeRoller.speed == IntakeRollerState.Stop.getSpeedPercent()) {
-                intakeRoller.setSpeedCommand(IntakeRollerState.Test).schedule();
-            } else {
-                intakeRoller.setSpeedCommand(IntakeRollerState.Stop).schedule();
-            }
-        }));
+    // private void getIntakeRollerBindings() {
+    // manipulatorController.povUp().onTrue(Commands.runOnce(() -> {
+    // if (intakeRoller.speed == IntakeRollerState.Stop.getSpeedPercent()) {
+    // intakeRoller.setSpeedCommand(IntakeRollerState.Test).schedule();
+    // } else {
+    // intakeRoller.setSpeedCommand(IntakeRollerState.Stop).schedule();
+    // }
+    // }));
 
-        manipulatorController.povDown().onTrue(Commands.runOnce(() -> {
-            if (intakeRoller.speed == IntakeRollerState.Stop.getSpeedPercent()) {
-                intakeRoller.setSpeedCommand(IntakeRollerState.IntakeTransfer).schedule();
-            } else {
-                intakeRoller.setSpeedCommand(IntakeRollerState.Stop).schedule();
-            }
-        }));
+    // manipulatorController.povDown().onTrue(Commands.runOnce(() -> {
+    // if (intakeRoller.speed == IntakeRollerState.Stop.getSpeedPercent()) {
+    // intakeRoller.setSpeedCommand(IntakeRollerState.IntakeTransfer).schedule();
+    // } else {
+    // intakeRoller.setSpeedCommand(IntakeRollerState.Stop).schedule();
+    // }
+    // }));
 
-        manipulatorController.povRight().onTrue(Commands.runOnce(() -> {
-            if (intakeRoller.speed == IntakeRollerState.Stop.getSpeedPercent()) {
-                intakeRoller.setSpeedCommand(IntakeRollerState.Outtake).schedule();
-            } else {
-                intakeRoller.setSpeedCommand(IntakeRollerState.Stop).schedule();
-            }
-        }));
+    // manipulatorController.povRight().onTrue(Commands.runOnce(() -> {
+    // if (intakeRoller.speed == IntakeRollerState.Stop.getSpeedPercent()) {
+    // intakeRoller.setSpeedCommand(IntakeRollerState.Outtake).schedule();
+    // } else {
+    // intakeRoller.setSpeedCommand(IntakeRollerState.Stop).schedule();
+    // }
+    // }));
 
-        final IntakeCommandTwo intakeCommandTwo = new IntakeCommandTwo();
+    // final IntakeCommandTwo intakeCommandTwo = new IntakeCommandTwo();
 
-        manipulatorController.povLeft().onTrue(Commands.runOnce(() -> intakeCommandTwo.schedule()));
-    }
+    // manipulatorController.povLeft().onTrue(Commands.runOnce(() ->
+    // intakeCommandTwo.schedule()));
+    // }
 
     private void getIndexBindings() {
         manipulatorController.start().onTrue(Commands.runOnce(() -> {
