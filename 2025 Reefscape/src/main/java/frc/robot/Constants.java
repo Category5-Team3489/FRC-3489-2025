@@ -70,4 +70,23 @@ public final class Constants {
         public static final int LEFT_MOTOR_ID = 12;
     }
 
+    public static class AutoAlign {
+        public static final double X_REEF_ALIGNMENT_P = 0.01;
+        public static final double Y_REEF_ALIGNMENT_P = 0.01;
+        public static final double ROT_REEF_ALIGNMENT_P = 0.01;
+
+        public static final double ROT_SETPOINT_REEF_ALIGNMENT = 0;
+        public static final double ROT_TOLERANCE_REEF_ALIGNMENT = 5;
+
+        public static final double X_SETPOINT_REEF_ALIGNMENT = 40.33;
+        public static final double X_TOLERANCE_REEF_ALIGNMENT = 5;
+
+        public static final double Y_SETPOINT_REEF_ALIGNMENT = -3.9;
+        public static final double Y_TOLERANCE_REEF_ALIGNMENT = 5;
+
+        public static final double DONT_SEE_TAG_WAIT_TIME = 1;
+        public static final double POSE_VALIDATION_TIME = 1;
+
+    }
+
 }

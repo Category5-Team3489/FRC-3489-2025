@@ -1,7 +1,7 @@
 package frc.robot.enums;
 
 public enum AlignState {
-    Left(41.9, -3.32), // 0.001
+    Left(40.33, -3.49), // 0.001
     Right(0.32, -8.6), // 0.8
     LeftCenter(35.49, -7.80);
 

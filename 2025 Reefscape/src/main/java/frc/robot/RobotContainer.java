@@ -20,11 +20,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.autoPlacement.ReefAlign;
+import frc.robot.commands.autoPlacement.AlignToReefTagRelative;
+// import frc.robot.commands.autoPlacement.ReefAlign;
 // import frc.robot.commands.IntakeCommandOne;
 // import frc.robot.commands.IntakeCommandThree;
 // import frc.robot.commands.IntakeCommandTwo;
-// import frc.robot.commands.IntakeCommand;
+// import frc.robot.commands.IntAakeCommand;
 import frc.robot.enums.ElevatorState;
 import frc.robot.enums.IndexState;
 // import frc.robot.enums.IntakeExtentionState;
@@ -77,7 +78,7 @@ public class RobotContainer {
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
 
-    public final ReefAlign autoAlign = new ReefAlign(drivetrain, limelight);
+    public final AlignToReefTagRelative alignToReefTagRelative = new AlignToReefTagRelative(true, drivetrain);
 
     public RobotContainer() {
         autoChooser = AutoBuilder.buildAutoChooser("New Auto");
@@ -223,10 +224,9 @@ public class RobotContainer {
         driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         // TODO !!!Uncomment this for Limelight Testing!!!
-        // driverController.rightBumper().onTrue(Commands.runOnce(() -> {
-        // System.out.println("-----------==");
-        // autoAlign.schedule();
-        // }));
+        driverController.rightBumper().onTrue(Commands.runOnce(() -> {
+            alignToReefTagRelative.schedule();
+        }));
 
         drivetrain.registerTelemetry(logger::telemeterize);
         // DriverStation.silenceJoystickConnectionWarning(true);
