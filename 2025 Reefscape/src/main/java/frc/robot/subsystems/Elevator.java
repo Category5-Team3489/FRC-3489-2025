@@ -136,7 +136,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public Command updateCommand(ElevatorState elevatorState) {
-        return Commands.run(() -> {
+        return Commands.runOnce(() -> {
             setTargetTics(elevatorState.getHeigt());
         }, this);
     }

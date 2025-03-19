@@ -14,22 +14,13 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.autoPlacement.AlignToReefTagRelative;
-// import frc.robot.commands.autoPlacement.ReefAlign;
-// import frc.robot.commands.IntakeCommandOne;
-// import frc.robot.commands.IntakeCommandThree;
-// import frc.robot.commands.IntakeCommandTwo;
-// import frc.robot.commands.IntAakeCommand;
 import frc.robot.enums.ElevatorState;
 import frc.robot.enums.IndexState;
-// import frc.robot.enums.IntakeExtentionState;
-// import frc.robot.enums.IntakeRollerState;
 import frc.robot.enums.OuttakeState;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -37,8 +28,6 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ElevatorLimelight;
 import frc.robot.subsystems.Index;
 import frc.robot.subsystems.Outtake;
-// import frc.robot.subsystems.intake.IntakeExtention;
-// import frc.robot.subsystems.intake.IntakeRoller;
 
 public class RobotContainer {
     private final Outtake outtake = Outtake.get();
@@ -78,7 +67,8 @@ public class RobotContainer {
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
 
-    public final AlignToReefTagRelative alignToReefTagRelative = new AlignToReefTagRelative(true, drivetrain);
+    // public final AlignToReefTagRelative alignToReefTagRelative = new
+    // AlignToReefTagRelative(true, drivetrain);
 
     public RobotContainer() {
         autoChooser = AutoBuilder.buildAutoChooser("New Auto");
@@ -125,11 +115,11 @@ public class RobotContainer {
         // ======================================================================
         // -----------------BINDING METHODS-----------------------------------------
         getDrivetrainBindings();
-        // getElevatorBindings();
-        // getOuttakeBindings(); // RUN = LB; STOP = RB
+        getElevatorBindings();
+        getOuttakeBindings(); // RUN = LB; STOP = RB
         // // getIntakeExtendBindings();
         // // getIntakeRollerBindings();
-        // getIndexBindings(); // RUN = START; STOP = BACK
+        getIndexBindings(); // RUN = START; STOP = BACK
 
     }
 
@@ -224,9 +214,9 @@ public class RobotContainer {
         driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         // TODO !!!Uncomment this for Limelight Testing!!!
-        driverController.rightBumper().onTrue(Commands.runOnce(() -> {
-            alignToReefTagRelative.schedule();
-        }));
+        // driverController.rightBumper().onTrue(Commands.runOnce(() -> {
+        // alignToReefTagRelative.schedule();
+        // }));
 
         drivetrain.registerTelemetry(logger::telemeterize);
         // DriverStation.silenceJoystickConnectionWarning(true);
@@ -317,6 +307,6 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         /* Run the path selected from the auto chooser */
-        return new PathPlannerAuto("Leave");
+        return autoChooser.getSelected();
     }
 }
