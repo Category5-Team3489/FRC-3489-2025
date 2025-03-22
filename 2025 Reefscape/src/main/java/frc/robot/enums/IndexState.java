@@ -1,7 +1,7 @@
 package frc.robot.enums;
 
 public enum IndexState {
-    Outtake(-0.25),
+    Outtake(-0.5), // 25
     Intake(0.25),
     Stop(0);
 
