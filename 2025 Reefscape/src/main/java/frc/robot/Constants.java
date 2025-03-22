@@ -90,7 +90,7 @@ public final class Constants {
     }
 
     public static class Climber {
-        public static final double MOTOR_ID = 16;
+        public static final int MOTOR_ID = 16;
     }
 
 }

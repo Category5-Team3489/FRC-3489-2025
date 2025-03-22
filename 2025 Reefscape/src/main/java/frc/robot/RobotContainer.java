@@ -19,12 +19,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-// import frc.robot.enums.ClimberState;
+import frc.robot.enums.ClimberState;
 import frc.robot.enums.ElevatorState;
 import frc.robot.enums.IndexState;
 import frc.robot.enums.OuttakeState;
 import frc.robot.generated.TunerConstants;
-// import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ElevatorLimelight;
@@ -36,7 +36,7 @@ public class RobotContainer {
     private final Elevator elevator = Elevator.get();
     // private final IntakeCommand intakeCommand = new IntakeCommand();
     private final Index index = Index.get();
-    // private final Climber climber = Climber.get();
+    private final Climber climber = Climber.get();
     private final ElevatorLimelight limelight = ElevatorLimelight.get();
     // private final IntakeExtention intakeExtention = IntakeExtention.get();
     // private final IntakeRoller intakeRoller = IntakeRoller.get();
@@ -120,7 +120,7 @@ public class RobotContainer {
         getDrivetrainBindings();
         getElevatorBindings();
         getOuttakeBindings(); // RUN = LB; STOP = RB
-        // getClimberBindings();
+        getClimberBindings();
 
         // // getIntakeExtendBindings();
         // // getIntakeRollerBindings();
@@ -248,15 +248,15 @@ public class RobotContainer {
 
     }
 
-    // private void getClimberBindings() {
-    // manipulatorController.povUp().onTrue(Commands.runOnce(() -> {
-    // if (climber.speed == ClimberState.Off.getSpeed()) {
-    // climber.setClimber(ClimberState.On).schedule();
-    // } else {
-    // climber.setClimber(ClimberState.Off).schedule();
-    // }
-    // }));
-    // }
+    private void getClimberBindings() {
+        manipulatorController.povUp().onTrue(Commands.runOnce(() -> {
+            if (climber.speed == ClimberState.Off.getSpeed()) {
+                climber.setClimber(ClimberState.On).schedule();
+            } else {
+                climber.setClimber(ClimberState.Off).schedule();
+            }
+        }));
+    }
 
     private void getIntakeExtendBindings() {
         // final IntakeCommandOne intakeCommandOne = new IntakeCommandOne();
