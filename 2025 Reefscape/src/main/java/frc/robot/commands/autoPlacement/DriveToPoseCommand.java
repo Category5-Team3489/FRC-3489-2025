@@ -1,79 +1,79 @@
-package frc.robot.commands.autoPlacement;
+// package frc.robot.commands.autoPlacement;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
-import java.util.function.Supplier;
+// import edu.wpi.first.math.controller.PIDController;
+// import edu.wpi.first.math.controller.ProfiledPIDController;
+// import edu.wpi.first.math.geometry.Pose2d;
+// import edu.wpi.first.math.geometry.Transform2d;
+// import edu.wpi.first.math.kinematics.ChassisSpeeds;
+// import edu.wpi.first.wpilibj2.command.Command;
+// import edu.wpi.first.wpilibj2.command.Commands;
+// import edu.wpi.first.wpilibj2.command.button.Trigger;
+// import frc.robot.subsystems.CommandSwerveDrivetrain;
+// import java.util.function.Supplier;
 
-public class DriveToPoseCommand extends Command {
-    private final PIDController perpendicularController = DriveCommandConstants.makeTranslationController();
-    private final PIDController parallelController = DriveCommandConstants.makeTranslationController();
-    private final ProfiledPIDController angleController = DriveCommandConstants.makeAngleController();
+// public class DriveToPoseCommand extends Command {
+//     private final PIDController perpendicularController = DriveCommandConstants.makeTranslationController();
+//     private final PIDController parallelController = DriveCommandConstants.makeTranslationController();
+//     private final ProfiledPIDController angleController = DriveCommandConstants.makeAngleController();
 
-    private final CommandSwerveDrivetrain drive;
-    private final boolean useConstrainedPose;
-    private final Supplier<Pose2d> targetPoseSupplier;
+//     private final CommandSwerveDrivetrain drive;
+//     private final boolean useConstrainedPose;
+//     private final Supplier<Pose2d> targetPoseSupplier;
 
-    public DriveToPoseCommand(
-            CommandSwerveDrivetrain drive, boolean useConstrainedPose, Supplier<Pose2d> targetPoseSupplier) {
-        addRequirements(drive);
+//     public DriveToPoseCommand(
+//             CommandSwerveDrivetrain drive, boolean useConstrainedPose, Supplier<Pose2d> targetPoseSupplier) {
+//         addRequirements(drive);
 
-        this.drive = drive;
-        this.useConstrainedPose = useConstrainedPose;
-        this.targetPoseSupplier = targetPoseSupplier;
-    }
+//         this.drive = drive;
+//         this.useConstrainedPose = useConstrainedPose;
+//         this.targetPoseSupplier = targetPoseSupplier;
+//     }
 
-    public static DriveToPoseCommand withJoystickRumble(
-            CommandSwerveDrivetrain drive,
-            boolean useConstrainedPose,
-            Supplier<Pose2d> targetPoseSupplier,
-            Command rumbleCommand) {
-        DriveToPoseCommand command = new DriveToPoseCommand(drive, useConstrainedPose, targetPoseSupplier);
+//     public static DriveToPoseCommand withJoystickRumble(
+//             CommandSwerveDrivetrain drive,
+//             boolean useConstrainedPose,
+//             Supplier<Pose2d> targetPoseSupplier,
+//             Command rumbleCommand) {
+//         DriveToPoseCommand command = new DriveToPoseCommand(drive, useConstrainedPose, targetPoseSupplier);
 
-        command.atSetpoint().onTrue(Commands.deferredProxy(() -> rumbleCommand));
+//         command.atSetpoint().onTrue(Commands.deferredProxy(() -> rumbleCommand));
 
-        return command;
-    }
+//         return command;
+//     }
 
-    @Override
-    public void execute() {
-        Pose2d robotPose = useConstrainedPose ? drive.getConstrainedPose() : drive.getGlobalPose();
-        Pose2d targetPose = targetPoseSupplier.get();
+//     @Override
+//     public void execute() {
+//         Pose2d robotPose = useConstrainedPose ? drive.getConstrainedPose() : drive.getGlobalPose();
+//         Pose2d targetPose = targetPoseSupplier.get();
 
-        Transform2d error = robotPose.minus(targetPose);
+//         Transform2d error = robotPose.minus(targetPose);
 
-        double perpendicularSpeed = perpendicularController.calculate(error.getX(), 0);
-        perpendicularSpeed = !perpendicularController.atSetpoint() ? perpendicularSpeed : 0;
+//         double perpendicularSpeed = perpendicularController.calculate(error.getX(), 0);
+//         perpendicularSpeed = !perpendicularController.atSetpoint() ? perpendicularSpeed : 0;
 
-        double parallelSpeed = parallelController.calculate(error.getY(), 0);
-        parallelSpeed = !parallelController.atSetpoint() ? parallelSpeed : 0;
+//         double parallelSpeed = parallelController.calculate(error.getY(), 0);
+//         parallelSpeed = !parallelController.atSetpoint() ? parallelSpeed : 0;
 
-        double angularSpeed = angleController.calculate(error.getRotation().getRadians(), 0);
-        angularSpeed = !angleController.atSetpoint() ? angularSpeed : 0;
+//         double angularSpeed = angleController.calculate(error.getRotation().getRadians(), 0);
+//         angularSpeed = !angleController.atSetpoint() ? angularSpeed : 0;
 
-        ChassisSpeeds speeds = new ChassisSpeeds(perpendicularSpeed, parallelSpeed, angularSpeed);
+//         ChassisSpeeds speeds = new ChassisSpeeds(perpendicularSpeed, parallelSpeed, angularSpeed);
 
-        drive.runVelocity(speeds);
-    }
+//         drive.runVelocity(speeds);
+//     }
 
     
-    @Override
-    public void end(boolean interrupt) {
-        perpendicularController.reset();
-        parallelController.reset();
-        angleController.reset(0);
-    }
+//     @Override
+//     public void end(boolean interrupt) {
+//         perpendicularController.reset();
+//         parallelController.reset();
+//         angleController.reset(0);
+//     }
 
-    public Trigger atSetpoint() {
-        return new Trigger(
-                () -> perpendicularController.atSetpoint()
-                        && parallelController.atSetpoint()
-                        && angleController.atSetpoint());
-    }
-}
+//     public Trigger atSetpoint() {
+//         return new Trigger(
+//                 () -> perpendicularController.atSetpoint()
+//                         && parallelController.atSetpoint()
+//                         && angleController.atSetpoint());
+//     }
+// }

@@ -19,10 +19,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.autoPlacement.Align;
 import frc.robot.enums.ClimberState;
 import frc.robot.enums.ElevatorState;
 import frc.robot.enums.IndexState;
 import frc.robot.enums.OuttakeState;
+import frc.robot.enums.SpeedLimitState;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -42,6 +44,8 @@ public class RobotContainer {
     // private final IntakeRoller intakeRoller = IntakeRoller.get();
     // private final ElevatorLimelight limelight = ElevatorLimelight.get();
 
+    private boolean alignScheduled = false;
+
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top
                                                                                   // speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per
@@ -53,6 +57,11 @@ public class RobotContainer {
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive
                                                                      // motors
+
+    private final SwerveRequest.RobotCentric driveRobotRel = new SwerveRequest.RobotCentric()
+        .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+        .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
     private final SwerveRequest.RobotCentric forwardStraight = new SwerveRequest.RobotCentric()
@@ -65,13 +74,14 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
+    private final Command align = new Align(drivetrain).onlyWhile(() -> isNotDriving());
+
     // public final ElevatorLimelight limelight = ElevatorLimelight.get();
 
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
 
-    // public final AlignToReefTagRelative alignToReefTagRelative = new
-    // AlignToReefTagRelative(true, drivetrain);
+    
 
     public RobotContainer() {
         autoChooser = AutoBuilder.buildAutoChooser("New Auto");
@@ -98,6 +108,25 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
+
+        // driverController.rightBumper().onTrue(Commands.runOnce( () -> align.schedule()));
+
+       
+
+        driverController.start().onTrue(Commands.runOnce( () -> {
+            if (alignScheduled) {
+                align.cancel();
+                System.out.println("Cancle!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                alignScheduled = false;
+            } else {
+                align.schedule();
+                alignScheduled = true;
+                System.out.println("++++++++++++++++++++++++++++++++++++++++++++");
+
+            }
+        }));
+
+        
 
         // manipulatorController.axisLessThan(5, -0.1).whileTrue(
         // intakeExtention.adjustManualAngle(-1));
@@ -128,21 +157,26 @@ public class RobotContainer {
 
     }
 
+    private boolean isNotDriving() {
+        return Math.abs(driverController.getLeftX()) < 0.1 && Math.abs(driverController.getLeftY()) < 0.1
+                && Math.abs(driverController.getRightX()) < 0.1;
+    }
+
     private void getDrivetrainBindings() {
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         drivetrain.setDefaultCommand(
                 // Drivetrain will execute this command periodically
                 drivetrain.applyRequest(() -> drive
-                        .withVelocityX(-driverController.getLeftY() * MaxSpeed) // Drive
+                        .withVelocityX(-driverController.getLeftY() * MaxSpeed  * drivetrain.getSpeedLimit()) // Drive
                                                                                 // forward
                                                                                 // with
                         // negative Y
                         // (forward)
-                        .withVelocityY(-driverController.getLeftX() * MaxSpeed) // Drive left
+                        .withVelocityY(-driverController.getLeftX() * MaxSpeed  * drivetrain.getSpeedLimit()) // Drive left
                                                                                 // with negative
                                                                                 // X (left)
-                        .withRotationalRate(-driverController.getRightX() * MaxAngularRate) // Drive
+                        .withRotationalRate(-driverController.getRightX() * MaxAngularRate  * drivetrain.getSpeedLimit()) // Drive
                                                                                             // counterclockwise
                                                                                             // with
                 // negative X (left)
@@ -225,6 +259,14 @@ public class RobotContainer {
 
         drivetrain.registerTelemetry(logger::telemeterize);
         // DriverStation.silenceJoystickConnectionWarning(true);
+
+        driverController.leftBumper().onTrue(Commands.runOnce(() -> drivetrain.setSpeedLimit(SpeedLimitState.Full)));
+        driverController.rightBumper()
+                .onTrue(Commands.runOnce(() -> drivetrain.setSpeedLimit(SpeedLimitState.Forth)));
+        // Reset the speed when button is released
+        driverController.leftBumper().onFalse(Commands.runOnce(() -> drivetrain.setSpeedLimit(SpeedLimitState.Half)));
+        driverController.rightBumper()
+                .onFalse(Commands.runOnce(() -> drivetrain.setSpeedLimit(SpeedLimitState.Half)));
     }
 
     private void getElevatorBindings() {

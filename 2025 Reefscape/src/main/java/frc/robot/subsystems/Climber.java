@@ -14,7 +14,7 @@ public class Climber extends SubsystemBase {
 
     private static final Climber instance = new Climber();
 
-    private SparkMax motor = new SparkMax(Constants.Climber.MOTOR_ID, MotorType.kBrushless);
+    private final SparkMax motor = new SparkMax(Constants.Climber.MOTOR_ID, MotorType.kBrushless);
 
     public double speed = 0;
 

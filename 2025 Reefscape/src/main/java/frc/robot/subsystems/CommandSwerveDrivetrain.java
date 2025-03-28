@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.Drivetrain;
+import frc.robot.enums.SpeedLimitState;
 import frc.robot.generated.TunerConstants;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
@@ -50,6 +51,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private static final CommandSwerveDrivetrain instance = TunerConstants.DriveTrain;
 
     public static CommandSwerveDrivetrain get() {
+        System.out.println("++++++++++++++++++++++++++++++++++++++++INSTANCE: " + instance);
         return instance;
     }
 
@@ -71,6 +73,19 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final SwerveRequest.SysIdSwerveTranslation m_translationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
     private final SwerveRequest.SysIdSwerveSteerGains m_steerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
     private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
+
+    public SpeedLimitState speedLimit = SpeedLimitState.Half;
+
+    public double getSpeedLimit() {
+        return speedLimit.getSpeedLimit();
+    }
+
+    public void setSpeedLimit(SpeedLimitState speedLimitState) {
+        if (speedLimitState != speedLimit) {
+            System.out.println("Drivetrain speed limit delta: " + speedLimit.toString() + " -> " + speedLimitState.toString());
+        }
+        speedLimit = speedLimitState;
+    }
 
     /*
      * SysId routine for characterizing translation. This is used to find PID gains
