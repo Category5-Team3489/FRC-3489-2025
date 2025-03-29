@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.autoPlacement.Align;
 import frc.robot.enums.ClimberState;
@@ -74,7 +75,8 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-    private final Command align = new Align(drivetrain).onlyWhile(() -> isNotDriving());
+    private final Command align = new Align(drivetrain).onlyWhile(() -> isNotDriving())
+            .withInterruptBehavior(InterruptionBehavior.kCancelSelf);
 
     // public final ElevatorLimelight limelight = ElevatorLimelight.get();
 
@@ -152,7 +154,8 @@ public class RobotContainer {
     }
 
     private boolean isNotDriving() {
-        return Math.abs(driverController.getLeftX()) < 0.1 && Math.abs(driverController.getLeftY()) < 0.1
+        return Math.abs(driverController.getLeftX()) < 0.1 &&
+                Math.abs(driverController.getLeftY()) < 0.1
                 && Math.abs(driverController.getRightX()) < 0.1;
     }
 

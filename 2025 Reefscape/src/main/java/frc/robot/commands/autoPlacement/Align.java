@@ -25,7 +25,7 @@ public class Align extends Command {
     private double drivetrainVelocityY;
 
     private double rotationSpeed = 0.05 * Constants.Drivetrain.MaxRadiansPerSecond;
-    private double translationSpeed = 0.5;
+    private double translationSpeed = 0.2;
 
     private final double targetXRange = 5;
     private final double targetYRange = 5;
@@ -80,9 +80,11 @@ public class Align extends Command {
             return;
         }
 
-        if (Math.abs(18 - currentX) < 2) {
+        if (currentX > 15) {
             drivetrainVelocityX = 0;
             xAlign = true;
+            driveCommandForward.schedule();
+
             System.out.println("X Aligned, current x: " + currentX);
         } else if (currentX < AlignState.Left.getX()) {
             drivetrainVelocityX = translationSpeed;
@@ -96,9 +98,11 @@ public class Align extends Command {
 
         }
 
-        if (Math.abs(-4 - currentY) < 2) {
+        if (currentY < -4 && currentY > -8) {
             drivetrainVelocityY = 0;
             yAlign = true;
+            driveCommandForward.schedule();
+
             System.out.println("Y Aligned, current y: " + currentY);
         } else if (currentY < AlignState.Left.getY()) {
             drivetrainVelocityY = -translationSpeed;
@@ -137,10 +141,7 @@ public class Align extends Command {
     // @Override
     // public void end(boolean interrupted) {
 
-    // // drivetrainAngleRate = 0;
-    // // drivetrainVelocityX = 0;
-    // // drivetrainVelocityY = 0;
-    // // driveCommandForward.cancel();
+    // driveCommandForward.cancel();
 
     // }
 
