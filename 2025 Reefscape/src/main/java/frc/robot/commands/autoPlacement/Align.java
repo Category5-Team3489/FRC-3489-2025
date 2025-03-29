@@ -1,14 +1,17 @@
 package frc.robot.commands.autoPlacement;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
+import frc.robot.enums.AlignState;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorLimelight;
 
-public class Align extends Command{
+public class Align extends Command {
 
     private final ElevatorLimelight limelight = ElevatorLimelight.get();
     private CommandSwerveDrivetrain drivetrain;
@@ -30,7 +33,6 @@ public class Align extends Command{
     private boolean xAlign = false;
     private boolean yAlign = false;
 
-
     private final double maxYMeterRange = 4;
     private final double minYMeterRange = 0.2;
 
@@ -44,11 +46,12 @@ public class Align extends Command{
     @Override
     public void initialize() {
         driveCommandForward = drivetrain.applyRequest(() -> drive
-            .withVelocityX(5)
-            .withVelocityY(5)
-            .withRotationalRate(5));
+                .withVelocityX(getDrivetrainVelocityX().getAsDouble())
+                .withVelocityY(getDrivetrainVelocityY().getAsDouble())
+                .withRotationalRate(getDrivetrainAngleRate().getAsDouble()));
 
-        //TODO Uncomment when velosity passed correctly: driveCommandForward.schedule();
+        // TODO Uncomment when velosity passed correctly:
+        // driveCommandForward.schedule();
 
     }
 
@@ -58,63 +61,75 @@ public class Align extends Command{
         double targetY = limelight.getTargetY();
         double targetV = limelight.getTargetVisible();
 
+        System.out.println("TEST");
 
-        //Return if Tag is not visible
+        // Return if Tag is not visible
         if (targetV == 0) {
             drivetrainAngleRate = 0;
-            drivetrainVelocityX = -0.5;
+            drivetrainVelocityX = 0;
             drivetrainVelocityY = 0;
             System.out.println("Tag is not Visible");
             return;
         }
 
-        if (Math.abs(targetX) < targetXRange) {
+        if (Math.abs(targetX) > 15) {
             drivetrainVelocityX = 0;
             xAlign = true;
-        } else if (targetX < 0) {
+            System.out.println("X Aligned");
+        } else if (targetX < AlignState.Left.getX()) {
+            drivetrainVelocityX = translationSpeed;
+            System.out.println("X -> -speed ---- " + targetX);
+
+            driveCommandForward.schedule();
+
+        } else if (targetX > AlignState.Left.getX()) {
             drivetrainVelocityX = -translationSpeed;
+            System.out.println("X -> +speed ---- " + targetX);
             driveCommandForward.schedule();
-        } else if (targetX > 0) {
-            drivetrainAngleRate = translationSpeed;
-            driveCommandForward.schedule();
+
         }
 
-        if (Math.abs(targetY) < targetYRange) {
+        if (Math.abs(targetY) > 3) {
             drivetrainVelocityY = 0;
             yAlign = true;
-        } else if (targetX < 0) {
-            drivetrainAngleRate = -translationSpeed;
+            System.out.println("Y Aligned");
+        } else if (targetX < AlignState.Left.getY()) {
+            drivetrainVelocityY = -translationSpeed;
+            System.out.println("Y -> -speed ---- " + targetY);
             driveCommandForward.schedule();
-        } else if (targetX > 0) {
-            drivetrainAngleRate = translationSpeed;
+        } else if (targetX > AlignState.Left.getY()) {
+            drivetrainVelocityY = translationSpeed;
+            System.out.println("Y -> +speed ---- " + targetY);
             driveCommandForward.schedule();
         }
 
     }
 
-    private double getDrivetrainAngleRate() {
-        return drivetrainAngleRate;
+    private DoubleSupplier getDrivetrainAngleRate() {
+        return () -> drivetrainAngleRate;
     }
 
-    private double getDrivetrainVelocityX() {
-        return drivetrainVelocityX;
+    private DoubleSupplier getDrivetrainVelocityX() {
+        return () -> drivetrainVelocityX;
     }
 
-    private double getDrivetrainVelocityY() {
-        return drivetrainVelocityY;
+    private DoubleSupplier getDrivetrainVelocityY() {
+        return () -> drivetrainVelocityY;
     }
 
-    @Override
-    public boolean isFinished() {
-        return xAlign && yAlign;
-    }
+    // @Override
+    // public boolean isFinished() {
+    // return xAlign && yAlign;
+    // }
 
     @Override
     public void end(boolean interrupted) {
+
+        drivetrainAngleRate = 0;
+        drivetrainVelocityX = 0;
+        drivetrainVelocityY = 0;
         driveCommandForward.cancel();
-        
-       
+
     }
 
-    
 }

@@ -59,8 +59,8 @@ public class RobotContainer {
                                                                      // motors
 
     private final SwerveRequest.RobotCentric driveRobotRel = new SwerveRequest.RobotCentric()
-        .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
-        .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
@@ -80,8 +80,6 @@ public class RobotContainer {
 
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
-
-    
 
     public RobotContainer() {
         autoChooser = AutoBuilder.buildAutoChooser("New Auto");
@@ -109,24 +107,20 @@ public class RobotContainer {
 
     private void configureBindings() {
 
-        // driverController.rightBumper().onTrue(Commands.runOnce( () -> align.schedule()));
+        // driverController.rightBumper().onTrue(Commands.runOnce( () ->
+        // align.schedule()));
 
-       
+        driverController.start().onTrue(Commands.run(() -> {
+            // if (alignScheduled) {
+            // align.cancel();
+            // System.out.println("Cancle!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            // alignScheduled = false;
+            // } else {
+            align.schedule();
+            alignScheduled = true;
+            System.out.println("++++++++++++++++++++++++++++++++++++++++++++");
 
-        driverController.start().onTrue(Commands.runOnce( () -> {
-            if (alignScheduled) {
-                align.cancel();
-                System.out.println("Cancle!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                alignScheduled = false;
-            } else {
-                align.schedule();
-                alignScheduled = true;
-                System.out.println("++++++++++++++++++++++++++++++++++++++++++++");
-
-            }
         }));
-
-        
 
         // manipulatorController.axisLessThan(5, -0.1).whileTrue(
         // intakeExtention.adjustManualAngle(-1));
@@ -168,17 +162,18 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
                 // Drivetrain will execute this command periodically
                 drivetrain.applyRequest(() -> drive
-                        .withVelocityX(-driverController.getLeftY() * MaxSpeed  * drivetrain.getSpeedLimit()) // Drive
-                                                                                // forward
-                                                                                // with
+                        .withVelocityX(-driverController.getLeftY() * MaxSpeed * drivetrain.getSpeedLimit()) // Drive
+                        // forward
+                        // with
                         // negative Y
                         // (forward)
-                        .withVelocityY(-driverController.getLeftX() * MaxSpeed  * drivetrain.getSpeedLimit()) // Drive left
-                                                                                // with negative
-                                                                                // X (left)
-                        .withRotationalRate(-driverController.getRightX() * MaxAngularRate  * drivetrain.getSpeedLimit()) // Drive
-                                                                                            // counterclockwise
-                                                                                            // with
+                        .withVelocityY(-driverController.getLeftX() * MaxSpeed * drivetrain.getSpeedLimit()) // Drive
+                                                                                                             // left
+                        // with negative
+                        // X (left)
+                        .withRotationalRate(-driverController.getRightX() * MaxAngularRate * drivetrain.getSpeedLimit()) // Drive
+                // counterclockwise
+                // with
                 // negative X (left)
                 ));
 
