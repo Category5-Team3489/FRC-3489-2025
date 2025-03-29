@@ -21,8 +21,8 @@ public class Align extends Command {
     private Command driveCommandForward;
 
     private double drivetrainAngleRate = 0;
-    private double drivetrainVelocityX = 0;
-    private double drivetrainVelocityY = 0;
+    private double drivetrainVelocityX;
+    private double drivetrainVelocityY;
 
     private double rotationSpeed = 0.05 * Constants.Drivetrain.MaxRadiansPerSecond;
     private double translationSpeed = 0.5;
@@ -45,10 +45,18 @@ public class Align extends Command {
 
     @Override
     public void initialize() {
-        driveCommandForward = drivetrain.applyRequest(() -> drive
-                .withVelocityX(getDrivetrainVelocityX().getAsDouble())
-                .withVelocityY(getDrivetrainVelocityY().getAsDouble())
-                .withRotationalRate(getDrivetrainAngleRate().getAsDouble()));
+        driveCommandForward = drivetrain.applyRequest(() -> {
+            System.out.println("X: " + getDrivetrainVelocityX().getAsDouble());
+            System.out.println("Y: " + getDrivetrainVelocityY().getAsDouble());
+            System.out.println("Angle: " + getDrivetrainAngleRate().getAsDouble());
+
+            return drive
+                    .withVelocityX(getDrivetrainVelocityX().getAsDouble())
+                    .withVelocityY(getDrivetrainVelocityY().getAsDouble())
+                    .withRotationalRate(getDrivetrainAngleRate().getAsDouble());
+        });
+
+        // driveCommandForward.schedule();
 
         // TODO Uncomment when velosity passed correctly:
         // driveCommandForward.schedule();
@@ -57,79 +65,83 @@ public class Align extends Command {
 
     @Override
     public void execute() {
-        double targetX = limelight.getTargetX();
-        double targetY = limelight.getTargetY();
+        double currentX = limelight.getTargetX();
+        double currentY = limelight.getTargetY();
         double targetV = limelight.getTargetVisible();
 
-        System.out.println("TEST");
+        // System.out.println("TEST");
 
         // Return if Tag is not visible
         if (targetV == 0) {
-            drivetrainAngleRate = 0;
-            drivetrainVelocityX = 0;
-            drivetrainVelocityY = 0;
+            // drivetrainAngleRate = 0;
+            // drivetrainVelocityX = 0;
+            // drivetrainVelocityY = 0;
             System.out.println("Tag is not Visible");
             return;
         }
 
-        if (Math.abs(targetX) > 15) {
+        if (Math.abs(18 - currentX) < 2) {
             drivetrainVelocityX = 0;
             xAlign = true;
-            System.out.println("X Aligned");
-        } else if (targetX < AlignState.Left.getX()) {
+            System.out.println("X Aligned, current x: " + currentX);
+        } else if (currentX < AlignState.Left.getX()) {
             drivetrainVelocityX = translationSpeed;
-            System.out.println("X -> -speed ---- " + targetX);
-
+            System.out.println("X -> -speed ---- " + currentX + "Velosity: " + drivetrainVelocityX);
             driveCommandForward.schedule();
 
-        } else if (targetX > AlignState.Left.getX()) {
+        } else if (currentX > AlignState.Left.getX()) {
             drivetrainVelocityX = -translationSpeed;
-            System.out.println("X -> +speed ---- " + targetX);
+            System.out.println("X -> +speed ---- " + currentX + "Velosity: " + drivetrainVelocityX);
             driveCommandForward.schedule();
 
         }
 
-        if (Math.abs(targetY) > 3) {
+        if (Math.abs(-4 - currentY) < 2) {
             drivetrainVelocityY = 0;
             yAlign = true;
-            System.out.println("Y Aligned");
-        } else if (targetX < AlignState.Left.getY()) {
+            System.out.println("Y Aligned, current y: " + currentY);
+        } else if (currentY < AlignState.Left.getY()) {
             drivetrainVelocityY = -translationSpeed;
-            System.out.println("Y -> -speed ---- " + targetY);
+            System.out.println("Y -> -speed ---- " + currentY + "Velosity: " + drivetrainVelocityY);
             driveCommandForward.schedule();
-        } else if (targetX > AlignState.Left.getY()) {
+        } else if (currentY > AlignState.Left.getY()) {
             drivetrainVelocityY = translationSpeed;
-            System.out.println("Y -> +speed ---- " + targetY);
+            System.out.println("Y -> +speed ---- " + currentY + "Velosity: " + drivetrainVelocityY);
             driveCommandForward.schedule();
         }
 
     }
 
     private DoubleSupplier getDrivetrainAngleRate() {
+        System.out.println("drive angle rate: " + drivetrainAngleRate);
         return () -> drivetrainAngleRate;
     }
 
     private DoubleSupplier getDrivetrainVelocityX() {
+        System.out.println("drive x rate: " + drivetrainVelocityX);
+
         return () -> drivetrainVelocityX;
     }
 
     private DoubleSupplier getDrivetrainVelocityY() {
+        System.out.println("drive y rate: " + drivetrainVelocityY);
+
         return () -> drivetrainVelocityY;
     }
 
-    // @Override
-    // public boolean isFinished() {
-    // return xAlign && yAlign;
-    // }
-
     @Override
-    public void end(boolean interrupted) {
-
-        drivetrainAngleRate = 0;
-        drivetrainVelocityX = 0;
-        drivetrainVelocityY = 0;
-        driveCommandForward.cancel();
-
+    public boolean isFinished() {
+        return xAlign && yAlign;
     }
+
+    // @Override
+    // public void end(boolean interrupted) {
+
+    // // drivetrainAngleRate = 0;
+    // // drivetrainVelocityX = 0;
+    // // drivetrainVelocityY = 0;
+    // // driveCommandForward.cancel();
+
+    // }
 
 }
