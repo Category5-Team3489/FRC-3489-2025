@@ -112,17 +112,40 @@ public class RobotContainer {
         // driverController.rightBumper().onTrue(Commands.runOnce( () ->
         // align.schedule()));
 
-        driverController.start().onTrue(Commands.run(() -> {
+        // driverController.back().onTrue(Commands.run(() -> {
+        // // if (alignScheduled) {
+        // // align.cancel();
+        // // System.out.println("Cancle!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        // // alignScheduled = false;
+        // // } else {
+        // // if (!align.isFinished()) {
+        // align.schedule();
+
+        // alignScheduled = true;
+        // System.out.println("++++++++++++++++++++++++++++++++++++++++++++");
+
+        // // align.repeatedly();
+
+        // }).until(() -> align.isFinished()));
+
+        driverController.back().onTrue(Commands.run(() -> {
             // if (alignScheduled) {
             // align.cancel();
             // System.out.println("Cancle!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             // alignScheduled = false;
             // } else {
+            // if (!align.isFinished()) {
             align.schedule();
+
             alignScheduled = true;
             System.out.println("++++++++++++++++++++++++++++++++++++++++++++");
 
+            // align.repeatedly();
+
         }));
+
+        // driverController.start().onTrue( align.repeatedly().until(() ->
+        // align.isFinished()));
 
         // manipulatorController.axisLessThan(5, -0.1).whileTrue(
         // intakeExtention.adjustManualAngle(-1));

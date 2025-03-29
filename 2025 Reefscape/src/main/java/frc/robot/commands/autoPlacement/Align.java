@@ -1,5 +1,6 @@
 package frc.robot.commands.autoPlacement;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -25,7 +26,7 @@ public class Align extends Command {
     private double drivetrainVelocityY;
 
     private double rotationSpeed = 0.05 * Constants.Drivetrain.MaxRadiansPerSecond;
-    private double translationSpeed = 0.2;
+    private double translationSpeed = 0.5;
 
     private final double targetXRange = 5;
     private final double targetYRange = 5;
@@ -80,40 +81,39 @@ public class Align extends Command {
             return;
         }
 
-        if (currentX > 15) {
-            drivetrainVelocityX = 0;
+        if (currentX > 4) { // 17
+            drivetrainVelocityY = 0;
             xAlign = true;
             driveCommandForward.schedule();
 
             System.out.println("X Aligned, current x: " + currentX);
-        } else if (currentX < AlignState.Left.getX()) {
-            drivetrainVelocityX = translationSpeed;
-            System.out.println("X -> -speed ---- " + currentX + "Velosity: " + drivetrainVelocityX);
+        } else if (currentX < 4) {
+            drivetrainVelocityY = translationSpeed;
+            System.out.println("X -> -speed ---- " + currentX + "Velosity: " + drivetrainVelocityY);
             driveCommandForward.schedule();
 
-        } else if (currentX > AlignState.Left.getX()) {
-            drivetrainVelocityX = -translationSpeed;
-            System.out.println("X -> +speed ---- " + currentX + "Velosity: " + drivetrainVelocityX);
+        } else if (currentX > 4) {
+            drivetrainVelocityY = -translationSpeed;
+            System.out.println("X -> +speed ---- " + currentX + "Velosity: " + drivetrainVelocityY);
             driveCommandForward.schedule();
 
         }
 
-        if (currentY < -4 && currentY > -8) {
-            drivetrainVelocityY = 0;
-            yAlign = true;
+        if (currentY > -1.5) {// -9
+            drivetrainVelocityX = 0;
+            xAlign = true;
             driveCommandForward.schedule();
 
             System.out.println("Y Aligned, current y: " + currentY);
-        } else if (currentY < AlignState.Left.getY()) {
-            drivetrainVelocityY = -translationSpeed;
-            System.out.println("Y -> -speed ---- " + currentY + "Velosity: " + drivetrainVelocityY);
+        } else if (currentY < -1.5) {
+            drivetrainVelocityX = translationSpeed;
+            System.out.println("Y -> -speed ---- " + currentY + "Velosity: " + drivetrainVelocityX);
             driveCommandForward.schedule();
-        } else if (currentY > AlignState.Left.getY()) {
-            drivetrainVelocityY = translationSpeed;
-            System.out.println("Y -> +speed ---- " + currentY + "Velosity: " + drivetrainVelocityY);
+        } else if (currentY > -1.5) {
+            drivetrainVelocityX = -translationSpeed;
+            System.out.println("Y -> +speed ---- " + currentY + "Velosity: " + drivetrainVelocityX);
             driveCommandForward.schedule();
         }
-
     }
 
     private DoubleSupplier getDrivetrainAngleRate() {
@@ -133,10 +133,12 @@ public class Align extends Command {
         return () -> drivetrainVelocityY;
     }
 
-    @Override
-    public boolean isFinished() {
-        return xAlign && yAlign;
-    }
+    // @Override
+    // public boolean isFinished() {
+
+    // // return xAlign && yAlign;
+    // return xAlign;
+    // }
 
     // @Override
     // public void end(boolean interrupted) {
