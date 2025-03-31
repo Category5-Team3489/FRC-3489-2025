@@ -26,7 +26,7 @@ public class Align extends Command {
     private double drivetrainVelocityY;
 
     private double rotationSpeed = 0.05 * Constants.Drivetrain.MaxRadiansPerSecond;
-    private double translationSpeed = 0.5;
+    private double translationSpeed = 0.2;
 
     private final double targetXRange = 5;
     private final double targetYRange = 5;
@@ -69,6 +69,7 @@ public class Align extends Command {
         double currentX = limelight.getTargetX();
         double currentY = limelight.getTargetY();
         double targetV = limelight.getTargetVisible();
+        double currentA = limelight.getTargetArea();
 
         // System.out.println("TEST");
 
@@ -99,17 +100,35 @@ public class Align extends Command {
 
         }
 
-        if (currentY > -1.5) {// -9
+        // if (currentY > -1.5) {// -9
+        // drivetrainVelocityX = 0;
+        // xAlign = true;
+        // driveCommandForward.schedule();
+
+        // System.out.println("Y Aligned, current y: " + currentY);
+        // } else if (currentY < -1.5) {
+        // drivetrainVelocityX = translationSpeed;
+        // System.out.println("Y -> -speed ---- " + currentY + "Velosity: " +
+        // drivetrainVelocityX);
+        // driveCommandForward.schedule();
+        // } else if (currentY > -1.5) {
+        // drivetrainVelocityX = -translationSpeed;
+        // System.out.println("Y -> +speed ---- " + currentY + "Velosity: " +
+        // drivetrainVelocityX);
+        // driveCommandForward.schedule();
+        // }
+
+        if (currentA > 14) {// at 14 it could see it
             drivetrainVelocityX = 0;
             xAlign = true;
             driveCommandForward.schedule();
 
             System.out.println("Y Aligned, current y: " + currentY);
-        } else if (currentY < -1.5) {
+        } else if (currentY < 14) {
             drivetrainVelocityX = translationSpeed;
             System.out.println("Y -> -speed ---- " + currentY + "Velosity: " + drivetrainVelocityX);
             driveCommandForward.schedule();
-        } else if (currentY > -1.5) {
+        } else if (currentY > 14) {
             drivetrainVelocityX = -translationSpeed;
             System.out.println("Y -> +speed ---- " + currentY + "Velosity: " + drivetrainVelocityX);
             driveCommandForward.schedule();

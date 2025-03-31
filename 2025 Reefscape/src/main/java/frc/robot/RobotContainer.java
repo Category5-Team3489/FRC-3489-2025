@@ -128,7 +128,7 @@ public class RobotContainer {
 
         // }).until(() -> align.isFinished()));
 
-        driverController.back().onTrue(Commands.run(() -> {
+        driverController.back().whileTrue(Commands.run(() -> {
             // if (alignScheduled) {
             // align.cancel();
             // System.out.println("Cancle!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -142,6 +142,10 @@ public class RobotContainer {
 
             // align.repeatedly();
 
+        }));
+
+        driverController.back().whileFalse(Commands.run(() -> {
+            align.cancel();
         }));
 
         // driverController.start().onTrue( align.repeatedly().until(() ->
