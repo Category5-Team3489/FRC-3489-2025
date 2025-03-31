@@ -45,7 +45,7 @@ public class RobotContainer {
     // private final IntakeRoller intakeRoller = IntakeRoller.get();
     // private final ElevatorLimelight limelight = ElevatorLimelight.get();
 
-    private boolean alignScheduled = false;
+    // private boolean alignScheduled = false;
 
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top
                                                                                   // speed
@@ -78,6 +78,7 @@ public class RobotContainer {
     private final Command align = new Align(drivetrain).onlyWhile(() -> isNotDriving())
             .withInterruptBehavior(InterruptionBehavior.kCancelSelf);
 
+    private boolean isPressed = true;
     // public final ElevatorLimelight limelight = ElevatorLimelight.get();
 
     /* Path follower */
@@ -129,23 +130,15 @@ public class RobotContainer {
         // }).until(() -> align.isFinished()));
 
         driverController.back().whileTrue(Commands.run(() -> {
-            // if (alignScheduled) {
-            // align.cancel();
-            // System.out.println("Cancle!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            // alignScheduled = false;
-            // } else {
-            // if (!align.isFinished()) {
             align.schedule();
-
-            alignScheduled = true;
+            isPressed = true;
             System.out.println("++++++++++++++++++++++++++++++++++++++++++++");
-
-            // align.repeatedly();
 
         }));
 
         driverController.back().whileFalse(Commands.run(() -> {
             align.cancel();
+            isPressed = false;
         }));
 
         // driverController.start().onTrue( align.repeatedly().until(() ->

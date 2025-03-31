@@ -8,6 +8,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.enums.AlignState;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorLimelight;
@@ -36,6 +37,8 @@ public class Align extends Command {
 
     private final double maxYMeterRange = 4;
     private final double minYMeterRange = 0.2;
+
+    public boolean isPressed = true;
 
     public Align(CommandSwerveDrivetrain drivetrain) {
         this.drivetrain = drivetrain;
@@ -118,17 +121,17 @@ public class Align extends Command {
         // driveCommandForward.schedule();
         // }
 
-        if (currentA > 14) {// at 14 it could see it
+        if (currentA > 16) {// at 14 it could see it
             drivetrainVelocityX = 0;
             xAlign = true;
             driveCommandForward.schedule();
 
             System.out.println("Y Aligned, current y: " + currentY);
-        } else if (currentY < 14) {
+        } else if (currentY < 16) {
             drivetrainVelocityX = translationSpeed;
             System.out.println("Y -> -speed ---- " + currentY + "Velosity: " + drivetrainVelocityX);
             driveCommandForward.schedule();
-        } else if (currentY > 14) {
+        } else if (currentY > 16) {
             drivetrainVelocityX = -translationSpeed;
             System.out.println("Y -> +speed ---- " + currentY + "Velosity: " + drivetrainVelocityX);
             driveCommandForward.schedule();
@@ -159,11 +162,17 @@ public class Align extends Command {
     // return xAlign;
     // }
 
-    // @Override
-    // public void end(boolean interrupted) {
+    @Override
+    public void end(boolean interrupted) {
 
-    // driveCommandForward.cancel();
+        if (isPressed) {
+            return;
+        } else {
+            driveCommandForward.cancel();
+        }
 
-    // }
+        driveCommandForward.cancel();
+
+    }
 
 }
