@@ -105,10 +105,10 @@ public class RobotContainer {
         // manipulatorController.axisGreaterThan(5, 0.1).whileTrue(
         // intakeExtention.adjustManualAngle(1));
 
-        manipulatorController.axisLessThan(2, -0.1).whileTrue(
+        manipulatorController.axisLessThan(5, -0.1).whileTrue(
                 elevator.adjustManualAngle(1));
 
-        manipulatorController.axisGreaterThan(2, 0.1).whileTrue(
+        manipulatorController.axisGreaterThan(5, 0.1).whileTrue(
                 elevator.adjustManualAngle(-1));
 
         // // ================= INTAKE ROLLER ===================================
