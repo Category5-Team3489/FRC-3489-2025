@@ -23,6 +23,7 @@ import frc.robot.enums.ClimberState;
 import frc.robot.enums.ElevatorState;
 import frc.robot.enums.IndexState;
 import frc.robot.enums.OuttakeState;
+import frc.robot.enums.SpeedLimitState;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -134,17 +135,18 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
                 // Drivetrain will execute this command periodically
                 drivetrain.applyRequest(() -> drive
-                        .withVelocityX(-driverController.getLeftY() * MaxSpeed) // Drive
-                                                                                // forward
-                                                                                // with
+                        .withVelocityX(-driverController.getLeftY() * MaxSpeed * drivetrain.getSpeedLimit()) // Drive
+                        // forward
+                        // with
                         // negative Y
                         // (forward)
-                        .withVelocityY(-driverController.getLeftX() * MaxSpeed) // Drive left
-                                                                                // with negative
-                                                                                // X (left)
-                        .withRotationalRate(-driverController.getRightX() * MaxAngularRate) // Drive
-                                                                                            // counterclockwise
-                                                                                            // with
+                        .withVelocityY(-driverController.getLeftX() * MaxSpeed * drivetrain.getSpeedLimit()) // Drive
+                                                                                                             // left
+                        // with negative
+                        // X (left)
+                        .withRotationalRate(-driverController.getRightX() * MaxAngularRate * drivetrain.getSpeedLimit()) // Drive
+                // counterclockwise
+                // with
                 // negative X (left)
                 ));
 
@@ -216,7 +218,13 @@ public class RobotContainer {
         // .whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
         // reset the field-centric heading on left bumper press
-        driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+        driverController.povUp().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+
+        driverController.leftBumper().onTrue(Commands.runOnce(() -> drivetrain.setSpeedLimit(SpeedLimitState.Full)));
+        driverController.rightBumper().onTrue(Commands.runOnce(() -> drivetrain.setSpeedLimit(SpeedLimitState.Forth)));
+        // Reset the speed when button is released
+        driverController.leftBumper().onFalse(Commands.runOnce(() -> drivetrain.setSpeedLimit(SpeedLimitState.Half)));
+        driverController.rightBumper().onFalse(Commands.runOnce(() -> drivetrain.setSpeedLimit(SpeedLimitState.Half)));
 
         // TODO !!!Uncomment this for Limelight Testing!!!
         // driverController.rightBumper().onTrue(Commands.runOnce(() -> {

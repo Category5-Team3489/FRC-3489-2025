@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.Drivetrain;
+import frc.robot.enums.SpeedLimitState;
 import frc.robot.generated.TunerConstants;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
@@ -55,6 +56,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
+
+    public SpeedLimitState speedLimit = SpeedLimitState.Half;
 
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
@@ -265,6 +268,19 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      */
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
         return run(() -> this.setControl(requestSupplier.get()));
+    }
+
+    public double getSpeedLimit() {
+        return speedLimit.getSpeedLimit();
+    }
+
+    public void setSpeedLimit(SpeedLimitState speedLimitState) {
+        if (speedLimitState != speedLimit) {
+            // System.out.println(
+            // "Drivetrain speed limit delta: " + speedLimit.toString() + " -> " +
+            // speedLimitState.toString());
+        }
+        speedLimit = speedLimitState;
     }
 
     /**
