@@ -340,6 +340,6 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         /* Run the path selected from the auto chooser */
-        return new PathPlannerAuto("(2) Far Left to 5B");
+        return new PathPlannerAuto("(1) Far Left to 1B");
     }
 }
