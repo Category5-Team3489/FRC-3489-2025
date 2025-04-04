@@ -14,11 +14,13 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.Cat5Autos;
 import frc.robot.enums.ClimberState;
 import frc.robot.enums.ElevatorState;
 import frc.robot.enums.IndexState;
@@ -35,12 +37,9 @@ import frc.robot.subsystems.Outtake;
 public class RobotContainer {
     private final Outtake outtake = Outtake.get();
     private final Elevator elevator = Elevator.get();
-    // private final IntakeCommand intakeCommand = new IntakeCommand();
     private final Index index = Index.get();
     private final Climber climber = Climber.get();
     private final ElevatorLimelight limelight = ElevatorLimelight.get();
-    // private final IntakeExtention intakeExtention = IntakeExtention.get();
-    // private final IntakeRoller intakeRoller = IntakeRoller.get();
     // private final ElevatorLimelight limelight = ElevatorLimelight.get();
 
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top
@@ -66,19 +65,36 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
+    private final Cat5Autos autos = new Cat5Autos();
+
+    // private final SendableChooser<Command> autoChooser;
+
     // public final ElevatorLimelight limelight = ElevatorLimelight.get();
 
     /* Path follower */
-    private final SendableChooser<Command> autoChooser;
+    // private final SendableChooser<Command> autoChooser;
+    // private final SendableChooser<String> autoChooser = new
+    // SendableChooser<String>();
 
     // public final AlignToReefTagRelative alignToReefTagRelative = new
     // AlignToReefTagRelative(true, drivetrain);
 
+    String[] autonomousList = { "Leave", "(1) Far Left to 1B", "(2) Far Right to 3B", "(3) Far Left to 5B" };
+    String autoSelected;
+
     public RobotContainer() {
-        autoChooser = AutoBuilder.buildAutoChooser("New Auto");
+        // autoChooser = AutoBuilder.buildAutoChooser("New Auto");
+        // SmartDashboard.putData("Auto Mode", autoChooser);
 
-        SmartDashboard.putData("Auto Mode", autoChooser);
+        SmartDashboard.putStringArray("Auto List", autonomousList);
+        autoSelected = SmartDashboard.getString("Auto Selector", "None");
 
+        // autoChooser = AutoBuilder.buildAutoChooser();
+
+        // Shuffleboard.getTab("Main")
+        // .("Auto Mode", autoChooser);
+        // .withSize(1, 1)
+        // .withPosition(7, 2);
         NamedCommands.registerCommand("Outtake", outtake.updateSpeed(OuttakeState.Outtake));
         NamedCommands.registerCommand("Index", index.updateSpeed(IndexState.Outtake));
         // NamedCommands.registerCommand("Intake", intakeCommand);
@@ -96,6 +112,7 @@ public class RobotContainer {
         }));
 
         configureBindings();
+        addAutos();
     }
 
     private void configureBindings() {
@@ -150,17 +167,16 @@ public class RobotContainer {
                 // negative X (left)
                 ));
 
+        /* #region DriveTrain */
+
         // final SwerveRequest.FieldCentricFacingAngle driveFacingAngle = new
         // SwerveRequest.FieldCentricFacingAngle()
         // .withDeadband(Constants.Drivetrain.MaxMetersPerSecond * 0.1)
-        // .withRotationalDeadband(Constants.Drivetrain.MaxRadiansPerSecond * 0.1) //
-        // Add a
-        // // 10%
-        // // deadband
+        // .withRotationalDeadband(Constants.Drivetrain.MaxRadiansPerSecond * 0.1) //Add
+        // a 10% deadband
         // .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want
         // field-centric
         // driving in open loop
-
         // driverController.y().whileTrue(
         // drivetrain.applyRequest(() -> driveFacingAngle
         // .withVelocityX(-driverController.getLeftY() *
@@ -193,7 +209,6 @@ public class RobotContainer {
         // Constants.Drivetrain.MaxMetersPerSecond)
         // .withTargetDirection(Rotation2d.fromDegrees(90))));
 
-        // driverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
         // driverController.b().whileTrue(drivetrain.applyRequest(
         // () -> point.withModuleDirection(
         // new Rotation2d(-driverController.getLeftY(),
@@ -216,7 +231,7 @@ public class RobotContainer {
         // .whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         // driverController.start().and(driverController.x())
         // .whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-
+        /* #endregion */
         // reset the field-centric heading on left bumper press
         driverController.povUp().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
@@ -266,58 +281,6 @@ public class RobotContainer {
         }));
     }
 
-    private void getIntakeExtendBindings() {
-        // final IntakeCommandOne intakeCommandOne = new IntakeCommandOne();
-        // final IntakeCommandTwo intakeCommandThree = new IntakeCommandTwo();
-        // final IntakeCommandThree intakeCommandTwo = new IntakeCommandThree();
-
-        // manipulatorController.leftBumper().onTrue(Commands.runOnce(() -> {
-        // if (intakeExtention.targetTics ==
-        // IntakeExtentionState.IntakePosition.getValue()) {
-        // intakeExtention.updateCommand(IntakeExtentionState.MatchHome).schedule();
-        // } else {
-        // intakeCommandOne.schedule();
-        // }
-        // }));
-
-        // manipulatorController.rightBumper().onTrue(Commands.runOnce(() ->
-        // intakeCommandTwo.schedule()));
-        // manipulatorController.leftTrigger().onTrue(Commands.runOnce(() ->
-        // intakeCommandThree.schedule()));
-
-    }
-
-    // private void getIntakeRollerBindings() {
-    // manipulatorController.povUp().onTrue(Commands.runOnce(() -> {
-    // if (intakeRoller.speed == IntakeRollerState.Stop.getSpeedPercent()) {
-    // intakeRoller.setSpeedCommand(IntakeRollerState.Test).schedule();
-    // } else {
-    // intakeRoller.setSpeedCommand(IntakeRollerState.Stop).schedule();
-    // }
-    // }));
-
-    // manipulatorController.povDown().onTrue(Commands.runOnce(() -> {
-    // if (intakeRoller.speed == IntakeRollerState.Stop.getSpeedPercent()) {
-    // intakeRoller.setSpeedCommand(IntakeRollerState.IntakeTransfer).schedule();
-    // } else {
-    // intakeRoller.setSpeedCommand(IntakeRollerState.Stop).schedule();
-    // }
-    // }));
-
-    // manipulatorController.povRight().onTrue(Commands.runOnce(() -> {
-    // if (intakeRoller.speed == IntakeRollerState.Stop.getSpeedPercent()) {
-    // intakeRoller.setSpeedCommand(IntakeRollerState.Outtake).schedule();
-    // } else {
-    // intakeRoller.setSpeedCommand(IntakeRollerState.Stop).schedule();
-    // }
-    // }));
-
-    // final IntakeCommandTwo intakeCommandTwo = new IntakeCommandTwo();
-
-    // manipulatorController.povLeft().onTrue(Commands.runOnce(() ->
-    // intakeCommandTwo.schedule()));
-    // }
-
     private void getIndexBindings() {
         manipulatorController.start().onTrue(Commands.runOnce(() -> {
             if (index.speed == IndexState.Stop.getSpeedPercent()
@@ -339,7 +302,38 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
+        // switch (autoSelected) {
+        // case "Leave":
+        // return new PathPlannerAuto("Leave");
+        // case "Far Left to 1B":
+        // return new PathPlannerAuto("(1) Far Left to 1B");
+        // case "Far Right to 3B":
+        // return new PathPlannerAuto("(2) Far Right to 3B");
+        // case "Far Left to 5B":
+        // return new PathPlannerAuto("(3) Far Left to 5B");
+        // default:
+        // return new PathPlannerAuto("Leave");
+
         /* Run the path selected from the auto chooser */
-        return new PathPlannerAuto("(2) Far Left to 5B");
+        // return autoChooser.getSelected();}
+        // }
+        return autos.getAutonomousCommand();
     }
+
+    private void addAutos() {
+        autos.addAuto(() -> {
+            return new PathPlannerAuto("Leave");
+        });
+        autos.addAuto(() -> {
+            return new PathPlannerAuto("(1) Far Left to 1B");
+        });
+        autos.addAuto(() -> {
+            return new PathPlannerAuto("(3) Far Right to 3B");
+        });
+        autos.addAuto(() -> {
+            return new PathPlannerAuto("(2) Far Left to 5B");
+        });
+        autos.addSelectorWidget();
+    }
+
 }
