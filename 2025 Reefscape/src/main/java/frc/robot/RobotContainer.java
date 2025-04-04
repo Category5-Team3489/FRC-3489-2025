@@ -19,12 +19,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.enums.AlgaeRemovalState;
 import frc.robot.enums.ClimberState;
 import frc.robot.enums.ElevatorState;
 import frc.robot.enums.IndexState;
 import frc.robot.enums.OuttakeState;
 import frc.robot.enums.SpeedLimitState;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.AlgaeRemoval;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator;
@@ -38,6 +40,7 @@ public class RobotContainer {
     // private final IntakeCommand intakeCommand = new IntakeCommand();
     private final Index index = Index.get();
     private final Climber climber = Climber.get();
+    private final AlgaeRemoval algaeRemoval = AlgaeRemoval.get();
     private final ElevatorLimelight limelight = ElevatorLimelight.get();
     // private final IntakeExtention intakeExtention = IntakeExtention.get();
     // private final IntakeRoller intakeRoller = IntakeRoller.get();
@@ -122,6 +125,7 @@ public class RobotContainer {
         getElevatorBindings();
         getOuttakeBindings(); // RUN = LB; STOP = RB
         getClimberBindings();
+        getAlgaeRemovalBindings();
 
         // // getIntakeExtendBindings();
         // // getIntakeRollerBindings();
@@ -254,6 +258,16 @@ public class RobotContainer {
             }
         }));
 
+    }
+
+    private void getAlgaeRemovalBindings() {
+        manipulatorController.povDown().onTrue(Commands.runOnce(() -> {
+            if (algaeRemoval.speed == AlgaeRemovalState.Stop.getSpeedPercent()) {
+                algaeRemoval.updateSpeed(AlgaeRemovalState.Outtake).schedule();
+            } else {
+                algaeRemoval.updateSpeed(AlgaeRemovalState.Stop).schedule();
+            }
+        }));
     }
 
     private void getClimberBindings() {

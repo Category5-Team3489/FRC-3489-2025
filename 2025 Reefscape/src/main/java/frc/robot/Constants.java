@@ -93,4 +93,8 @@ public final class Constants {
         public static final int MOTOR_ID = 16;
     }
 
+    public static class AlgaeRemoval {
+        public static final int MOTOR_ID = 17;
+    }
+
 }
