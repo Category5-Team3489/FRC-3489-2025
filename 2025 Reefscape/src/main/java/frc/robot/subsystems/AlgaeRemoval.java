@@ -8,8 +8,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.enums.AlgaeRemovalState;
-import frc.robot.enums.IndexState;
-import frc.robot.enums.OuttakeState;
+
 // import frc.robot.subsystems.intake.IntakeExtention;
 
 public class AlgaeRemoval extends SubsystemBase {
@@ -28,8 +27,8 @@ public class AlgaeRemoval extends SubsystemBase {
     // Update the global speed variables based on the input enums
     public Command updateSpeed(AlgaeRemovalState state) {
         return Commands.runOnce(() -> {
-            speed = state.getSpeedPercent();
             motor.set(speed);
+            speed = state.getSpeedPercent();
         });
     }
 

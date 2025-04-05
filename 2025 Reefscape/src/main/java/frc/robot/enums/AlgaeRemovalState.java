@@ -1,8 +1,8 @@
 package frc.robot.enums;
 
 public enum AlgaeRemovalState {
-    Outtake(-0.25),
-    Intake(0.25),
+    PushUp(0.25),
+    PushDown(-0.25),
     Stop(0);
 
     private final double speedPercent;

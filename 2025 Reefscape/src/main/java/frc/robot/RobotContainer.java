@@ -262,12 +262,23 @@ public class RobotContainer {
 
     private void getAlgaeRemovalBindings() {
         manipulatorController.povDown().onTrue(Commands.runOnce(() -> {
-            if (algaeRemoval.speed == AlgaeRemovalState.Stop.getSpeedPercent()) {
-                algaeRemoval.updateSpeed(AlgaeRemovalState.Outtake).schedule();
-            } else {
-                algaeRemoval.updateSpeed(AlgaeRemovalState.Stop).schedule();
-            }
+            // if (algaeRemoval.speed == AlgaeRemovalState.Stop.getSpeedPercent()) {
+            // algaeRemoval.updateSpeed(AlgaeRemovalState.Outtake).schedule();
+            // System.out.println("ALGAE REMOVER IS MOVING!!!");
+
+            // } else {
+            // algaeRemoval.updateSpeed(AlgaeRemovalState.Stop).schedule();
+            // System.out.println("ALGAE REMOVER IS STOPPED!!!");
+            // }
+            algaeRemoval.updateSpeed(AlgaeRemovalState.Stop).schedule();
         }));
+        manipulatorController.povLeft().onTrue(Commands.runOnce(() -> {
+            algaeRemoval.updateSpeed(AlgaeRemovalState.PushDown).schedule();
+        }));
+        manipulatorController.povRight().onTrue(Commands.runOnce(() -> {
+            algaeRemoval.updateSpeed(AlgaeRemovalState.PushUp).schedule();
+        }));
+
     }
 
     private void getClimberBindings() {
@@ -354,6 +365,10 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         /* Run the path selected from the auto chooser */
-        return new PathPlannerAuto("(1) Far Left to 1B");
+        // return new PathPlannerAuto("Leave");
+
+        return autoChooser.getSelected().andThen(elevator.updateCommand(ElevatorState.L2))
+                .andThen(Commands.waitSeconds(1)).andThen(outtake.updateSpeed(OuttakeState.Outtake))
+                .andThen(index.updateSpeed(IndexState.Outtake));
     }
 }
