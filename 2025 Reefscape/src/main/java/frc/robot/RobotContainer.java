@@ -261,22 +261,54 @@ public class RobotContainer {
     }
 
     private void getAlgaeRemovalBindings() {
-        manipulatorController.povDown().onTrue(Commands.runOnce(() -> {
-            // if (algaeRemoval.speed == AlgaeRemovalState.Stop.getSpeedPercent()) {
-            // algaeRemoval.updateSpeed(AlgaeRemovalState.Outtake).schedule();
-            // System.out.println("ALGAE REMOVER IS MOVING!!!");
 
-            // } else {
-            // algaeRemoval.updateSpeed(AlgaeRemovalState.Stop).schedule();
-            // System.out.println("ALGAE REMOVER IS STOPPED!!!");
-            // }
+        // manipulatorController.povLeft().onTrue(Commands.runOnce(() -> {
+        // if (algaeRemoval.speed == AlgaeRemovalState.Stop.getSpeedPercent()
+        // || algaeRemoval.speed == AlgaeRemovalState.PushUp.getSpeedPercent()) {
+        // algaeRemoval.updateSpeed(AlgaeRemovalState.PushDown).schedule();
+        // } else {
+        // algaeRemoval.updateSpeed(AlgaeRemovalState.Stop).schedule();
+        // }
+        // }));
+
+        // manipulatorController.povRight().onTrue(Commands.runOnce(() -> {
+        // if (algaeRemoval.speed == AlgaeRemovalState.Stop.getSpeedPercent()
+        // || algaeRemoval.speed == AlgaeRemovalState.PushDown.getSpeedPercent()) {
+        // algaeRemoval.updateSpeed(AlgaeRemovalState.PushUp).schedule();
+        // } else {
+        // algaeRemoval.updateSpeed(AlgaeRemovalState.Stop).schedule();
+        // }
+        // }));
+
+        // manipulatorController.povDown().onTrue(Commands.runOnce(() -> {
+        // algaeRemoval.updateSpeed(AlgaeRemovalState.Stop).schedule();
+        // System.out.println("STOP");
+        // }));
+
+        // manipulatorController.povLeft().onTrue(Commands.runOnce(() -> {
+        // algaeRemoval.updateSpeed(AlgaeRemovalState.PushDown).schedule();
+        // System.out.println("Down");
+
+        // }));
+        // manipulatorController.povRight().onTrue(Commands.runOnce(() -> {
+        // algaeRemoval.updateSpeed(AlgaeRemovalState.PushUp).schedule();
+        // System.out.println("Up");
+
+        // }));
+
+        manipulatorController.povDown().whileTrue(Commands.runOnce(() -> {
             algaeRemoval.updateSpeed(AlgaeRemovalState.Stop).schedule();
+            System.out.println("STOP");
         }));
-        manipulatorController.povLeft().onTrue(Commands.runOnce(() -> {
+
+        manipulatorController.povLeft().whileTrue(Commands.runOnce(() -> {
             algaeRemoval.updateSpeed(AlgaeRemovalState.PushDown).schedule();
+            System.out.println("Down");
         }));
-        manipulatorController.povRight().onTrue(Commands.runOnce(() -> {
+
+        manipulatorController.povRight().whileTrue(Commands.runOnce(() -> {
             algaeRemoval.updateSpeed(AlgaeRemovalState.PushUp).schedule();
+            System.out.println("Up");
         }));
 
     }
