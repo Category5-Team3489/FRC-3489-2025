@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 3.2246926229508195,
-        "y": 4.162858606557377
+        "x": 3.596311475409836,
+        "y": 4.09093237704918
       },
       "prevControl": {
-        "x": 2.2246926229508195,
-        "y": 4.162858606557377
+        "x": 2.596311475409836,
+        "y": 4.09093237704918
       },
       "nextControl": null,
       "isLocked": false,
@@ -48,7 +48,7 @@
   "folder": "Blue Left 2 Piece",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -52.00126755749538
+    "rotation": -52.00126755749539
   },
   "useDefaultConstraints": true
 }

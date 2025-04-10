@@ -83,7 +83,13 @@ public class RobotContainer {
         SmartDashboard.putData("Auto Mode", autoChooser);
 
         NamedCommands.registerCommand("Outtake", outtake.updateSpeed(OuttakeState.Outtake));
+        NamedCommands.registerCommand("Stop Outtake", outtake.updateSpeed(OuttakeState.Stop));
+
         NamedCommands.registerCommand("Index", index.updateSpeed(IndexState.Outtake));
+        NamedCommands.registerCommand("Stop Index", index.updateSpeed(IndexState.Stop));
+
+        NamedCommands.registerCommand("Algae", algaeRemoval.updateSpeed(AlgaeRemovalState.PushDown));
+
         // NamedCommands.registerCommand("Intake", intakeCommand);
         NamedCommands.registerCommand("L1", elevator.updateCommand(ElevatorState.L1));
         NamedCommands.registerCommand("L2", elevator.updateCommand(ElevatorState.L2));
@@ -399,8 +405,11 @@ public class RobotContainer {
         /* Run the path selected from the auto chooser */
         // return new PathPlannerAuto("Leave");
 
-        return autoChooser.getSelected().andThen(elevator.updateCommand(ElevatorState.L2))
-                .andThen(Commands.waitSeconds(1)).andThen(outtake.updateSpeed(OuttakeState.Outtake))
-                .andThen(index.updateSpeed(IndexState.Outtake));
+        // return
+        // autoChooser.getSelected().andThen(elevator.updateCommand(ElevatorState.L2))
+        // .andThen(Commands.waitSeconds(1)).andThen(outtake.updateSpeed(OuttakeState.Outtake))
+        // .andThen(index.updateSpeed(IndexState.Outtake));
+
+        return new PathPlannerAuto("Blue Left 2 Piece");
     }
 }
