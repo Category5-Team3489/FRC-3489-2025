@@ -6,9 +6,11 @@
     "(1) Far Left to 1B",
     "(2) Far Left to 5B",
     "(3) Far Right to 3B",
-    "(4) Leave"
+    "(4) Leave",
+    "Blue Left 2 Piece"
   ],
   "autoFolders": [
+    "Two Coral",
     "One Coral"
   ],
   "defaultMaxVel": 3.0,

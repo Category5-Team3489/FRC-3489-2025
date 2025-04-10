@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.26550019210811,
+        "y": 5.061131722395004
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.46639344262295,
+        "y": 6.320645491803279
+      },
+      "isLocked": false,
+      "linkedName": "Score 1B"
+    },
+    {
+      "anchor": {
+        "x": 1.5464139344262293,
+        "y": 7.207735655737704
+      },
+      "prevControl": {
+        "x": 1.965983606557377,
+        "y": 5.996977459016393
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Blue Left HP"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -52.00126755749538
+  },
+  "reversed": false,
+  "folder": "Blue Left 2 Piece",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -119.82284040604654
+  },
+  "useDefaultConstraints": true
+}
