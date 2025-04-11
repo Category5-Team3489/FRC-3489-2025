@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.autoPlacement.NewAutoAlign;
 import frc.robot.enums.AlgaeRemovalState;
 import frc.robot.enums.ClimberState;
 import frc.robot.enums.ElevatorState;
@@ -69,6 +70,8 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
+    private final Command autoAlign = new NewAutoAlign(limelight, drivetrain);
+
     // public final ElevatorLimelight limelight = ElevatorLimelight.get();
 
     /* Path follower */
@@ -114,6 +117,20 @@ public class RobotContainer {
 
         // manipulatorController.axisGreaterThan(5, 0.1).whileTrue(
         // intakeExtention.adjustManualAngle(1));
+
+        // driverController.a().onTrue(Commands.runOnce(() -> autoAlign.schedule()));
+
+        driverController.a().whileTrue(Commands.run(() -> {
+
+            autoAlign.schedule();
+
+            if (!driverController.a().getAsBoolean()) {
+                autoAlign.cancel();
+            }
+
+        }));
+
+        // driverController.a().onTrue(autoAlign);
 
         manipulatorController.axisLessThan(5, -0.1).whileTrue(
                 elevator.adjustManualAngle(1));

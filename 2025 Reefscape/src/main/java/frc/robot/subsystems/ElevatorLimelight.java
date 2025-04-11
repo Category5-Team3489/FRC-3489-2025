@@ -36,7 +36,7 @@ public class ElevatorLimelight extends SubsystemBase {
 
     private ElevatorLimelight() {
 
-        limelight = NetworkTableInstance.getDefault().getTable("limelight-one");
+        limelight = NetworkTableInstance.getDefault().getTable("limelight-right");
 
         tagIdEntry = limelight.getEntry("tid");
         targetXEntry = limelight.getEntry("tx");
