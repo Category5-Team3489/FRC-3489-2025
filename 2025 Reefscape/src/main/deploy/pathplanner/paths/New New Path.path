@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 9.535499999999999,
-        "y": 0.44674999999999954
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 10.303563754614137,
-        "y": 1.0346199686229243
-      },
-      "isLocked": false,
-      "linkedName": "Red Left Start"
-    },
-    {
-      "anchor": {
         "x": 12.083606557377047,
         "y": 2.5445184426229503
       },
+      "prevControl": null,
+      "nextControl": {
+        "x": 12.861153842821613,
+        "y": 2.02868471874633
+      },
+      "isLocked": false,
+      "linkedName": "Red Left Score"
+    },
+    {
+      "anchor": {
+        "x": 16.063524590163933,
+        "y": 0.8182889344262299
+      },
       "prevControl": {
-        "x": 11.498496012582203,
-        "y": 1.9331237948052058
+        "x": 15.205591200764786,
+        "y": 1.181188399976256
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Red Left Score"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 60.46121774044221
+    "rotation": 125.13419305691569
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Red Left 2 Piece",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 60.46121774044221
   },
   "useDefaultConstraints": true
 }

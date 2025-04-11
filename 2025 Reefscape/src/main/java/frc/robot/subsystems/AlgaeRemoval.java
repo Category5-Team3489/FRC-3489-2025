@@ -27,8 +27,8 @@ public class AlgaeRemoval extends SubsystemBase {
     // Update the global speed variables based on the input enums
     public Command updateSpeed(AlgaeRemovalState state) {
         return Commands.runOnce(() -> {
-            motor.set(speed);
             speed = state.getSpeedPercent();
+            motor.set(speed);
         });
     }
 
