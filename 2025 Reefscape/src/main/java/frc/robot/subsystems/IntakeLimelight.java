@@ -17,7 +17,7 @@ public class IntakeLimelight extends SubsystemBase {
     // Devices
     // private final NetworkTable limelight =
     // NetworkTableInstance.getDefault().getTable("limelight-shooter");
-    private final NetworkTable limelight = NetworkTableInstance.getDefault().getTable("limelight-intake");
+    private final NetworkTable limelight = NetworkTableInstance.getDefault().getTable("limelight");
 
     // Used to determine how long
     private Timer timer = new Timer();
@@ -34,23 +34,23 @@ public class IntakeLimelight extends SubsystemBase {
     private double lastTargetY;
     private double lastTargetS;
 
-    private IntakeLimelight() {
+    // private IntakeLimelight() {
 
-        Shuffleboard.getTab("Main")
-                .addDouble("Tag", () -> getTagId())
-                .withSize(1, 1)
-                .withPosition(7, 2);
+    // Shuffleboard.getTab("Main")
+    // .addDouble("Tag", () -> getTagId())
+    // .withSize(1, 1)
+    // .withPosition(7, 2);
 
-        Shuffleboard.getTab("Testing")
-                .addDouble("Limelight X", () -> getTargetX())
-                .withSize(1, 1)
-                .withPosition(5, 2);
+    // Shuffleboard.getTab("Testing")
+    // .addDouble("Limelight X", () -> getTargetX())
+    // .withSize(1, 1)
+    // .withPosition(5, 2);
 
-        Shuffleboard.getTab("Testing")
-                .addDouble("Limelight Y", () -> getTargetY())
-                .withSize(1, 1)
-                .withPosition(2, 2);
-    }
+    // Shuffleboard.getTab("Testing")
+    // .addDouble("Limelight Y", () -> getTargetY())
+    // .withSize(1, 1)
+    // .withPosition(2, 2);
+    // }
 
     private boolean isTagVisible() {
         return targetVisibleEntry.getInteger(0) == 1;

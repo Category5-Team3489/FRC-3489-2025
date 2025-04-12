@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.autoPlacement.NewAutoAlign;
+import frc.robot.commands.autoPlacement.RightAutoAlign;
 import frc.robot.enums.AlgaeRemovalState;
 import frc.robot.enums.ClimberState;
 import frc.robot.enums.ElevatorState;
@@ -33,6 +34,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ElevatorLimelight;
 import frc.robot.subsystems.Index;
+import frc.robot.subsystems.IntakeLimelight;
 import frc.robot.subsystems.Outtake;
 
 public class RobotContainer {
@@ -43,6 +45,8 @@ public class RobotContainer {
     private final Climber climber = Climber.get();
     private final AlgaeRemoval algaeRemoval = AlgaeRemoval.get();
     private final ElevatorLimelight limelight = ElevatorLimelight.get();
+    private final IntakeLimelight leftLimelight = IntakeLimelight.get();
+
     // private final IntakeExtention intakeExtention = IntakeExtention.get();
     // private final IntakeRoller intakeRoller = IntakeRoller.get();
     // private final ElevatorLimelight limelight = ElevatorLimelight.get();
@@ -71,7 +75,7 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
     private final Command autoAlign = new NewAutoAlign(limelight, drivetrain);
-    private final Command rightAlign = new NewAutoAlign(limelight, drivetrain);
+    private final Command rightAlign = new RightAutoAlign(leftLimelight, drivetrain);
 
     // public final ElevatorLimelight limelight = ElevatorLimelight.get();
 
@@ -124,6 +128,13 @@ public class RobotContainer {
         driverController.x().onTrue(autoAlign);
 
         driverController.b().onTrue(rightAlign);
+
+        driverController.y().onTrue(Commands.runOnce(() -> {
+
+            autoAlign.cancel();
+            rightAlign.cancel();
+
+        }));
 
         // driverController.a().whileTrue(Commands.run(() -> {
 
@@ -427,11 +438,10 @@ public class RobotContainer {
         /* Run the path selected from the auto chooser */
         // return new PathPlannerAuto("Leave");
 
-        // return
-        // autoChooser.getSelected().andThen(elevator.updateCommand(ElevatorState.L2))
-        // .andThen(Commands.waitSeconds(1)).andThen(outtake.updateSpeed(OuttakeState.Outtake))
-        // .andThen(index.updateSpeed(IndexState.Outtake));
+        return autoChooser.getSelected().andThen(elevator.updateCommand(ElevatorState.L2))
+                .andThen(Commands.waitSeconds(1)).andThen(outtake.updateSpeed(OuttakeState.Outtake))
+                .andThen(index.updateSpeed(IndexState.Outtake));
 
-        return new PathPlannerAuto("Blue Left 2 Piece");
+        // return new PathPlannerAuto("Red Left 2 Piece");
     }
 }
