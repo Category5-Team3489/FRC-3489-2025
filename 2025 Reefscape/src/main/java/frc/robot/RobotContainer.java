@@ -74,7 +74,7 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-    private final Command autoAlign = new NewAutoAlign(limelight, drivetrain);
+    private final Command leftAutoAlign = new NewAutoAlign(limelight, drivetrain);
     private final Command rightAlign = new RightAutoAlign(leftLimelight, drivetrain);
 
     // public final ElevatorLimelight limelight = ElevatorLimelight.get();
@@ -125,13 +125,13 @@ public class RobotContainer {
 
         // driverController.a().onTrue(Commands.runOnce(() -> autoAlign.schedule()));
 
-        driverController.x().onTrue(autoAlign);
+        driverController.x().onTrue(leftAutoAlign);
 
         driverController.b().onTrue(rightAlign);
 
         driverController.y().onTrue(Commands.runOnce(() -> {
 
-            autoAlign.cancel();
+            leftAutoAlign.cancel();
             rightAlign.cancel();
 
         }));

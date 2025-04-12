@@ -123,7 +123,7 @@ public class RightAutoAlign extends Command {
 
     @Override
     public boolean isFinished() {
-        System.out.println("!!!!!!!!!!!!!!IS FINISHED!!!!!!!!!!!!!!!!!!!!");
+        // System.out.println("!!!!!!!!!!!!!!IS FINISHED!!!!!!!!!!!!!!!!!!!!");
         return (strafeController.atSetpoint() && distanceController.atSetpoint()) || isTagVisible == 0;
     }
 
