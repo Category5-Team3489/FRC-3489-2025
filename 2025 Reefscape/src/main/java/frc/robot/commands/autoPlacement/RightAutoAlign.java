@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorLimelight;
 
-public class NewAutoAlign extends Command {
+public class RightAutoAlign extends Command {
     private static double ProportionalGain = 0.1; // 0.18
     private static double MaxStrafeMetersPerSecond = 0.8;
     private static double MaxAngleMetersPerSecond = 0.5;
@@ -22,8 +22,8 @@ public class NewAutoAlign extends Command {
     // private static Rotation2d TargetAngle = Rotation2d.fromDegrees(180);
     private static double SpeedLimiter = 0.5;
     // private static double MaxOmegaDegreesPerSecond = 180; // 90
-    private static double TargetXSetpointDegrees = -17.83;
-    private static double TargetYSetpointDegrees = 4.38;
+    private static double TargetXSetpointDegrees = 9.54;
+    private static double TargetYSetpointDegrees = 0.67;
     private static double TargetAnglSetpointDegrees = 88; // ?
     private static Rotation2d TargetAngle = Rotation2d.fromDegrees(180);
 
@@ -50,7 +50,7 @@ public class NewAutoAlign extends Command {
 
     private boolean hasHitStrafeSetpoint = false;
 
-    public NewAutoAlign(ElevatorLimelight limelight, CommandSwerveDrivetrain drivetrain) {
+    public RightAutoAlign(ElevatorLimelight limelight, CommandSwerveDrivetrain drivetrain) {
         this.limelight = limelight;
         this.drivetrain = drivetrain;
 
@@ -66,7 +66,7 @@ public class NewAutoAlign extends Command {
     @Override
     public void execute() {
 
-        // System.out.println("TS!!!!!");
+        System.out.println("TS!!!!!");
 
         double currentX = limelight.getTargetX();
         double currentY = limelight.getTargetY();
@@ -74,7 +74,7 @@ public class NewAutoAlign extends Command {
 
         isTagVisible = limelight.getTargetVisible();
 
-        // System.out.println("Limelight: " + currentAngle);
+        System.out.println("Limelight: " + currentAngle);
 
         if (!Double.isNaN(currentY)) {
             yMetersPerSecond = -strafeController.calculate(currentY, TargetYSetpointDegrees);
