@@ -18,16 +18,16 @@ public class RightAutoAlign extends Command {
     private static double MaxAngleMetersPerSecond = 0.5;
 
     // The range it can be within cancle
-    private static double StrafeToleranceDegrees = 1.5;
+    private static double StrafeToleranceDegrees = 0.025;
     private static double DistanceToleranceDegrees = 1.5;
 
     // Limit the speed
     private static double SpeedLimiter = 0.5;
 
     // The limelight setpoint values
-    private static double TargetXSetpointDegrees = -0.25;
-    private static double TargetYSetpointDegrees = 0.67;
-    private static double TargetAnglSetpointDegrees = 1.7; // ?
+    private static double TargetXSetpointDegrees = -0.175; // -0.25
+    private static double TargetYSetpointDegrees = -3.13; // 0.67
+    // private static double TargetAnglSetpointDegrees = 4.7; // ?
 
     private Timer wallTimer = new Timer();
 
@@ -75,6 +75,8 @@ public class RightAutoAlign extends Command {
         double currentAngle = limelight.getTargetS();
         isTagVisible = limelight.getTargetVisible();
 
+        // System.out.println(currentAngle);
+
         // Horizontal Alignment
         if (!Double.isNaN(currentY)) { // If the tag is Visible
             yMetersPerSecond = strafeController.calculate(currentY, TargetYSetpointDegrees);
@@ -95,7 +97,8 @@ public class RightAutoAlign extends Command {
 
         // Angular Alignment
         if (!Double.isNaN(currentAngle)) { // If the tag is Visible
-            angleMetersPerSecond = strafeController.calculate(currentAngle, TargetAnglSetpointDegrees);
+            // angleMetersPerSecond = strafeController.calculate(currentAngle,
+            // TargetAnglSetpointDegrees);
             angleMetersPerSecond = MathUtil.clamp(angleMetersPerSecond, -MaxAngleMetersPerSecond,
                     MaxAngleMetersPerSecond);
         } else {
@@ -113,8 +116,8 @@ public class RightAutoAlign extends Command {
         driveCommandForward = drivetrain.applyRequest(() -> {
             return drive
                     .withVelocityX(xMetersPerSecond * SpeedLimiter)
-                    .withVelocityY(yMetersPerSecond * SpeedLimiter)
-                    .withRotationalRate(angleMetersPerSecond * SpeedLimiter);
+                    .withVelocityY(yMetersPerSecond * SpeedLimiter);
+            // .withRotationalRate(angleMetersPerSecond * SpeedLimiter);
         });
 
         // Schedule the drive command

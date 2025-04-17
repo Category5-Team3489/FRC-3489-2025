@@ -124,7 +124,7 @@ public class NewAutoAlign extends Command {
         // return wallTimer.hasElapsed(WallTimeoutSeconds);
 
         // return strafeController.atSetpoint() && distanceController.atSetpoint();
-        System.out.println("!!!!!!!!!!!!!!IS FINISHED!!!!!!!!!!!!!!!!!!!!");
+        // System.out.println("!!!!!!!!!!!!!!IS FINISHED!!!!!!!!!!!!!!!!!!!!");
         return (strafeController.atSetpoint() && distanceController.atSetpoint()) || isTagVisible == 0;
     }
 
