@@ -19,14 +19,14 @@ public class RightAutoAlign extends Command {
 
     // The range it can be within cancle
     private static double StrafeToleranceDegrees = 0.025;
-    private static double DistanceToleranceDegrees = 1.5;
+    private static double DistanceToleranceDegrees = 0.025;
 
     // Limit the speed
     private static double SpeedLimiter = 0.5;
 
     // The limelight setpoint values
-    private static double TargetXSetpointDegrees = -0.175; // -0.25
-    private static double TargetYSetpointDegrees = -3.13; // 0.67
+    private static double TargetXSetpointDegrees = -0.3; // -0.25//-0.175
+    private static double TargetYSetpointDegrees = -1.10; // 0.67
     // private static double TargetAnglSetpointDegrees = 4.7; // ?
 
     private Timer wallTimer = new Timer();
