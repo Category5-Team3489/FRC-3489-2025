@@ -271,7 +271,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     public double getSpeedLimit() {
-        return speedLimit.getSpeedLimit();
+        // return speedLimit.getSpeedLimit();
+        return 0.3;
     }
 
     public void setSpeedLimit(SpeedLimitState speedLimitState) {

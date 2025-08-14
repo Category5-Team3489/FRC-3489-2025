@@ -61,15 +61,6 @@ public class Elevator extends SubsystemBase {
         leftMotor = new SparkMax(Constants.Elevator.LEFT_MOTOR_ID, MotorType.kBrushless);
 
         pidControllerRight = rightMotor.getClosedLoopController();
-
-        // throughBoreEncoder = rightMotor.getAbsoluteEncoder();
-
-        // encoder = rightMotor.();
-
-        // Shuffleboard.getTab("Main")
-        // .addDouble("Right Encoder", () -> encoder.getPosition())
-        // .withSize(1, 1)
-        // .withPosition(7, 3);
     }
 
     @Override
@@ -81,28 +72,11 @@ public class Elevator extends SubsystemBase {
         setHeight();
     }
 
-    // private double getEncoder() {
-    // return encoder.getPosition();
-    // }
-
-    public void printEncoder() {
-        // System.out.println("Encoder: " + encoder.getPosition());
-    }
-
     // Move the elevator to the correct height
     private void setHeight() {
         setTargetTics(targetTics);
-        // double targetRotations = (targetTics * gearRatio) / sparkTicsPerRotation;
-        // //Through Bore Math
-        // double targetRotations = (targetTics / sparkTicsPerRotation); // Built in
-        // encoder
-        // double targetRotations = ElevatorState.Down.getHeigtInches(); // 8.8
-        // System.out.println("---------------------Target" + targetTics);
         pidControllerRight.setReference(targetTics, ControlType.kPosition,
                 ClosedLoopSlot.kSlot0);
-        // // TODO TESTING:
-        // System.out.println("**************************************target rotation: "
-        // + targetTics);
 
         if (targetTics != ElevatorState.Down.getHeigt()) {
             pidControllerRight.setReference(targetTics, ControlType.kPosition,
@@ -116,7 +90,6 @@ public class Elevator extends SubsystemBase {
     private void setTargetTics(double positionHeight) {
         targetTics = MathUtil.clamp(positionHeight,
                 ElevatorState.Down.getHeigt(), ElevatorState.Up.getHeigt());
-        // System.out.println("pos: " + positionHeight);
     }
 
     public Command adjustManualAngle(double adjustPercent) {
